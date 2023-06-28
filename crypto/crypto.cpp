@@ -1,8 +1,10 @@
 
 #include "crypto.hpp"
+
 #define BUFFER 300
 #define AES_BLOCK_SIZE 256
-int run(void)
+
+int aes_cbc(void)
 {
     for (size_t i = 0; i <= 16; i++)
     {
@@ -10,7 +12,7 @@ int run(void)
     }
 
     /* Message to be encrypted */
-    string plain = "0167C6697351FF4AEC29CDBAABF2FBE346000160000D2DAD45876789652136548C4297AFC9F7117BA94315C063933646657AD08540FCBEFBE346000100000D2DA7DC4297AFC2AFD3C1FA67CB93A3473DAE2595EE59F7117BA94315C063933646657AD08540FCBECA0D95AEA09FE6DC9F92492B2AD5C5BF913B816C979AEF04E";
+    string plain = "Super Secret Message";
     cout << "Input is: " << plain << endl;
 
     uint8_t *plaintext = const_cast<uint8_t *>(reinterpret_cast<const uint8_t *>(plain.c_str()));
@@ -23,14 +25,17 @@ int run(void)
     int ret = false;
     string hexString = "";
     char *hexArray;
+    string decryptedString = "";
 
     if (plain.size() > AES_BLOCK_SIZE - 1)
     {
         cout << "plaintext size too big" << endl;
         return -1;
     }
+
     cout << "Input size = " << plain.size() << endl
          << endl;
+
     for (size_t i = 0; i < plain.size(); i++)
     {
         plaintext_buff[i] = plaintext[i];
@@ -45,6 +50,7 @@ int run(void)
         }
     }
 
+    /*Encryption*/
     cipher_object COB;
 
     ret = COB.encrypt(plaintext_buff, plaintext_len, key, iv,
@@ -65,21 +71,18 @@ int run(void)
     }
 
     std::cout << "Ciphertext is:\n";
-    hexArray = strToHex(padded_frame, 277);
-    hexString.assign(hexArray, hexArray + 277);
+    hexString = toHex(padded_frame, 277);
+
     cout << hexString << endl;
 
     BIO_dump_fp(stdout, (const char *)padded_frame, 277);
-    /*FILE *fp;
-    fp = fopen("/home/giuseppe/Code/Crypto/out/cipher", "w");
-    BIO_dump_fp(fp, (const char *)ciphertext, ciphertext_len);
-    fclose(fp);*/
 
     for (size_t i = 0; i < 256; i++)
     {
         ciphertext[i] = padded_frame[i + 21];
     }
 
+    /*Decryption*/
     ret = COB.decrypt(ciphertext, ciphertext_len, key, iv,
                       decryptedtext, plaintext_len);
 
@@ -93,10 +96,9 @@ int run(void)
     std::cout << "\nDecrypted text is:" << endl;
     std::cout << decryptedtext << endl;
 
-    string decryptS = "";
-    decryptS.assign(decryptedtext, decryptedtext + plaintext_len);
+    decryptedString.assign(decryptedtext, decryptedtext + plaintext_len);
 
-    if (strcmp(plain.c_str(), decryptS.c_str()) != 0)
+    if (strcmp(plain.c_str(), decryptedString.c_str()) != 0)
     {
         cout << "Input and Output strings do not match" << endl;
         return -1;
@@ -186,8 +188,9 @@ int cipher_object::prepare_ciphertext(uint8_t version, uint8_t *iv, uint8_t *pla
     return 0;
 }
 
-char *strToHex(unsigned char *str, int len)
+string toHex(unsigned char *str, int len)
 {
+    string hex_hash_string = "";
     char *buffer = new char[len * 2 + 1];
     char *pbuffer = buffer;
     for (int i = 0; i < len; ++i)
@@ -195,7 +198,9 @@ char *strToHex(unsigned char *str, int len)
         sprintf(pbuffer, "%02X", str[i]);
         pbuffer += 2;
     }
-    return buffer;
+
+    hex_hash_string.assign(buffer, buffer + len);
+    return hex_hash_string;
 }
 
 int write_to_file(string in)
@@ -219,10 +224,6 @@ int read_from_file(string &out)
     ifstream myfile("sha");
     if (myfile.is_open())
     {
-        /*while (getline(myfile, out))
-        {
-            cout << line << '\n';
-        }*/
         getline(myfile, out);
         myfile.close();
     }
@@ -238,36 +239,48 @@ int sha_256()
 {
     int ret = -1;
     unsigned char hash[SHA256_DIGEST_LENGTH];
-    string hex_hash_string = "";
     const unsigned char plain_password[] = "Secret";
     unsigned char *hash_bytes_ptr;
 
-    string compare_input_string = "Secret";
+    string hex_hash_string = "";
+
     string compare_hash_string = "";
 
+    /* Generate Hash*/
     hash_bytes_ptr = SHA256(plain_password, 7, hash);
 
     if (hash_bytes_ptr == NULL)
     {
-        cout << "Output Hash is NULL" << endl;
+        cout << " NULL pointer" << endl;
         return -1;
     }
 
-    const char *hex_hash_ptr = strToHex(hash_bytes_ptr, SHA256_DIGEST_LENGTH);
+    hex_hash_string = toHex(hash_bytes_ptr, SHA256_DIGEST_LENGTH);
 
-    hex_hash_string.assign(hex_hash_ptr, hex_hash_ptr + 32);
-
-    write_to_file(hex_hash_string);
-    read_from_file(compare_hash_string);
-
-    ret = strcmp(compare_hash_string.c_str(), compare_input_string.c_str());
+    ret = write_to_file(hex_hash_string);
 
     if (ret != 0)
     {
+        return ret;
+    }
+
+    ret = read_from_file(compare_hash_string);
+
+    if (ret != 0)
+    {
+        return ret;
+    }
+
+    ret = strcmp(compare_hash_string.c_str(), hex_hash_string.c_str());
+    cout << compare_hash_string << "\n"
+         << hex_hash_string << endl;
+    if (ret != 0)
+    {
         cout << "Hash ckeck was not Sucessfull: " << ret << endl;
-        return -1;
+        return ret;
     }
 
     cout << "Hash check was sucessfull" << endl;
+
     return 0;
 }

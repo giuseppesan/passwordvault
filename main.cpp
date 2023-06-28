@@ -3,7 +3,11 @@
 #include "crypto/crypto.cpp"
 int main()
 {
+    /*run crypto algorithm*/
+
+    // aes_cbc();
+    /*run hash algorithm*/
     sha_256();
-    //run();
+
     return 0;
 }

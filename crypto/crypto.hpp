@@ -28,8 +28,8 @@ cipher_object::cipher_object() {}
 
 cipher_object::~cipher_object() {}
 
-int run(void);
-char *strToHex(unsigned char *str, int len);
+int aes_cbc(void);
+string toHex(unsigned char *str, int len);
 unsigned char iv[16] = {0};
 unsigned char key[32] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
                          0x38, 0x39, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35,
