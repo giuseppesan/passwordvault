@@ -16,8 +16,8 @@ class encryption
 private:
     /* data */
 public:
-    bool decrypt(const unsigned char *ciphertext, int ciphertext_len, const unsigned char *key, const unsigned char *iv, unsigned char *plaintext, int &plaintext_len);
-    bool encrypt(const unsigned char *plaintext, int plaintext_len, const unsigned char *key, const unsigned char *iv, unsigned char *ciphertext, int &ciphertext_len);
+    bool decrypt(const unsigned char *cipher_text, int ciphertext_len, const unsigned char *key, const unsigned char *iv, unsigned char *plaintext, int &plaintext_len);
+    bool encrypt(const unsigned char *plaintext, int plaintext_len, const unsigned char *key, const unsigned char *iv, unsigned char *cipher_text, int &ciphertext_len);
     int prepare_ciphertext(uint8_t version, uint8_t *iv, uint8_t *plain_cipher_text, uint64_t pl_ciph_text_size, uint8_t *cipher_text_out, uint64_t ciph_text_out_size);
     int aes_cbc(void);
     encryption(/* args */);

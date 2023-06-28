@@ -18,7 +18,7 @@ int main()
     {
         return -1;
     }
-    
+
     /*Encryption*/
     //aes_cbc();
     return 0;

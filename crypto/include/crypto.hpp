@@ -18,7 +18,7 @@ public:
      * @param in Plain input string
      * @param out 32 Byte Hex Hash
      * 
-     * @return 0 if successul
+     * @return 0 if successful
     */
     int sha_256(string in, string &out);
 

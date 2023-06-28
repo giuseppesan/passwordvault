@@ -14,17 +14,17 @@ int aes_cbc(void)
     string plain = "Super Secret Message";
     cout << "Input is: " << plain << endl;
 
-    uint8_t *plaintext = const_cast<uint8_t *>(reinterpret_cast<const uint8_t *>(plain.c_str()));
+    uint8_t *plain_text = const_cast<uint8_t *>(reinterpret_cast<const uint8_t *>(plain.c_str()));
     uint8_t plaintext_buff[AES_BLOCK_SIZE] = {0};
-    uint8_t ciphertext[AES_BLOCK_SIZE] = {0};
+    uint8_t cipher_text[AES_BLOCK_SIZE] = {0};
     uint8_t padded_frame[BUFFER] = {0};
-    uint8_t decryptedtext[AES_BLOCK_SIZE] = {0};
+    uint8_t decrypted_text[AES_BLOCK_SIZE] = {0};
     int plaintext_len = AES_BLOCK_SIZE;
     int ciphertext_len = 0;
     int ret = false;
-    string hexString = "";
+    string hex_string = "";
     char *hexArray;
-    string decryptedString = "";
+    string decrypted_string = "";
 
     if (plain.size() > AES_BLOCK_SIZE - 1)
     {
@@ -37,7 +37,7 @@ int aes_cbc(void)
 
     for (size_t i = 0; i < plain.size(); i++)
     {
-        plaintext_buff[i] = plaintext[i];
+        plaintext_buff[i] = plain_text[i];
     }
 
     // Padding
@@ -53,7 +53,7 @@ int aes_cbc(void)
     encryption COB;
 
     ret = COB.encrypt(plaintext_buff , plaintext_len, key, iv,
-                      ciphertext, ciphertext_len);
+                      cipher_text, ciphertext_len);
 
     if (ret != true)
     {
@@ -61,29 +61,29 @@ int aes_cbc(void)
         return -1;
     }
 
-    ret = COB.prepare_ciphertext(1, iv, ciphertext, ciphertext_len, padded_frame, 277);
+    ret = COB.prepare_ciphertext(1, iv, cipher_text, ciphertext_len, padded_frame, 277);
 
     if (ret != 0)
     {
-        cout << "Preparing ciphertext failed" << endl;
+        cout << "Preparing cipher_text failed" << endl;
         return -1;
     }
 
     std::cout << "Ciphertext is:\n";
-    hexString = to_hex(padded_frame, 277);
+    hex_string = to_hex(padded_frame, 277);
 
-    cout << hexString << endl;
+    cout << hex_string << endl;
 
     BIO_dump_fp(stdout, (const char *)padded_frame, 277);
 
     for (size_t i = 0; i < 256; i++)
     {
-        ciphertext[i] = padded_frame[i + 21];
+        cipher_text[i] = padded_frame[i + 21];
     }
 
     /*Decryption*/
-    ret = COB.decrypt(ciphertext, ciphertext_len, key, iv,
-                      decryptedtext, plaintext_len);
+    ret = COB.decrypt(cipher_text, ciphertext_len, key, iv,
+                      decrypted_text, plaintext_len);
 
     if (ret != true)
     {
@@ -93,11 +93,11 @@ int aes_cbc(void)
 
     /* Show the decrypted text */
     std::cout << "\nDecrypted text is:" << endl;
-    std::cout << decryptedtext << endl;
+    std::cout << decrypted_text << endl;
 
-    decryptedString.assign(decryptedtext, decryptedtext + plaintext_len);
+    decrypted_string.assign(decrypted_text, decrypted_text + plaintext_len);
 
-    if (strcmp(plain.c_str(), decryptedString.c_str()) != 0)
+    if (strcmp(plain.c_str(), decrypted_string.c_str()) != 0)
     {
         cout << "Input and Output strings do not match" << endl;
         return -1;
@@ -106,7 +106,7 @@ int aes_cbc(void)
     return 0;
 }
 
-bool encryption::encrypt(const unsigned char *plaintext, int plaintext_len, const unsigned char *key, const unsigned char *iv, unsigned char *ciphertext, int &ciphertext_len)
+bool encryption::encrypt(const unsigned char *plain_text, int plaintext_len, const unsigned char *key, const unsigned char *iv, unsigned char *cipher_text, int &ciphertext_len)
 {
     EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
     if (!ctx)
@@ -122,7 +122,7 @@ bool encryption::encrypt(const unsigned char *plaintext, int plaintext_len, cons
         return false;
     }
 
-    if (EVP_EncryptUpdate(ctx, ciphertext, &ciphertext_len, plaintext, plaintext_len) != 1)
+    if (EVP_EncryptUpdate(ctx, cipher_text, &ciphertext_len, plain_text, plaintext_len) != 1)
     {
         std::cerr << "Failed to encrypt data" << std::endl;
         EVP_CIPHER_CTX_free(ctx);
@@ -133,7 +133,7 @@ bool encryption::encrypt(const unsigned char *plaintext, int plaintext_len, cons
     return true;
 }
 
-bool encryption::decrypt(const unsigned char *ciphertext, int ciphertext_len, const unsigned char *key, const unsigned char *iv, unsigned char *plaintext, int &plaintext_len)
+bool encryption::decrypt(const unsigned char *cipher_text, int ciphertext_len, const unsigned char *key, const unsigned char *iv, unsigned char *plain_text, int &plaintext_len)
 {
     EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
     if (!ctx)
@@ -149,7 +149,7 @@ bool encryption::decrypt(const unsigned char *ciphertext, int ciphertext_len, co
         return false;
     }
 
-    if (EVP_DecryptUpdate(ctx, plaintext, &plaintext_len, ciphertext, ciphertext_len) != 1)
+    if (EVP_DecryptUpdate(ctx, plain_text, &plaintext_len, cipher_text, ciphertext_len) != 1)
     {
         std::cerr << "Failed to decrypt data" << std::endl;
         EVP_CIPHER_CTX_free(ctx);
@@ -170,7 +170,7 @@ int encryption::prepare_ciphertext(uint8_t version, uint8_t *iv, uint8_t *plain_
     {
         cipher_text_out[i] = iv[i - 1];
     }
-    /*add length of ciphertext from byte 17 to 20*/
+    /*add length of cipher_text from byte 17 to 20*/
     *(reinterpret_cast<uint32_t *>(cipher_text_out + 17)) = pl_ciph_text_size;
 
     if (pl_ciph_text_size > (ciph_text_out_size - 1 - 16 - 4))
@@ -178,7 +178,7 @@ int encryption::prepare_ciphertext(uint8_t version, uint8_t *iv, uint8_t *plain_
         cout << "buffer is too big or cipher array is too small" << endl;
         return -1;
     }
-    /*copy ciphertext*/
+    /*copy cipher_text*/
     for (uint32_t j = 0; j < ciph_text_out_size; j++)
     {
         cipher_text_out[j + 21] = plain_cipher_text[j];

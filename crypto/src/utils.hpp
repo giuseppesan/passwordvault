@@ -10,11 +10,11 @@ inline string to_hex(unsigned char *str, int len)
 {
     string hex_hash_string = "";
     char *buffer = new char[len * 2 + 1];
-    char *pbuffer = buffer;
+    char *p_buffer = buffer;
     for (int i = 0; i < len; ++i)
     {
-        sprintf(pbuffer, "%02X", str[i]);
-        pbuffer += 2;
+        sprintf(p_buffer, "%02X", str[i]);
+        p_buffer += 2;
     }
 
     hex_hash_string.assign(buffer, buffer + len);

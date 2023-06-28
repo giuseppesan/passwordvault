@@ -3,11 +3,11 @@
 
 int write_to_file(string in, string file)
 {
-    ofstream myfile(file);
-    if (myfile.is_open())
+    ofstream my_file(file);
+    if (my_file.is_open())
     {
-        myfile << in;
-        myfile.close();
+        my_file << in;
+        my_file.close();
     }
     else
     {
@@ -19,11 +19,11 @@ int write_to_file(string in, string file)
 
 int read_from_file(string &out)
 {
-    ifstream myfile("sha");
-    if (myfile.is_open())
+    ifstream my_file("sha");
+    if (my_file.is_open())
     {
-        getline(myfile, out);
-        myfile.close();
+        getline(my_file, out);
+        my_file.close();
     }
     else
     {
