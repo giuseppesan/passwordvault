@@ -5,6 +5,8 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+#include <string>
+#include <random>
 #include "../src/utils.hpp"
 
 using namespace std;

@@ -4,6 +4,7 @@
 int write_to_file(string in, string file)
 {
     ofstream my_file(file);
+
     if (my_file.is_open())
     {
         my_file << in;
@@ -14,12 +15,14 @@ int write_to_file(string in, string file)
         cout << "Unable to open file\n";
         return -1;
     }
+
     return 0;
 }
 
 int read_from_file(string &out)
 {
     ifstream my_file("sha");
+
     if (my_file.is_open())
     {
         getline(my_file, out);
@@ -30,6 +33,7 @@ int read_from_file(string &out)
         cout << "Unable to open & read file\n";
         return -1;
     }
+
     return 0;
 }
 
@@ -42,16 +46,15 @@ int save_password(string out)
     {
         return ret;
     }
-    return 0;
+
+    return ret;
 }
 
 int sha_256(string in, string &out)
 {
-    int ret = -1;
     unsigned char hash[SHA256_DIGEST_LENGTH];
     const unsigned char *plain_password = reinterpret_cast<const unsigned char *>(in.c_str());
     unsigned char *hash_bytes_ptr;
-
     string hex_hash_string = "";
 
     /* Generate Hash*/
@@ -73,8 +76,9 @@ int check_password(string name, string pw)
     int ret = -1;
     string saved_hash = "";
     string generated_hash = "";
+    string salt = "";
 
-    ret = sha_256(pw, generated_hash);
+    // TODO search for user in file
 
     ret = read_from_file(saved_hash);
 
@@ -83,11 +87,21 @@ int check_password(string name, string pw)
         return ret;
     }
 
-    saved_hash.erase(0, name.size()+1);
+    saved_hash.erase(0, name.size() + 1);
+    salt = saved_hash.substr(0, 16);
+    saved_hash.erase(0, 17);
+    pw = pw + salt;
+    ret = sha_256(pw, generated_hash);
+
+    if (ret != 0)
+    {
+        return ret;
+    }
 
     ret = strcmp(saved_hash.c_str(), generated_hash.c_str());
     cout << saved_hash << "\n"
          << generated_hash << endl;
+
     if (ret != 0)
     {
         cout << "Password is not correct: " << ret << endl;
@@ -102,8 +116,34 @@ int register_user(string name, string password)
 {
     int ret = -1;
     string out = "";
-    sha_256(password, out);
-    out = name + ":" + out;
-    save_password(out);
+    string salt = "";
+
+    const string CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    random_device random_device;
+    mt19937 generator(random_device());
+    uniform_int_distribution<> distribution(0, CHARACTERS.size() - 1);
+
+    for (size_t i = 0; i < 16; ++i)
+    {
+        salt += CHARACTERS[distribution(generator)];
+    }
+
+    password = password + salt;
+    ret = sha_256(password, out);
+
+    if (ret != 0)
+    {
+        return ret;
+    }
+
+    out = name + ":" + salt + ":" + out;
+    ret = save_password(out);
+
+    if (ret != 0)
+    {
+        return ret;
+    }
+
     return 0;
 }

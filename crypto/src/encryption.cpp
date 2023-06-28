@@ -23,7 +23,7 @@ int aes_cbc(void)
     int ciphertext_len = 0;
     int ret = false;
     string hex_string = "";
-    char *hexArray;
+    char *hex_array;
     string decrypted_string = "";
 
     if (plain.size() > AES_BLOCK_SIZE - 1)
