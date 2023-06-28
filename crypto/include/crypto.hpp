@@ -1,37 +1,71 @@
+#ifndef CRYPTO_H
+#define CRYPTO_H
 
-#include <openssl/ssl.h>
-#include <openssl/err.h>
-#include <openssl/conf.h>
-#include <openssl/evp.h>
-#include <openssl/rand.h>
 #include <openssl/sha.h>
-#include <vector>
 #include <iostream>
 #include <fstream>
+#include <string.h>
+#include "../src/utils.hpp"
 
 using namespace std;
 
-class cipher_object
+class crypto
 {
 public:
-    bool decrypt(const unsigned char *ciphertext, int ciphertext_len, const unsigned char *key, const unsigned char *iv, unsigned char *plaintext, int &plaintext_len);
-    bool encrypt(const unsigned char *plaintext, int plaintext_len, const unsigned char *key, const unsigned char *iv, unsigned char *ciphertext, int &ciphertext_len);
-    int prepare_ciphertext(uint8_t version, uint8_t *iv, uint8_t *plain_cipher_text, uint64_t pl_ciph_text_size, 
-									 uint8_t *cipher_text_out, uint64_t ciph_text_out_size);
-    void sha_256();
-    int write_to_file (string in);
+     /**
+     * @brief Turn string into hash
+     * 
+     * @param in Plain input string
+     * @param out 32 Byte Hex Hash
+     * 
+     * @return 0 if successul
+    */
+    int sha_256(string in, string &out);
+
+    /**
+     * @brief reads hashed password from file and compares it to input
+     * 
+     * @param name Username
+     * @param pw Password
+     * 
+     * @return 0 is successful
+    */
+    int check_password(string name, string pw);
+
+    /**
+     * @brief writes sting to give filename
+     * 
+     * @param in String which is written
+     * @param file Filename / Filepath
+     * 
+     * @return 0 is successful
+    */
+    int write_to_file(string in, string file);
+
+    /**
+     * @brief Reads from file
+     * 
+     * @param out String witch filecontent
+     * 
+     * @return 0 is successful
+    */
     int read_from_file(string &out);
-    cipher_object();
-    ~cipher_object();
+
+    /**
+     * @brief writes the userdata in the defined format to the file <USERNAME>:<SALT>:<HASH>
+     * 
+     * @param name Username
+     * @param password Password
+     * CRYPTO_H
+     * @return 0 is successful
+    */
+    int register_user(string name, string password);
+
+    crypto();
+    ~crypto();
 };
-cipher_object::cipher_object() {}
+crypto::crypto() {}
 
-cipher_object::~cipher_object() {}
+crypto::~crypto() {}
 
-int aes_cbc(void);
-string toHex(unsigned char *str, int len);
-unsigned char iv[16] = {0};
-unsigned char key[32] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
-                         0x38, 0x39, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35,
-                         0x36, 0x37, 0x38, 0x39, 0x30, 0x31, 0x32, 0x33,
-                         0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x30, 0x31};
+#endif //CRYPTO_H
