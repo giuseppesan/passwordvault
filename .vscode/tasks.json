@@ -7,7 +7,7 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${workspaceFolder}/cyrpto/include/crypto.hpp",
+                "${workspaceFolder}/crypto/include/crypto.hpp",
                 "${file}",
                 "-lssl",
                 "-lcrypto",
