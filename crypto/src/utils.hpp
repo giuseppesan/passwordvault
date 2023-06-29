@@ -4,15 +4,17 @@
 #include <iostream>
 #include <string.h>
 #include <fstream>
+#include <istream>
 using namespace std;
 #define PEPPER "SEpl9QTQ574d9R5R"
+
 /**
  * @brief convert bytes to hexstring
  *
- * @param str Bytes string 
- * @param len length of string 
+ * @param str Bytes string
+ * @param len length of string
  *
- * @return string
+ * @return hex string
  */
 
 inline string to_hex(unsigned char *str, int len)
@@ -36,23 +38,26 @@ inline string to_hex(unsigned char *str, int len)
  * @param in String which is written
  * @param file Filename / Filepath
  *
- * @return 0 is successful
+ * @return 0 if successful
  */
 
 inline int write_to_file(string in, string file)
 {
-    // TODO handle multiple entries
-    ofstream my_file(file);
+    /*Add multiple entries*/
 
-    if (my_file.is_open())
-    {
-        my_file << in;
-        my_file.close();
-    }
-    else
+    ofstream my_file;
+    my_file.open(file, ios::app);
+
+    if (!my_file)
     {
         cout << "Unable to open file\n";
         return -1;
+    }
+    else
+    {
+        my_file << in;
+        my_file << endl;
+        my_file.close();
     }
 
     return 0;
@@ -63,26 +68,35 @@ inline int write_to_file(string in, string file)
  *
  * @param out String witch filecontent
  *
- * @return 0 is successful
+ * @return 0 if successful
  */
 
-inline int read_from_file(string &out)
+inline int read_from_file(string &out, string name)
 {
-    // TODO search for user in file
-    ifstream my_file("sha");
+    /*search for user in file*/
+    ifstream my_file("passwd");
+    string check = "";
 
     if (my_file.is_open())
     {
-        getline(my_file, out);
-        my_file.close();
+        while (getline(my_file, out))
+        {
+            check = out.substr(0, name.size());
+
+            if (strcmp(check.c_str(), name.c_str()) == 0)
+            {
+                my_file.close();
+                return 0;
+            }
+        }
+        cout << "User not found\n";
+        return -1;
     }
     else
     {
         cout << "Unable to open & read file\n";
         return -1;
     }
-
-    return 0;
 }
 
 #endif // UTILS_H

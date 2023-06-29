@@ -3,9 +3,9 @@
 
 int save_password(string out)
 {
-    // TODO handle multiple entries & username has to be unique
+    // username has to be unique
     int ret = -1;
-    ret = write_to_file(out, "sha");
+    ret = write_to_file(out, "passwd");
 
     if (ret != 0)
     {
@@ -15,7 +15,7 @@ int save_password(string out)
     return ret;
 }
 
-int sha_256(string in, string &out)
+int sha_512(string in, string &out)
 {
     unsigned char hash[SHA512_DIGEST_LENGTH];
     const unsigned char *plain_password = reinterpret_cast<const unsigned char *>(in.c_str());
@@ -36,24 +36,31 @@ int sha_256(string in, string &out)
     return 0;
 }
 
-int salt_n_hash(string in, string salt, string &final_hash)
+int salt_n_hash(string in, string salt, string &final_hash, size_t iterations)
 {
     int ret = -1;
     string first_hash = "";
+    string buffer_hash = "";
+
     in = in + salt + PEPPER;
-    ret = sha_256(in, first_hash);
+    ret = sha_512(in, first_hash);
 
     if (ret != 0)
     {
         return ret;
     }
+    /*Does the cycle 10 times*/
+    buffer_hash = first_hash;
 
-    first_hash = first_hash + salt;
-    ret = sha_256(first_hash, final_hash);
-
-    if (ret != 0)
+    for (size_t i = 0; i < iterations; i++)
     {
-        return ret;
+        buffer_hash += salt;
+        ret = sha_512(buffer_hash, final_hash);
+
+        if (ret != 0)
+        {
+            return ret;
+        }
     }
 
     return 0;
@@ -65,36 +72,55 @@ int check_password(string name, string pw)
     string saved_hash = "";
     string salt = "";
     string final_hash = "";
-
-    ret = read_from_file(saved_hash);
+    string algo = "";
+    ret = read_from_file(saved_hash, name);
 
     if (ret != 0)
     {
         return ret;
     }
 
+    /*Erase name for now*/
     saved_hash.erase(0, name.size() + 1);
-    salt = saved_hash.substr(0, 16);
-    saved_hash.erase(0, 17);
-
-    ret = salt_n_hash(pw, salt, final_hash);
-
-    if (ret != 0)
+    /*Get Algorithm */
+    // TODO add logic for sha256
+    algo = saved_hash.substr(0, 1);
+    
+    if (algo == "1")
     {
-        return ret;
+        cout << "SHA256 check not implemented yet" << endl;
+        return -1;
     }
 
-    ret = strcmp(saved_hash.c_str(), final_hash.c_str());
-    cout << saved_hash << "\n"
-         << final_hash << endl;
-
-    if (ret != 0)
+    if (algo == "2")
     {
-        cout << "Password is not correct: " << ret << endl;
-        return ret;
-    }
+        cout << "SHA512 detected" << endl;
+    
 
-    cout << "Password is correct" << endl;
+        saved_hash.erase(0, 2);
+        /*Get Salt*/
+        salt = saved_hash.substr(0, 16);
+        saved_hash.erase(0, 17);
+
+        ret = salt_n_hash(pw, salt, final_hash, ITERATIONS);
+
+        if (ret != 0)
+        {
+            return ret;
+        }
+
+        ret = strcmp(saved_hash.c_str(), final_hash.c_str());
+        cout << saved_hash << "\n"
+            << final_hash << endl;
+
+        if (ret != 0)
+        {
+            cout << "Password is not correct: " << ret << endl;
+            return ret;
+        }
+
+        cout << "Password is correct" << endl;
+    }
     return 0;
 }
 
@@ -104,6 +130,7 @@ int register_user(string name, string password)
     string out = "";
     string salt = "";
     string final_hash = "";
+    /*Create random 16 byte salt from charset*/
     const string CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     random_device random_device;
@@ -115,14 +142,14 @@ int register_user(string name, string password)
         salt += CHARACTERS[distribution(generator)];
     }
 
-    ret = salt_n_hash(password, salt, final_hash);
+    ret = salt_n_hash(password, salt, final_hash, ITERATIONS);
 
     if (ret != 0)
     {
         return ret;
     }
 
-    out = name + ":" + salt + ":" + final_hash;
+    out = name + ":" + SHA_512 + ":" + salt + ":" + final_hash;
     ret = save_password(out);
 
     if (ret != 0)
@@ -132,3 +159,34 @@ int register_user(string name, string password)
 
     return 0;
 }
+
+
+int check_user(string name)
+{
+    int ret = -1;
+    ifstream my_file("passwd");
+    string check = "";
+    string buff = "";
+
+    if (my_file.is_open())
+    {
+        while (getline(my_file, buff))
+        {
+            check = buff.substr(0, name.size());
+
+            if (strcmp(check.c_str(), name.c_str()) == 0)
+            {
+                cout << "Username is taken\n";
+                my_file.close();
+                return -1;
+            }
+        }
+        return 0;
+    }
+    else
+    {
+        cout << "Unable to open & read file\n";
+        return -1;
+    }
+}
+
