@@ -13,7 +13,7 @@ using namespace std;
 
 class crypto
 {
-public:
+private:
      /**
      * @brief Turn string into hash
      * 
@@ -35,25 +35,6 @@ public:
     int check_password(string name, string pw);
 
     /**
-     * @brief writes sting to give filename
-     * 
-     * @param in String which is written
-     * @param file Filename / Filepath
-     * 
-     * @return 0 is successful
-    */
-    int write_to_file(string in, string file);
-
-    /**
-     * @brief Reads from file
-     * 
-     * @param out String witch filecontent
-     * 
-     * @return 0 is successful
-    */
-    int read_from_file(string &out);
-
-    /**
      * @brief writes the userdata in the defined format to the file <USERNAME>:<SALT>:<HASH>
      * 
      * @param name Username
@@ -62,6 +43,16 @@ public:
      * @return 0 is successful
     */
     int register_user(string name, string password);
+
+    /**
+     * @brief creates the password hash 
+     * adds salts and pepper 
+     * 
+     * @param in password
+     * @param salt random salt string
+     * @param final_hash the hash string
+    */
+    int salt_n_hash (string in, string salt, string &final_hash);
 
     crypto();
     ~crypto();
