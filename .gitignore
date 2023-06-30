@@ -4,8 +4,7 @@
 bin/
 main
 */secure/*
-passwd
-logins
+
 # Local History for Visual Studio Code
 .history/
 
