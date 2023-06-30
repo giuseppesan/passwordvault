@@ -65,7 +65,7 @@ int crypto::salt_n_hash(string in, string salt, string &final_hash, size_t itera
     string buffer_hash = "";
 
     in = in + salt + PEPPER;
-    
+
     if (algorithm == 1)
     {
         ret = sha_256(in, buffer_hash);
@@ -206,7 +206,7 @@ int crypto::register_user(string name, string password, int u_algorithm)
     string final_hash = "";
 
     generate_salt(salt);
-    algorithm = u_algorithm; 
+    algorithm = u_algorithm;
     ret = salt_n_hash(password, salt, final_hash, ITERATIONS);
 
     if (ret != 0)
@@ -253,4 +253,18 @@ int crypto::check_user(string name)
         cout << "Unable to open & read file\n";
         return -1;
     }
+}
+
+int crypto::add_new_entry(string tag, string user, string password)
+{
+    int ret = -1;
+    string credentials = tag + ":" + user + ":" + password;
+    ret = write_to_file(credentials, "logins");
+    
+    if (ret != 0)
+    {
+        return -1;
+    }
+
+    return 0;
 }
