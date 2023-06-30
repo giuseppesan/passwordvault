@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -11,7 +12,7 @@ class Router
     private:
         string curr_path;
         string input;
-        string message;
+        string logged_in_user;
     public:
         string get_curr_path();
         void handle_input();
