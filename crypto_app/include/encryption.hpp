@@ -24,13 +24,7 @@ public:
     ~encryption();
 };
 
-encryption::encryption(/* args */)
-{
-}
 
-encryption::~encryption()
-{
-}
 
 unsigned char iv[16] = {0};
 unsigned char key[32] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,

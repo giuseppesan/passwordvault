@@ -7,33 +7,13 @@ int main()
     bool registration = false;
     string name = "Alice";
     string pw = "Secret";
+    
+    Router router;
 
-    crypto cobj;
-
-    if (registration == true)
+    // close application by typing "q" or "quit"
+    while (true)
     {
-        ret = cobj.crypto::check_user(name);
-
-        if (ret != 0)
-        {
-            return -1;
-        }
-
-        cout << "Register User: " << name << " Password: " << pw << endl;
-        ret = cobj.crypto::register_user(name, pw);
-
-        if (ret != 0)
-        {
-            return -1;
-        }
+        router.handle_input();
     }
-    cout << "Login with User: " << name << " Password: " << pw << endl;
-    ret = cobj.crypto::check_password(name, pw);
-
-    if (ret != 0)
-    {
-        return -1;
-    }
-
     return 0;
 }

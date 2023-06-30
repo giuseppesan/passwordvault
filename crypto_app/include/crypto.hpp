@@ -14,7 +14,7 @@ using namespace std;
 
 class crypto
 {
-private:
+public:
     /**
      * @brief Turn string into hash
      *

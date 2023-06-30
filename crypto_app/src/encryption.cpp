@@ -3,6 +3,14 @@
 #define BUFFER 300
 #define AES_BLOCK_SIZE 256
 
+encryption::encryption(/* args */)
+{
+}
+
+encryption::~encryption()
+{
+}
+
 int aes_cbc(void)
 {
     for (size_t i = 0; i <= 16; i++)

@@ -7,8 +7,9 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${workspaceFolder}/crypto/include/*",
-                "${workspaceFolder}/crypto/src/utils.hpp",
+                "${workspaceFolder}/crypto_app/include/*",
+                "${workspaceFolder}/crypto_app/src/utils.hpp",
+                //"${workspaceFolder}/router_app/include/*",
                 "${file}",
                 "-lssl",
                 "-lcrypto",
