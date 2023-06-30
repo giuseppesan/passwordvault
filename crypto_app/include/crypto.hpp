@@ -15,6 +15,41 @@ using namespace std;
 class crypto
 {
 public:
+    crypto();
+    ~crypto();
+    /**
+     * @brief reads hashed password from file and compares it to input
+     *
+     * @param name Username
+     * @param pw Password
+     *
+     * @return 0 if successful
+     */
+    int check_password(string name, string pw);
+
+    /**
+     * @brief writes the userdata in the defined format to the file <USERNAME>:<SALT>:<HASH>
+     *
+     * @param name Username
+     * @param password Password
+     * CRYPTO_H
+     * @return 0 if successful
+     */
+    int register_user(string name, string password);
+
+    /**
+     * @brief checks if username is taken
+     *
+     * @param name username
+     *
+     * @return 0 if successful
+     */
+    int check_user(string name);
+
+    string user;
+    string password;
+
+private:
     /**
      * @brief Turn string into hash
      *
@@ -52,39 +87,7 @@ public:
      * @return 0 if successful
      */
     int save_password(string out);
-
-public:
-    crypto();
-    ~crypto();
-
-    /**
-     * @brief reads hashed password from file and compares it to input
-     *
-     * @param name Username
-     * @param pw Password
-     *
-     * @return 0 if successful
-     */
-    int check_password(string name, string pw);
-
-    /**
-     * @brief writes the userdata in the defined format to the file <USERNAME>:<SALT>:<HASH>
-     *
-     * @param name Username
-     * @param password Password
-     * CRYPTO_H
-     * @return 0 if successful
-     */
-    int register_user(string name, string password);
-
-    /**
-     * @brief checks if username is taken
-     *
-     * @param name username
-     *
-     * @return 0 if successful
-     */
-    int check_user(string name);
+    int algorithm = 0;
 };
 
 #define SHA_256 "1"

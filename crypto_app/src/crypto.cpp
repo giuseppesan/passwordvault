@@ -65,7 +65,19 @@ int crypto::salt_n_hash(string in, string salt, string &final_hash, size_t itera
     string buffer_hash = "";
 
     in = in + salt + PEPPER;
-    ret = sha_512(in, buffer_hash);
+    if(algorithm == 1)
+    {
+         ret = sha_256(in, buffer_hash);
+    }
+    else if (algorithm == 2)
+    {
+        ret = sha_512(in, buffer_hash);
+    }
+    else
+    {
+        cout << "Algorithm is not implemented" << endl;
+        return -1;
+    }
 
     if (ret != 0)
     {
@@ -76,7 +88,15 @@ int crypto::salt_n_hash(string in, string salt, string &final_hash, size_t itera
     for (size_t i = 0; i < iterations; i++)
     {
         buffer_hash += salt;
-        ret = sha_512(buffer_hash, final_hash);
+        if(algorithm == 1)
+        {
+            ret = sha_256(buffer_hash, final_hash);
+        }
+
+        if(algorithm == 2)
+        {
+            ret = sha_512(buffer_hash, final_hash);
+        }
 
         if (ret != 0)
         {
@@ -94,7 +114,7 @@ int crypto::check_password(string name, string pw)
     string saved_hash = "";
     string salt = "";
     string final_hash = "";
-    string algo = "";
+
     ret = read_from_file(saved_hash, name);
 
     if (ret != 0)
@@ -106,22 +126,39 @@ int crypto::check_password(string name, string pw)
     saved_hash.erase(0, name.size() + 1);
     /*Get Algorithm */
     // TODO add logic for sha256
-    algo = saved_hash.substr(0, 1);
+    algorithm = stoi(saved_hash.substr(0, 1));
 
-    if (algo == "1")
+    saved_hash.erase(0, 2);
+    /*Get Salt*/
+    salt = saved_hash.substr(0, 16);
+    saved_hash.erase(0, 17);
+    if (algorithm == 1)
     {
-        cout << "SHA256 check not implemented yet" << endl;
-        return -1;
+        cout << "SHA256 detected" << endl;
+
+        ret = salt_n_hash(pw, salt, final_hash, ITERATIONS);
+
+        if (ret != 0)
+        {
+            return ret;
+        }
+
+        ret = strcmp(saved_hash.c_str(), final_hash.c_str());
+        cout << saved_hash << "\n"
+             << final_hash << endl;
+
+        if (ret != 0)
+        {
+            cout << "Password is not correct: " << ret << endl;
+            return ret;
+        }
+
+        cout << "Password is correct" << endl;
     }
 
-    if (algo == "2")
+    if (algorithm == 2)
     {
         cout << "SHA512 detected" << endl;
-
-        saved_hash.erase(0, 2);
-        /*Get Salt*/
-        salt = saved_hash.substr(0, 16);
-        saved_hash.erase(0, 17);
 
         ret = salt_n_hash(pw, salt, final_hash, ITERATIONS);
 
@@ -162,7 +199,8 @@ int crypto::register_user(string name, string password)
     {
         salt += CHARACTERS[distribution(generator)];
     }
-
+    /*For now we keep the algorithm static*/
+    algorithm = 2; // SHA512
     ret = salt_n_hash(password, salt, final_hash, ITERATIONS);
 
     if (ret != 0)
@@ -201,6 +239,7 @@ int crypto::check_user(string name)
                 return -1;
             }
         }
+        cout << "Username is available\n";
         return 0;
     }
     else

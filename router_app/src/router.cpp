@@ -18,8 +18,8 @@ void Router::handle_input()
         cout << message << "\n\n";
     }
 
-    getline(cin, input);
-    system("clear");
+    cin >> input;
+
     if (input == "q" || input == "quit")
     {
         exit(0);
@@ -34,15 +34,33 @@ void Router::handle_input()
         if (input == "l" || input == "login")
         {
             cout << "Handle login \n";
-            cobj.check_password("Bob", "Secret");
+            cout << "Username: \n";
+            cin >> cobj.user;
+            cout << "Password: \n";
+            cin >> cobj.password;
+            ret = cobj.check_password(cobj.user, cobj.password);
+            
+            if (ret == 0)
+            {
+                cout << "Login successful\n";
+            }
+            else
+            {
+                cout << "Login failed\n";
+            }
+            
         }
         else if (input == "r" || input == "register")
         {
             cout << "Handle register \n";
-            ret = cobj.check_user("Bob");
+            cout << "Username: \n";
+            cin >> cobj.user;
+            ret = cobj.check_user(cobj.user);
             if (ret == 0)
             {
-                ret = cobj.register_user("Bob", "Secret");
+                cout << "Password: \n";
+                cin >> cobj.password;
+                ret = cobj.register_user(cobj.user, cobj.password);
             }
         }
         else
