@@ -6,6 +6,10 @@
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 main
+*/bin/*
+*/secure/*
+passwd
+logins
 # Local History for Visual Studio Code
 .history/
 

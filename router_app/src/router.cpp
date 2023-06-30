@@ -22,7 +22,7 @@ void Router::handle_input()
     // Comment this out instead of deleting it
     system("clear");
 
-    // for debug pruposes
+    // for debug purposes
     // cout <<input<<"\n\n";
 
     if (input == "q" || input == "quit")
@@ -85,7 +85,7 @@ void Router::handle_user(crypto &cobj)
         cobj.set_user(u);
         ret = cobj.check_user(cobj.get_user());
 
-        while (ret == -1) //Username is already taken, reprompt
+        while (ret == -1) //Username is already taken, re-prompt
         {
             getline(cin, u);
             cobj.set_user(u);
