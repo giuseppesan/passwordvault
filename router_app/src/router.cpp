@@ -11,7 +11,8 @@ void Router::handle_input()
 {
     crypto cobj;
     int ret = -1;
-
+    int alg;
+    string u, p;
     cout << "~~~ current path: " << curr_path << "\n\n";
     if (message != "")
     {
@@ -35,11 +36,13 @@ void Router::handle_input()
         {
             cout << "Handle login \n";
             cout << "Username: \n";
-            cin >> cobj.user;
+            cin >> u;
+            cobj.set_user(u);
             cout << "Password: \n";
-            cin >> cobj.password;
-            ret = cobj.check_password(cobj.user, cobj.password);
-            
+            cin >> p;
+            cobj.set_password(p);
+            ret = cobj.check_login(cobj.get_user(), cobj.get_password());
+
             if (ret == 0)
             {
                 cout << "Login successful\n";
@@ -48,19 +51,22 @@ void Router::handle_input()
             {
                 cout << "Login failed\n";
             }
-            
         }
         else if (input == "r" || input == "register")
         {
             cout << "Handle register \n";
             cout << "Username: \n";
-            cin >> cobj.user;
-            ret = cobj.check_user(cobj.user);
+            cin >> u;
+            cobj.set_user(u);
+            ret = cobj.check_user(cobj.get_user());
             if (ret == 0)
             {
                 cout << "Password: \n";
-                cin >> cobj.password;
-                ret = cobj.register_user(cobj.user, cobj.password);
+                cin >> p;
+                cobj.set_password(p);
+                cout << "Algorithms [1]SHA256 [2]SHA512\n";
+                cin >> alg;
+                ret = cobj.register_user(cobj.get_user(), cobj.get_password(), alg);
             }
         }
         else

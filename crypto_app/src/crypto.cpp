@@ -65,9 +65,10 @@ int crypto::salt_n_hash(string in, string salt, string &final_hash, size_t itera
     string buffer_hash = "";
 
     in = in + salt + PEPPER;
-    if(algorithm == 1)
+    
+    if (algorithm == 1)
     {
-         ret = sha_256(in, buffer_hash);
+        ret = sha_256(in, buffer_hash);
     }
     else if (algorithm == 2)
     {
@@ -88,12 +89,12 @@ int crypto::salt_n_hash(string in, string salt, string &final_hash, size_t itera
     for (size_t i = 0; i < iterations; i++)
     {
         buffer_hash += salt;
-        if(algorithm == 1)
+        if (algorithm == 1)
         {
             ret = sha_256(buffer_hash, final_hash);
         }
 
-        if(algorithm == 2)
+        if (algorithm == 2)
         {
             ret = sha_512(buffer_hash, final_hash);
         }
@@ -108,7 +109,7 @@ int crypto::salt_n_hash(string in, string salt, string &final_hash, size_t itera
     return 0;
 }
 
-int crypto::check_password(string name, string pw)
+int crypto::check_login(string name, string pw)
 {
     int ret = -1;
     string saved_hash = "";
@@ -122,14 +123,14 @@ int crypto::check_password(string name, string pw)
         return ret;
     }
 
-    /*Erase name for now*/
+    /*Erase name from string*/
     saved_hash.erase(0, name.size() + 1);
-    /*Get Algorithm */
-    // TODO add logic for sha256
+
+    /*Get Algorithm  and erase from string*/
     algorithm = stoi(saved_hash.substr(0, 1));
 
     saved_hash.erase(0, 2);
-    /*Get Salt*/
+    /*Get Salt and erase from string*/
     salt = saved_hash.substr(0, 16);
     saved_hash.erase(0, 17);
     if (algorithm == 1)
@@ -182,12 +183,8 @@ int crypto::check_password(string name, string pw)
     return 0;
 }
 
-int crypto::register_user(string name, string password)
+void crypto::generate_salt(string &out)
 {
-    int ret = -1;
-    string out = "";
-    string salt = "";
-    string final_hash = "";
     /*Create random 16 byte salt from charset*/
     const string CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
@@ -197,10 +194,19 @@ int crypto::register_user(string name, string password)
 
     for (size_t i = 0; i < 16; ++i)
     {
-        salt += CHARACTERS[distribution(generator)];
+        out += CHARACTERS[distribution(generator)];
     }
-    /*For now we keep the algorithm static*/
-    algorithm = 2; // SHA512
+}
+
+int crypto::register_user(string name, string password, int u_algorithm)
+{
+    int ret = -1;
+    string out = "";
+    string salt = "";
+    string final_hash = "";
+
+    generate_salt(salt);
+    algorithm = u_algorithm; 
     ret = salt_n_hash(password, salt, final_hash, ITERATIONS);
 
     if (ret != 0)
@@ -208,7 +214,7 @@ int crypto::register_user(string name, string password)
         return ret;
     }
 
-    out = name + ":" + SHA_512 + ":" + salt + ":" + final_hash;
+    out = name + ":" + to_string(algorithm) + ":" + salt + ":" + final_hash;
     ret = save_password(out);
 
     if (ret != 0)

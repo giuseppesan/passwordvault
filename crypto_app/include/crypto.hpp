@@ -25,7 +25,7 @@ public:
      *
      * @return 0 if successful
      */
-    int check_password(string name, string pw);
+    int check_login(string name, string pw);
 
     /**
      * @brief writes the userdata in the defined format to the file <USERNAME>:<SALT>:<HASH>
@@ -35,7 +35,7 @@ public:
      * CRYPTO_H
      * @return 0 if successful
      */
-    int register_user(string name, string password);
+    int register_user(string name, string password, int u_algorithm);
 
     /**
      * @brief checks if username is taken
@@ -46,8 +46,10 @@ public:
      */
     int check_user(string name);
 
-    string user;
-    string password;
+    void set_user(string u) { user = u; }
+    void set_password(string p) { password = p; }
+    string get_user() { return user; }
+    string get_password() { return password; }
 
 private:
     /**
@@ -87,10 +89,18 @@ private:
      * @return 0 if successful
      */
     int save_password(string out);
+
+    /**
+     * @brief Generate random salt
+     *
+     * @param out generated salt
+     *
+     */
+    void generate_salt(string &out);
+
+    string user = "";
+    string password = "";
     int algorithm = 0;
 };
-
-#define SHA_256 "1"
-#define SHA_512 "2"
 
 #endif // CRYPTO_H
