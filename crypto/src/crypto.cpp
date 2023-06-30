@@ -1,9 +1,11 @@
 
 #include "../include/crypto.hpp"
 
-int save_password(string out)
+crypto::crypto() {}
+crypto::~crypto() {}
+
+int crypto::save_password(string out)
 {
-    // username has to be unique
     int ret = -1;
     ret = write_to_file(out, "passwd");
 
@@ -15,7 +17,28 @@ int save_password(string out)
     return ret;
 }
 
-int sha_512(string in, string &out)
+int crypto::sha_256(string in, string &out)
+{
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    const unsigned char *plain_password = reinterpret_cast<const unsigned char *>(in.c_str());
+    unsigned char *hash_bytes_ptr;
+    string hex_hash_string = "";
+
+    /* Generate Hash*/
+    hash_bytes_ptr = SHA256(plain_password, in.size(), hash);
+
+    if (hash_bytes_ptr == NULL)
+    {
+        cout << " NULL pointer" << endl;
+        return -1;
+    }
+
+    out = to_hex(hash_bytes_ptr, SHA256_DIGEST_LENGTH);
+
+    return 0;
+}
+
+int crypto::sha_512(string in, string &out)
 {
     unsigned char hash[SHA512_DIGEST_LENGTH];
     const unsigned char *plain_password = reinterpret_cast<const unsigned char *>(in.c_str());
@@ -36,22 +59,20 @@ int sha_512(string in, string &out)
     return 0;
 }
 
-int salt_n_hash(string in, string salt, string &final_hash, size_t iterations)
+int crypto::salt_n_hash(string in, string salt, string &final_hash, size_t iterations)
 {
     int ret = -1;
-    string first_hash = "";
     string buffer_hash = "";
 
     in = in + salt + PEPPER;
-    ret = sha_512(in, first_hash);
+    ret = sha_512(in, buffer_hash);
 
     if (ret != 0)
     {
         return ret;
     }
-    /*Does the cycle 10 times*/
-    buffer_hash = first_hash;
 
+    /*Does the cycle 10 times*/
     for (size_t i = 0; i < iterations; i++)
     {
         buffer_hash += salt;
@@ -61,12 +82,13 @@ int salt_n_hash(string in, string salt, string &final_hash, size_t iterations)
         {
             return ret;
         }
+        buffer_hash = final_hash;
     }
 
     return 0;
 }
 
-int check_password(string name, string pw)
+int crypto::check_password(string name, string pw)
 {
     int ret = -1;
     string saved_hash = "";
@@ -85,7 +107,7 @@ int check_password(string name, string pw)
     /*Get Algorithm */
     // TODO add logic for sha256
     algo = saved_hash.substr(0, 1);
-    
+
     if (algo == "1")
     {
         cout << "SHA256 check not implemented yet" << endl;
@@ -95,7 +117,6 @@ int check_password(string name, string pw)
     if (algo == "2")
     {
         cout << "SHA512 detected" << endl;
-    
 
         saved_hash.erase(0, 2);
         /*Get Salt*/
@@ -111,7 +132,7 @@ int check_password(string name, string pw)
 
         ret = strcmp(saved_hash.c_str(), final_hash.c_str());
         cout << saved_hash << "\n"
-            << final_hash << endl;
+             << final_hash << endl;
 
         if (ret != 0)
         {
@@ -124,7 +145,7 @@ int check_password(string name, string pw)
     return 0;
 }
 
-int register_user(string name, string password)
+int crypto::register_user(string name, string password)
 {
     int ret = -1;
     string out = "";
@@ -160,8 +181,7 @@ int register_user(string name, string password)
     return 0;
 }
 
-
-int check_user(string name)
+int crypto::check_user(string name)
 {
     int ret = -1;
     ifstream my_file("passwd");
@@ -189,4 +209,3 @@ int check_user(string name)
         return -1;
     }
 }
-

@@ -23,7 +23,39 @@ private:
      *
      * @return 0 if successful
      */
+    int sha_256(string in, string &out);
+    /**
+     * @brief Turn string into hash
+     *
+     * @param in Plain input string
+     * @param out 64 Byte Hex Hash
+     *
+     * @return 0 if successful
+     */
     int sha_512(string in, string &out);
+
+    /**
+     * @brief creates the password hash
+     * adds salts and pepper
+     *
+     * @param in password
+     * @param salt random salt string
+     * @param final_hash the hash string
+     */
+    int salt_n_hash(string in, string salt, string &final_hash, size_t iterations);
+
+    /**
+     * @brief writes string to passwd file
+     *
+     * @param out hexstring
+     *
+     * @return 0 if successful
+     */
+    int save_password(string out);
+
+public:
+    crypto();
+    ~crypto();
 
     /**
      * @brief reads hashed password from file and compares it to input
@@ -46,30 +78,14 @@ private:
     int register_user(string name, string password);
 
     /**
-     * @brief creates the password hash
-     * adds salts and pepper
-     *
-     * @param in password
-     * @param salt random salt string
-     * @param final_hash the hash string
-     */
-    int salt_n_hash(string in, string salt, string &final_hash, size_t iterations);
-
-    /**
      * @brief checks if username is taken
-     * 
+     *
      * @param name username
-     * 
+     *
      * @return 0 if successful
      */
     int check_user(string name);
-
-    crypto();
-    ~crypto();
 };
-crypto::crypto() {}
-
-crypto::~crypto() {}
 
 #define SHA_256 "1"
 #define SHA_512 "2"

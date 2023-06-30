@@ -5,12 +5,14 @@ int main()
 {
     int ret = -1;
     bool registration = false;
-    string name = "Bob";
+    string name = "Alice";
     string pw = "Secret";
+
+    crypto cobj;
 
     if (registration == true)
     {
-        ret = check_user(name);
+        ret = cobj.crypto::check_user(name);
 
         if (ret != 0)
         {
@@ -18,7 +20,7 @@ int main()
         }
 
         cout << "Register User: " << name << " Password: " << pw << endl;
-        ret = register_user(name, pw);
+        ret = cobj.crypto::register_user(name, pw);
 
         if (ret != 0)
         {
@@ -26,7 +28,7 @@ int main()
         }
     }
     cout << "Login with User: " << name << " Password: " << pw << endl;
-    ret = check_password(name, pw);
+    ret = cobj.crypto::check_password(name, pw);
 
     if (ret != 0)
     {
