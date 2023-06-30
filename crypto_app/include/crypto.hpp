@@ -47,14 +47,17 @@ public:
     int check_user(string name);
 
     /**
-     * 
-    */
+     *
+     */
     int add_new_entry(string tag, string user, string password);
 
     void set_user(string u) { user = u; }
     void set_password(string p) { password = p; }
     string get_user() { return user; }
     string get_password() { return password; }
+
+    string passwd_path = "secure/passwd";
+    string logins_path = "secure/logins";
 
 private:
     /**

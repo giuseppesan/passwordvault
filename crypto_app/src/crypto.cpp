@@ -7,7 +7,7 @@ crypto::~crypto() {}
 int crypto::save_password(string out)
 {
     int ret = -1;
-    ret = write_to_file(out, "passwd");
+    ret = write_to_file(out, passwd_path.c_str());
 
     if (ret != 0)
     {
@@ -228,7 +228,8 @@ int crypto::register_user(string name, string password, int u_algorithm)
 int crypto::check_user(string name)
 {
     int ret = -1;
-    ifstream my_file("passwd");
+
+    ifstream my_file(passwd_path.c_str());
     string check = "";
     string buff = "";
 
@@ -259,7 +260,7 @@ int crypto::add_new_entry(string tag, string user, string password)
 {
     int ret = -1;
     string credentials = tag + ":" + user + ":" + password;
-    ret = write_to_file(credentials, "logins");
+    ret = write_to_file(credentials, logins_path.c_str());
     
     if (ret != 0)
     {

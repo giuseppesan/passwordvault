@@ -74,7 +74,8 @@ inline int write_to_file(string in, string file)
 inline int read_from_file(string &out, string name)
 {
     /*search for user in file*/
-    ifstream my_file("passwd");
+    string passwd_path = "secure/passwd";
+    ifstream my_file(passwd_path.c_str());
     string check = "";
 
     if (my_file.is_open())
