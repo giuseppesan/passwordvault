@@ -50,6 +50,10 @@ public:
      *
      */
     int add_new_entry(string tag, string user, string password);
+    /**
+     * 
+    */
+    int check_entry(string name);
 
     void set_user(string u) { user = u; }
     void set_password(string p) { password = p; }

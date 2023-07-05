@@ -20,7 +20,7 @@ void Router::handle_input()
 
     getline(cin, input);
     // Comment this out instead of deleting it
-    system("clear");
+    // system("clear");
 
     // for debug purposes
     // cout <<input<<"\n\n";
@@ -38,12 +38,11 @@ void Router::handle_input()
         if (curr_path == "auth")
         {
             handle_user(cobj);
-        } 
+        }
         else if (curr_path == "pw_manager")
         {
             handle_credentials(cobj);
         }
-        
     }
 };
 
@@ -52,6 +51,7 @@ void Router::handle_user(crypto &cobj)
     int ret = -1;
     string u, p;
     int alg;
+
     if (input == "l" || input == "login")
     {
         cout << "Handle login \n";
@@ -85,7 +85,7 @@ void Router::handle_user(crypto &cobj)
         cobj.set_user(u);
         ret = cobj.check_user(cobj.get_user());
 
-        while (ret == -1) //Username is already taken, re-prompt
+        while (ret == -1) // Username is already taken, re-prompt
         {
             getline(cin, u);
             cobj.set_user(u);
@@ -100,7 +100,7 @@ void Router::handle_user(crypto &cobj)
             cout << "Algorithms [1]SHA256 [2]SHA512\n";
             cin >> alg;
             ret = cobj.register_user(cobj.get_user(), cobj.get_password(), alg);
-        } 
+        }
     }
     else
     {
@@ -110,9 +110,46 @@ void Router::handle_user(crypto &cobj)
 
 void Router::handle_credentials(crypto &cobj)
 {
+    string user, password, tag;
+    int ret = -1;
+
     if (input == "c" || input == "credential")
     {
-        cobj.add_new_entry("Google", "my_user@gmail.com", "my_password");
+        cout << "Username: \n";
+        cin >> user;
+        cout << "Password: \n";
+        cin >> password;
+        cout << "Tag: \n";
+        cin >> tag;
+        ret = cobj.add_new_entry(tag, user, password);
+        if (ret != 0)
+        {
+            cout << "adding new entry failed\n";
+        }
+        cout << "credentials were added\n";
+    }
+    else if (input == "get credential" || input == "gc")
+    {
+
+        string entry = "";
+        string out = "";
+        cout << "Tag: \n";
+        cin >> entry;
+        ret = cobj.check_entry(entry);
+
+        if (ret != 0)
+        {
+            cout << "Nothing found" << endl;
+        }
+
+        ret = read_from_file(out, entry, "secure/logins");
+
+        if (ret != 0)
+        {
+            cout << "Nothing found" << endl;
+        }
+
+        cout << "Credentials: " << out << endl;
     }
     else
     {
@@ -138,12 +175,13 @@ void Router::console_available_commands()
     else if (curr_path == "pw_manager")
     {
         cout << "Available commands are:\n";
-        cout << "'get pw list' - to get a list of all passwords\n";
+        // cout << "'get pw list' - to get a list of all passwords\n";
+        cout << "'gc' or 'get credential' - to get a specific login\n";
         cout << "'c' or 'credentials' - to manage your passwords/credentials\n";
-        cout << "'create pw' - to create a new password\n";
-        cout << "'get pw {password_name}' - to get your password\n";
-        cout << "'change pw {password_name}' - to change your password\n";
-        cout << "'delete pw {password_name}' - to delete your password\n\n";
+        // cout << "'create pw' - to create a new password\n";
+        // cout << "'get pw {password_name}' - to get your password\n";
+        // cout << "'change pw {password_name}' - to change your password\n";
+        // cout << "'delete pw {password_name}' - to delete your password\n\n";
         cout << "'q' or 'quit' - to create an account\n";
         cout << "'h' or 'help' - to get a list of available commands\n\n";
     }

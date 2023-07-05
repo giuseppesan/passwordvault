@@ -116,7 +116,7 @@ int crypto::check_login(string name, string pw)
     string salt = "";
     string final_hash = "";
 
-    ret = read_from_file(saved_hash, name);
+    ret = read_from_file(saved_hash, name, "secure/passwd");
 
     if (ret != 0)
     {
@@ -256,12 +256,44 @@ int crypto::check_user(string name)
     }
 }
 
+int crypto::check_entry(string entry)
+{
+    int ret = -1;
+    string path = "secure/logins";
+    ifstream my_file(path.c_str());
+
+    string check = "";
+    string buff = "";
+
+    if (my_file.is_open())
+    {
+        while (getline(my_file, buff))
+        {
+            check = buff.substr(0, entry.size());
+
+            if (strcmp(check.c_str(), entry.c_str()) == 0)
+            {
+                cout << "Found credentials\n";
+                my_file.close();
+                return 0;
+            }
+        }
+        cout << "No credentials found\n";
+        return -1;
+    }
+    else
+    {
+        cout << "Unable to open & read file\n";
+        return -1;
+    }
+}
+
 int crypto::add_new_entry(string tag, string user, string password)
 {
     int ret = -1;
     string credentials = tag + ":" + user + ":" + password;
     ret = write_to_file(credentials, logins_path.c_str());
-    
+
     if (ret != 0)
     {
         return -1;

@@ -71,11 +71,10 @@ inline int write_to_file(string in, string file)
  * @return 0 if successful
  */
 
-inline int read_from_file(string &out, string name)
+inline int read_from_file(string &out, string name, string path)
 {
     /*search for user in file*/
-    string passwd_path = "secure/passwd";
-    ifstream my_file(passwd_path.c_str());
+    ifstream my_file(path.c_str());
     string check = "";
 
     if (my_file.is_open())
@@ -90,7 +89,7 @@ inline int read_from_file(string &out, string name)
                 return 0;
             }
         }
-        cout << "User not found\n";
+        cout << "Entry not found\n";
         return -1;
     }
     else
