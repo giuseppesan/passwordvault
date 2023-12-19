@@ -8,13 +8,13 @@
 
 int encrypt_decrypt_test(void)
 {
-    int ret = false;
+    int ret = -1;
     string plain = "Super Secret Message";
     string decrypted_string = "";
     uint8_t padded_cipher[BUFFER] = {0}; // passed between functions for testing
     encryption COB;
 
-    ret = COB.handle_encryption(plain, padded_cipher, COB);
+    ret = COB.handle_encryption(plain, padded_cipher);
 
     if (ret != 0)
     {
@@ -22,7 +22,7 @@ int encrypt_decrypt_test(void)
         return -1;
     }
 
-    ret = COB.handle_decryption(reinterpret_cast<const uint8_t *>(padded_cipher), decrypted_string, COB);
+    ret = COB.handle_decryption(reinterpret_cast<const uint8_t *>(padded_cipher), decrypted_string);
 
     if (ret != 0)
     {
@@ -60,7 +60,7 @@ int decrypt_from_file_test(string file_name)
     encryption COB;
     string plain ="Secret";
     uint8_t padded_cipher[BUFFER] = {0};
-    ret = COB.handle_encryption(plain, padded_cipher, COB);
+    ret = COB.handle_encryption(plain, padded_cipher);
 
     if (ret != 0)
     {
@@ -71,7 +71,7 @@ int decrypt_from_file_test(string file_name)
     const char * padded_cipher2 = buffer.c_str();
 
 
-    ret = COB.handle_decryption(reinterpret_cast<const uint8_t *>(padded_cipher2), plain_out, COB);
+    ret = COB.handle_decryption(reinterpret_cast<const uint8_t *>(padded_cipher2), plain_out);
     if (ret != 0)
     {
         cout << "handle_decryption went wrong" << endl;

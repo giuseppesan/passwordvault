@@ -17,6 +17,7 @@ class crypto
 public:
     crypto();
     ~crypto();
+
     /**
      * @brief reads hashed password from file and compares it to input
      *
@@ -28,11 +29,12 @@ public:
     int check_login(string name, string pw);
 
     /**
-     * @brief writes the userdata in the defined format to the file <USERNAME>:<SALT>:<HASH>
+     * @brief writes the userdata in the defined format to the file <USERNAME>:<ALG>:<SALT>:<HASH>
      *
      * @param name Username
      * @param password Password
-     * CRYPTO_H
+     * @param u_algorithm hash algorithm
+     * 
      * @return 0 if successful
      */
     int register_user(string name, string password, int u_algorithm);
@@ -47,11 +49,22 @@ public:
     int check_user(string name);
 
     /**
-     *
+     * @brief add new login credentials
+     * 
+     * @param tag tag which the user searches for e.g. google
+     * @param user username
+     * @param password user password
+     * 
+     * @return 0 if successful
      */
     int add_new_entry(string tag, string user, string password);
+    
     /**
+     * @brief check for existing login credentials
      * 
+     * @param name name-tag which the user searches for e.g. google
+     * 
+     * @return 0 if successful
     */
     int check_entry(string name);
 
@@ -85,11 +98,14 @@ private:
 
     /**
      * @brief creates the password hash
-     * adds salts and pepper
+     * adds salts and pepper[fixed value] repeats it for number of iterations
      *
      * @param in password
      * @param salt random salt string
      * @param final_hash the hash string
+     * @param iterations 10 times
+     * 
+     * @return 0 if successful
      */
     int salt_n_hash(string in, string salt, string &final_hash, size_t iterations);
 
@@ -103,7 +119,7 @@ private:
     int save_password(string out);
 
     /**
-     * @brief Generate random salt
+     * @brief Generate random salt from set of characters
      *
      * @param out generated salt
      *

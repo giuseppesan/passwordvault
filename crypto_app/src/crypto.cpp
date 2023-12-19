@@ -1,8 +1,13 @@
 
 #include "../include/crypto.hpp"
 
-crypto::crypto() {}
-crypto::~crypto() {}
+crypto::crypto() 
+{
+}
+
+crypto::~crypto() 
+{
+}
 
 int crypto::save_password(string out)
 {
@@ -116,7 +121,7 @@ int crypto::check_login(string name, string pw)
     string salt = "";
     string final_hash = "";
 
-    ret = read_from_file(saved_hash, name, "secure/passwd");
+    ret = read_from_file_and_find(saved_hash, name, "secure/passwd");
 
     if (ret != 0)
     {

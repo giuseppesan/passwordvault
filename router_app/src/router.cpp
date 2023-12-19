@@ -19,11 +19,6 @@ void Router::handle_input()
     cout << "\n\n~~~ current path: " << curr_path << "\n\n";
 
     getline(cin, input);
-    // Comment this out instead of deleting it
-    // system("clear");
-
-    // for debug purposes
-    // cout <<input<<"\n\n";
 
     if (input == "q" || input == "quit")
     {
@@ -77,6 +72,7 @@ void Router::handle_user(crypto &cobj)
             cout << "Login failed\n";
         }
     }
+
     else if (input == "r" || input == "register")
     {
         cout << "Handle register \n";
@@ -87,6 +83,7 @@ void Router::handle_user(crypto &cobj)
 
         while (ret == -1) // Username is already taken, re-prompt
         {
+            cout << "Choose an new username:\n";
             getline(cin, u);
             cobj.set_user(u);
             ret = cobj.check_user(cobj.get_user());
@@ -99,9 +96,15 @@ void Router::handle_user(crypto &cobj)
             cobj.set_password(p);
             cout << "Algorithms [1]SHA256 [2]SHA512\n";
             cin >> alg;
+            //TODO:
+            /*if (alg != "1" && alg != "2") 
+            {
+                cout << "Invalid choice. Please choose either 1 or 2 for the algorithm.\n";
+            }*/
             ret = cobj.register_user(cobj.get_user(), cobj.get_password(), alg);
         }
     }
+
     else
     {
         cout << "command '" << input << "' not available \nUse 'h' or 'help' to get a list of all available commands";
@@ -142,7 +145,7 @@ void Router::handle_credentials(crypto &cobj)
             cout << "Nothing found" << endl;
         }
 
-        ret = read_from_file(out, entry, "secure/logins");
+        ret = read_from_file_and_find(out, entry, "secure/logins");
 
         if (ret != 0)
         {

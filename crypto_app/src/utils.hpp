@@ -33,7 +33,7 @@ inline string to_hex(unsigned char *str, int len)
 }
 
 /**
- * @brief writes sting to give filename
+ * @brief writes sting to given filename
  *
  * @param in String which is written
  * @param file Filename / Filepath
@@ -64,14 +64,16 @@ inline int write_to_file(string in, string file)
 }
 
 /**
- * @brief Reads from file
+ * @brief Reads from file and find a string
  *
  * @param out String witch filecontent
+ * @param name given name
+ * @param path filepath
  *
  * @return 0 if successful
  */
 
-inline int read_from_file(string &out, string name, string path)
+inline int read_from_file_and_find(string &out, string name, string path)
 {
     /*search for user in file*/
     ifstream my_file(path.c_str());
