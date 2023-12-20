@@ -17,7 +17,7 @@ using namespace std;
  * @return hex string
  */
 
-inline string to_hex(unsigned char *str, int len)
+string to_hex(unsigned char *str, int len)
 {
     string hex_hash_string = "";
     char *buffer = new char[len * 2 + 1];
@@ -41,7 +41,7 @@ inline string to_hex(unsigned char *str, int len)
  * @return 0 if successful
  */
 
-inline int write_to_file(string in, string file)
+int write_to_file(string in, string file)
 {
     /*Add multiple entries*/
 
@@ -73,7 +73,7 @@ inline int write_to_file(string in, string file)
  * @return 0 if successful
  */
 
-inline int read_from_file_and_find(string &out, string name, string path)
+int read_from_file_and_find(string &out, string name, string path)
 {
     /*search for user in file*/
     ifstream my_file(path.c_str());
@@ -99,6 +99,38 @@ inline int read_from_file_and_find(string &out, string name, string path)
         cout << "Unable to open & read file\n";
         return -1;
     }
+}
+
+/**
+ * @brief 
+ * @param input src string
+ * @return input 
+ */
+int char2int(char input)
+{
+  if(input >= '0' && input <= '9')
+    return input - '0';
+  if(input >= 'A' && input <= 'F')
+    return input - 'A' + 10;
+  if(input >= 'a' && input <= 'f')
+    return input - 'a' + 10;
+  throw std::invalid_argument("Invalid input string");
+}
+
+
+/**
+ * @brief This function assumes src to be a zero terminated sanitized string with
+ *  an even number of [0-9a-f] characters, and target to be sufficiently large
+ * @param src zero terminated sanitized string
+ * @param target char array bytes
+ */
+void hex2bin(const char* src, char* target)
+{
+  while(*src && src[1])
+  {
+    *(target++) = char2int(*src)*16 + char2int(src[1]);
+    src += 2;
+  }
 }
 
 #endif // UTILS_H

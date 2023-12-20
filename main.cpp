@@ -4,10 +4,10 @@
 int main()
 {   
     //encrypt_decrypt_test();
-    //string path = "secure/crypt";
-    //decrypt_from_file_test(path);
+    string path = "secure/encrypt";
+    decrypt_from_file_test(path);
     
-    bool cli = true;
+    bool cli = false;
     if (cli == true)
     { 
         Router router;

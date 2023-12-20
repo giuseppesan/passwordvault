@@ -10,7 +10,6 @@ Router::Router()
 void Router::handle_input()
 {
     crypto cobj;
-    int ret = -1;
 
     if (logged_in_user != "")
     {

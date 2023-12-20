@@ -81,7 +81,8 @@ int encryption::handle_encryption(string plain, uint8_t *padded_cipher)
 
     hex_string = to_hex(padded_cipher, 276);
     cout << "Ciphertext is:\n";
-    cout << padded_cipher << endl;
+    //cout << padded_cipher << endl;
+    cout << hex_string << endl;
 
     return 0;
 }
@@ -93,19 +94,7 @@ int encryption::handle_decryption(const uint8_t *cipher, string &decrypted_strin
     uint8_t decrypted_text[AES_BLOCK_SIZE] = {0}; // plaintext
     uint8_t cipher_text[AES_BLOCK_SIZE] = {0};    // encrypted payload buffer
     int plaintext_len = 0;
-    uint8_t cipher_text_p[AES_BLOCK_SIZE] = {0};
-
-    // Extract Hex-digit from string and convert it to int
-    int buff;
-    string buff_s = "";
-
-    /*for (size_t i = 0; i < 256; i++)
-    {
-        buff_s = in[i + 20];
-        buff = stoi(buff_s, 0, 16);
-        cipher_text_p[i] = buff;
-    }*/
-
+ 
     /*Writes payload to buffer*/
     for (size_t i = 0; i < 256; i++)
     {
@@ -116,7 +105,7 @@ int encryption::handle_decryption(const uint8_t *cipher, string &decrypted_strin
     get_iv(iv, cipher);
 
     /*Decryption*/
-    ret = COB.decrypt(cipher_text_p, AES_BLOCK_SIZE, crypto_key, iv, decrypted_text, plaintext_len);
+    ret = COB.decrypt(cipher_text, AES_BLOCK_SIZE, crypto_key, iv, decrypted_text, plaintext_len);
 
     if (ret != true)
     {

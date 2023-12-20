@@ -232,8 +232,6 @@ int crypto::register_user(string name, string password, int u_algorithm)
 
 int crypto::check_user(string name)
 {
-    int ret = -1;
-
     ifstream my_file(passwd_path.c_str());
     string check = "";
     string buff = "";
@@ -251,7 +249,7 @@ int crypto::check_user(string name)
                 return -1;
             }
         }
-        cout << "Username is available\n";
+        cout << "Username is available\n";;
         return 0;
     }
     else
@@ -263,7 +261,6 @@ int crypto::check_user(string name)
 
 int crypto::check_entry(string entry)
 {
-    int ret = -1;
     string path = "secure/logins";
     ifstream my_file(path.c_str());
 
