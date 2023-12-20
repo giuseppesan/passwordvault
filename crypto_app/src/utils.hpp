@@ -75,30 +75,29 @@ int write_to_file(string in, string file)
 
 int read_from_file_and_find(string &out, string name, string path)
 {
-    /*search for user in file*/
-    ifstream my_file(path.c_str());
-    string check = "";
+   /*search for user in file*/
+    std::ifstream my_file(path);
 
-    if (my_file.is_open())
+    if (!my_file.is_open())
     {
-        while (getline(my_file, out))
+        std::cerr << "Unable to open & read file\n";
+        return -1;
+    }
+
+    std::string line;
+
+    while (getline(my_file, line))
+    {
+        if (line.compare(0, name.size(), name) == 0)
         {
-            check = out.substr(0, name.size());
-
-            if (strcmp(check.c_str(), name.c_str()) == 0)
-            {
-                my_file.close();
-                return 0;
-            }
+            out = line;
+            my_file.close();
+            return 0;
         }
-        cout << "Entry not found\n";
-        return -1;
     }
-    else
-    {
-        cout << "Unable to open & read file\n";
-        return -1;
-    }
+
+    std::cerr << "Entry not found\n";
+    return -1;
 }
 
 /**

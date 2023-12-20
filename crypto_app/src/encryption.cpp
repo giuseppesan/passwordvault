@@ -81,7 +81,7 @@ int encryption::handle_encryption(string plain, uint8_t *padded_cipher)
 
     hex_string = to_hex(padded_cipher, 276);
     cout << "Ciphertext is:\n";
-    //cout << padded_cipher << endl;
+    // cout << padded_cipher << endl;
     cout << hex_string << endl;
 
     return 0;
@@ -94,7 +94,7 @@ int encryption::handle_decryption(const uint8_t *cipher, string &decrypted_strin
     uint8_t decrypted_text[AES_BLOCK_SIZE] = {0}; // plaintext
     uint8_t cipher_text[AES_BLOCK_SIZE] = {0};    // encrypted payload buffer
     int plaintext_len = 0;
- 
+
     /*Writes payload to buffer*/
     for (size_t i = 0; i < 256; i++)
     {

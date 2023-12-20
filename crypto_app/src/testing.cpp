@@ -15,9 +15,9 @@ int encrypt_decrypt_test(void)
     string plain = "Super Secret Message";
     string decrypted_string = "";
     uint8_t padded_cipher[BUFFER] = {0}; // passed between functions for testing
-    encryption COB;
+    encryption crypto_obj;
 
-    ret = COB.handle_encryption(plain, padded_cipher);
+    ret = crypto_obj.handle_encryption(plain, padded_cipher);
 
     if (ret != 0)
     {
@@ -25,7 +25,7 @@ int encrypt_decrypt_test(void)
         return -1;
     }
 
-    ret = COB.handle_decryption(reinterpret_cast<const uint8_t *>(padded_cipher), decrypted_string);
+    ret = crypto_obj.handle_decryption(reinterpret_cast<const uint8_t *>(padded_cipher), decrypted_string);
 
     if (ret != 0)
     {
@@ -50,18 +50,18 @@ int decrypt_from_file_test(string file_name)
     char cipher_bytes[BUFFER];
     int ret = -1;
 
-    encryption COB;
-    string plain ="Secret";
+    encryption crypto_obj;
+    string plain = "Secret";
     uint8_t padded_cipher[BUFFER] = {0};
 
-    ret = COB.handle_encryption(plain, padded_cipher);
+    ret = crypto_obj.handle_encryption(plain, padded_cipher);
 
     if (ret != 0)
     {
         cout << "Encryption failed" << endl;
         return -1;
     }
-    
+
     write_to_file(to_hex(padded_cipher, 300), file_name);
 
     if (my_file.is_open())
@@ -74,18 +74,18 @@ int decrypt_from_file_test(string file_name)
         cout << "Unable to open & read file\n";
         return -1;
     }
-    
+
     hex2bin(read_buffer.c_str(), cipher_bytes);
-    
-    ret = COB.handle_decryption(reinterpret_cast<const uint8_t *>(cipher_bytes), plain_out);
-    
+
+    ret = crypto_obj.handle_decryption(reinterpret_cast<const uint8_t *>(cipher_bytes), plain_out);
+
     if (ret != 0)
     {
         cout << "handle_decryption went wrong" << endl;
         return -1;
     }
-    
-    my_file.open(file_name.c_str(),std::ofstream::out | std::ofstream::trunc);
+
+    my_file.open(file_name.c_str(), std::ofstream::out | std::ofstream::trunc);
     my_file.close();
     return 0;
 }

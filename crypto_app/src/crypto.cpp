@@ -1,25 +1,12 @@
 
 #include "../include/crypto.hpp"
 
-crypto::crypto() 
+crypto::crypto()
 {
 }
 
-crypto::~crypto() 
+crypto::~crypto()
 {
-}
-
-int crypto::save_password(string out)
-{
-    int ret = -1;
-    ret = write_to_file(out, passwd_path.c_str());
-
-    if (ret != 0)
-    {
-        return ret;
-    }
-
-    return ret;
 }
 
 int crypto::sha_256(string in, string &out)
@@ -66,40 +53,23 @@ int crypto::sha_512(string in, string &out)
 
 int crypto::salt_n_hash(string in, string salt, string &final_hash, size_t iterations)
 {
-    int ret = -1;
-    string buffer_hash = "";
-
-    in = in + salt + PEPPER;
-
-    if (algorithm == 1)
+    if (algorithm != 1 && algorithm != 2)
     {
-        ret = sha_256(in, buffer_hash);
-    }
-    else if (algorithm == 2)
-    {
-        ret = sha_512(in, buffer_hash);
-    }
-    else
-    {
-        cout << "Algorithm is not implemented" << endl;
+        std::cerr << "Algorithm is not implemented" << std::endl;
         return -1;
     }
 
-    if (ret != 0)
-    {
-        return ret;
-    }
+    std::string buffer_hash = in + salt + PEPPER;
 
-    /*Does the cycle 10 times*/
+    int ret = -1;
+
     for (size_t i = 0; i < iterations; i++)
     {
-        buffer_hash += salt;
         if (algorithm == 1)
         {
             ret = sha_256(buffer_hash, final_hash);
         }
-
-        if (algorithm == 2)
+        else if (algorithm == 2)
         {
             ret = sha_512(buffer_hash, final_hash);
         }
@@ -108,18 +78,17 @@ int crypto::salt_n_hash(string in, string salt, string &final_hash, size_t itera
         {
             return ret;
         }
-        buffer_hash = final_hash;
-    }
 
+        // Skip adding salt in the last iteration
+        buffer_hash = final_hash + salt;
+    }
     return 0;
 }
 
 int crypto::check_login(string name, string pw)
 {
     int ret = -1;
-    string saved_hash = "";
-    string salt = "";
-    string final_hash = "";
+    std::string saved_hash, salt, final_hash;
 
     ret = read_from_file_and_find(saved_hash, name, "secure/passwd");
 
@@ -128,176 +97,132 @@ int crypto::check_login(string name, string pw)
         return ret;
     }
 
-    /*Erase name from string*/
+    // Erase name from string
     saved_hash.erase(0, name.size() + 1);
 
-    /*Get Algorithm  and erase from string*/
+    // Get Algorithm and erase from string
     algorithm = stoi(saved_hash.substr(0, 1));
-
     saved_hash.erase(0, 2);
-    /*Get Salt and erase from string*/
+
+    // Get Salt and erase from string
     salt = saved_hash.substr(0, 16);
     saved_hash.erase(0, 17);
-    if (algorithm == 1)
+
+    // Check algorithm and perform corresponding hash verification
+    std::cout << (algorithm == 1 ? "SHA256" : "SHA512") << " detected" << std::endl;
+
+    ret = salt_n_hash(pw, salt, final_hash, ITERATIONS);
+
+    if (ret != 0)
     {
-        cout << "SHA256 detected" << endl;
-
-        ret = salt_n_hash(pw, salt, final_hash, ITERATIONS);
-
-        if (ret != 0)
-        {
-            return ret;
-        }
-
-        ret = strcmp(saved_hash.c_str(), final_hash.c_str());
-        cout << saved_hash << "\n"
-             << final_hash << endl;
-
-        if (ret != 0)
-        {
-            cout << "Password is not correct: " << ret << endl;
-            return ret;
-        }
-
-        cout << "Password is correct" << endl;
+        return ret;
     }
 
-    if (algorithm == 2)
+    ret = strcmp(saved_hash.c_str(), final_hash.c_str());
+    std::cout << saved_hash << "\n"
+              << final_hash << std::endl;
+
+    if (ret != 0)
     {
-        cout << "SHA512 detected" << endl;
-
-        ret = salt_n_hash(pw, salt, final_hash, ITERATIONS);
-
-        if (ret != 0)
-        {
-            return ret;
-        }
-
-        ret = strcmp(saved_hash.c_str(), final_hash.c_str());
-        cout << saved_hash << "\n"
-             << final_hash << endl;
-
-        if (ret != 0)
-        {
-            cout << "Password is not correct: " << ret << endl;
-            return ret;
-        }
-
-        cout << "Password is correct" << endl;
+        std::cout << "Password is not correct: " << ret << std::endl;
+        return ret;
     }
+
+    std::cout << "Password is correct" << std::endl;
+
     return 0;
 }
 
-void crypto::generate_salt(string &out)
+void crypto::generate_salt(std::string &out)
 {
-    /*Create random 16 byte salt from charset*/
-    const string CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    // Create random 16 byte salt from charset
+    const std::string CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-    random_device random_device;
-    mt19937 generator(random_device());
-    uniform_int_distribution<> distribution(0, CHARACTERS.size() - 1);
+    std::random_device random_device;
+    std::mt19937 generator(random_device());
+    std::uniform_int_distribution<> distribution(0, CHARACTERS.size() - 1);
 
+    // Use append directly instead of concatenating characters
     for (size_t i = 0; i < 16; ++i)
     {
-        out += CHARACTERS[distribution(generator)];
+        out.push_back(CHARACTERS[distribution(generator)]);
     }
 }
 
-int crypto::register_user(string name, string password, int u_algorithm)
+int crypto::register_user(const std::string &name, const std::string &password, int u_algorithm)
 {
-    int ret = -1;
-    string out = "";
-    string salt = "";
-    string final_hash = "";
+    std::string salt, final_hash;
 
     generate_salt(salt);
     algorithm = u_algorithm;
-    ret = salt_n_hash(password, salt, final_hash, ITERATIONS);
+    std::string out = name + ":" + std::to_string(algorithm) + ":" + salt + ":";
 
-    if (ret != 0)
+    if (salt_n_hash(password, salt, final_hash, ITERATIONS) != 0)
     {
-        return ret;
+        return -1;
     }
 
-    out = name + ":" + to_string(algorithm) + ":" + salt + ":" + final_hash;
-    ret = save_password(out);
+    out += final_hash;
+    return write_to_file(out, passwd_path.c_str());
+}
 
-    if (ret != 0)
+int crypto::check_user(const std::string &name)
+{
+    ifstream my_file(passwd_path.c_str());
+    std::string line = "";
+
+    if (!my_file.is_open())
     {
-        return ret;
+        std::cerr << "Unable to open & read file\n";
+        return -1;
     }
 
+    while (getline(my_file, line))
+    {
+        if (line.substr(0, name.size()) == name)
+        {
+            cout << "Username is taken\n";
+            my_file.close();
+            return -1;
+        }
+    }
+
+    cout << "Username is available\n";
     return 0;
 }
 
-int crypto::check_user(string name)
+int crypto::check_entry(const std::string &entry)
 {
-    ifstream my_file(passwd_path.c_str());
-    string check = "";
-    string buff = "";
-
-    if (my_file.is_open())
-    {
-        while (getline(my_file, buff))
-        {
-            check = buff.substr(0, name.size());
-
-            if (strcmp(check.c_str(), name.c_str()) == 0)
-            {
-                cout << "Username is taken\n";
-                my_file.close();
-                return -1;
-            }
-        }
-        cout << "Username is available\n";;
-        return 0;
-    }
-    else
-    {
-        cout << "Unable to open & read file\n";
-        return -1;
-    }
-}
-
-int crypto::check_entry(string entry)
-{
-    string path = "secure/logins";
+    std::string path = "secure/logins";
     ifstream my_file(path.c_str());
+    std::string line = "";
 
-    string check = "";
-    string buff = "";
-
-    if (my_file.is_open())
+    if (my_file.fail())
     {
-        while (getline(my_file, buff))
+        std::cerr << "Unable to open & read file\n";
+        return -1;
+    }
+
+    while (getline(my_file, line))
+    {
+        if (line.substr(0, entry.size()) == entry)
         {
-            check = buff.substr(0, entry.size());
-
-            if (strcmp(check.c_str(), entry.c_str()) == 0)
-            {
-                cout << "Found credentials\n";
-                my_file.close();
-                return 0;
-            }
+            cout << "Found credentials\n";
+            my_file.close();
+            return 0;
         }
-        cout << "No credentials found\n";
-        return -1;
     }
-    else
-    {
-        cout << "Unable to open & read file\n";
-        return -1;
-    }
+    cout << "No credentials found\n";
+    return -1;
 }
 
-int crypto::add_new_entry(string tag, string user, string password)
+int crypto::add_new_entry(const std::string &tag, const std::string &user, const std::string &password)
 {
-    int ret = -1;
-    string credentials = tag + ":" + user + ":" + password;
-    ret = write_to_file(credentials, logins_path.c_str());
+    std::string credentials = tag + ":" + user + ":" + password;
 
-    if (ret != 0)
+    if (write_to_file(credentials, logins_path.c_str()) != 0)
     {
+        std::cerr << "Failed to add new entry to file\n";
         return -1;
     }
 

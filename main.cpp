@@ -7,7 +7,7 @@ int main()
     string path = "secure/encrypt";
     decrypt_from_file_test(path);
     
-    bool cli = false;
+    bool cli = true;
     if (cli == true)
     { 
         Router router;

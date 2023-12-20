@@ -37,7 +37,7 @@ public:
      * 
      * @return 0 if successful
      */
-    int register_user(string name, string password, int u_algorithm);
+    int register_user(const std::string & name, const std::string & password, int u_algorithm);
 
     /**
      * @brief checks if username is taken
@@ -46,7 +46,7 @@ public:
      *
      * @return 0 if successful
      */
-    int check_user(string name);
+    int check_user(const std::string& name);
 
     /**
      * @brief add new login credentials
@@ -57,7 +57,7 @@ public:
      * 
      * @return 0 if successful
      */
-    int add_new_entry(string tag, string user, string password);
+    int add_new_entry(const std::string& tag, const std::string& user, const std::string& password);
     
     /**
      * @brief check for existing login credentials
@@ -66,7 +66,7 @@ public:
      * 
      * @return 0 if successful
     */
-    int check_entry(string name);
+    int check_entry(const std::string& entry);
 
     void set_user(string u) { user = u; }
     void set_password(string p) { password = p; }
@@ -110,21 +110,12 @@ private:
     int salt_n_hash(string in, string salt, string &final_hash, size_t iterations);
 
     /**
-     * @brief writes string to passwd file
-     *
-     * @param out hexstring
-     *
-     * @return 0 if successful
-     */
-    int save_password(string out);
-
-    /**
      * @brief Generate random salt from set of characters
      *
      * @param out generated salt
      *
      */
-    void generate_salt(string &out);
+    void generate_salt(std::string &out);
 
     string user = "";
     string password = "";

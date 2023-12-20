@@ -103,7 +103,11 @@ void Router::handle_user(crypto &cobj)
             ret = cobj.register_user(cobj.get_user(), cobj.get_password(), alg);
         }
     }
-
+    else if (input == "logout" || input == "o")
+    {
+        curr_path = "auth";
+        logged_in_user = "";
+    }
     else
     {
         cout << "command '" << input << "' not available \nUse 'h' or 'help' to get a list of all available commands";
@@ -153,6 +157,11 @@ void Router::handle_credentials(crypto &cobj)
 
         cout << "Credentials: " << out << endl;
     }
+    else if (input == "logout" || input == "o")
+    {
+        curr_path = "auth";
+        logged_in_user = "";
+    }
     else
     {
         cout << "command '" << input << "' not available \nUse 'h' or 'help' to get a list of all available commands";
@@ -180,6 +189,7 @@ void Router::console_available_commands()
         // cout << "'get pw list' - to get a list of all passwords\n";
         cout << "'gc' or 'get credential' - to get a specific login\n";
         cout << "'c' or 'credentials' - to manage your passwords/credentials\n";
+        cout << "'o' or 'logout' - to logout\n";
         // cout << "'create pw' - to create a new password\n";
         // cout << "'get pw {password_name}' - to get your password\n";
         // cout << "'change pw {password_name}' - to change your password\n";
