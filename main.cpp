@@ -3,11 +3,12 @@
 
 int main()
 {   
-    //encrypt_decrypt_test();
+    encrypt_decrypt_test();
     string path = "secure/encrypt";
     decrypt_from_file_test(path);
+    hashing_test();
     
-    bool cli = true;
+    bool cli = false;
     if (cli == true)
     { 
         Router router;

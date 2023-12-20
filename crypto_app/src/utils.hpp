@@ -2,9 +2,11 @@
 #define UTILS_H
 
 #include <iostream>
-#include <string.h>
+#include <string>
 #include <fstream>
 #include <istream>
+#include <sstream>
+#include <iomanip>
 using namespace std;
 #define PEPPER "SEpl9QTQ574d9R5R"
 
@@ -31,7 +33,18 @@ string to_hex(unsigned char *str, int len)
     hex_hash_string.assign(buffer, buffer + len);
     return hex_hash_string;
 }
+std::string to_hex2(const unsigned char* str, int len)
+{
+    std::ostringstream oss;
+    oss << std::hex << std::uppercase << std::setfill('0');
 
+    for (int i = 0; i < len; ++i)
+    {
+        oss << std::setw(2) << static_cast<unsigned>(str[i]);
+    }
+
+    return oss.str();
+}
 /**
  * @brief writes sting to given filename
  *
@@ -45,20 +58,15 @@ int write_to_file(string in, string file)
 {
     /*Add multiple entries*/
 
-    ofstream my_file;
-    my_file.open(file, ios::app);
+    std::ofstream my_file(file, std::ios::app);
 
-    if (!my_file)
+    if (!my_file.is_open())
     {
-        cout << "Unable to open file\n";
+        std::cerr << "Unable to open file: " << file << std::endl;
         return -1;
     }
-    else
-    {
-        my_file << in;
-        my_file << endl;
-        my_file.close();
-    }
+
+    my_file << in << std::endl;
 
     return 0;
 }

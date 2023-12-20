@@ -2,7 +2,7 @@
  * @brief for testing functions
  * @file testing.cpp
  */
-
+#include <cassert>
 #include "../include/encryption.hpp"
 #define BUFFER 300
 
@@ -62,7 +62,7 @@ int decrypt_from_file_test(string file_name)
         return -1;
     }
 
-    write_to_file(to_hex(padded_cipher, 300), file_name);
+    write_to_file(to_hex2(padded_cipher, 300), file_name);
 
     if (my_file.is_open())
     {
@@ -88,4 +88,28 @@ int decrypt_from_file_test(string file_name)
     my_file.open(file_name.c_str(), std::ofstream::out | std::ofstream::trunc);
     my_file.close();
     return 0;
+}
+
+void hashing_test()
+{
+    crypto c_obj;
+    int result = c_obj.check_login("giu", "giu");
+    assert(result == 0 && "Login check failed");
+    cout << endl;
+
+    result= c_obj.check_login("giu2", "giu2");
+    assert(result == 0 && "Login check failed");
+    cout << endl;
+
+    result = c_obj.check_login("giu", "giu2");
+    assert(result != 0 && "Login passed but should fail");
+    cout << endl;
+    
+    result= c_obj.check_login("giu2", "giu22");
+    assert(result != 0 && "Login passed but should fail");
+    cout << endl;
+
+    result= c_obj.check_login("bebo2", "giu22");
+    assert(result != 0 && "Login passed but should fail");
+    cout << endl;
 }

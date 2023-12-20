@@ -79,7 +79,7 @@ int encryption::handle_encryption(string plain, uint8_t *padded_cipher)
         return -1;
     }
 
-    hex_string = to_hex(padded_cipher, 276);
+    hex_string = to_hex2(padded_cipher, 276);
     cout << "Ciphertext is:\n";
     // cout << padded_cipher << endl;
     cout << hex_string << endl;
@@ -115,7 +115,7 @@ int encryption::handle_decryption(const uint8_t *cipher, string &decrypted_strin
 
     /* Show the decrypted text */
     std::cout << "\nDecrypted text is:" << endl;
-    std::cout << decrypted_text << endl;
+    std::cout << decrypted_text << "\n" <<endl;
     decrypted_string.assign(decrypted_text, decrypted_text + plaintext_len);
 
     return 0;
