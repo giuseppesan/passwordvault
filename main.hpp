@@ -3,6 +3,6 @@
 
 #include "crypto_app/src/crypto.cpp"
 #include "crypto_app/src/encryption.cpp"
-#include "router_app/src/router.cpp"
+#include "clinterface_app/src/CLInterface.cpp"
 #include "crypto_app/src/testing.cpp"
 #endif /* MAIN_H */

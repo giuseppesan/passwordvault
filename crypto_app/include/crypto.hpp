@@ -9,8 +9,9 @@
 #include <random>
 #include "../src/utils.hpp"
 
-using namespace std;
 #define ITERATIONS 10
+#define ALGORITHM_SHA256 1
+#define ALGORITHM_SHA512 2
 
 class crypto
 {
@@ -75,6 +76,8 @@ public:
 
     string passwd_path = "secure/passwd";
     string logins_path = "secure/logins";
+
+    const size_t SALT_SIZE = 16;
 
 private:
     /**

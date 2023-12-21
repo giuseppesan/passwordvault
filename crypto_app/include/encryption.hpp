@@ -10,7 +10,6 @@
 #include <iostream>
 #include "../src/utils.hpp"
 #include "key.hpp"
-using namespace std;
 
 #define BUFFER 300
 #define AES_BLOCK_SIZE 256

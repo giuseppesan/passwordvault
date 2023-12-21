@@ -39,7 +39,7 @@ int encryption::handle_encryption(string plain, uint8_t *padded_cipher)
 
     if (plain.size() > AES_BLOCK_SIZE - 1)
     {
-        cout << "plaintext size too big" << endl;
+        std::cerr << "plaintext size too big" << endl;
         return -1;
     }
 
@@ -65,7 +65,7 @@ int encryption::handle_encryption(string plain, uint8_t *padded_cipher)
 
     if (ret != true)
     {
-        cout << "Encrypt failed" << endl;
+        std::cerr << "Encrypt failed" << endl;
         return -1;
     }
 
@@ -75,13 +75,12 @@ int encryption::handle_encryption(string plain, uint8_t *padded_cipher)
 
     if (ret != 0)
     {
-        cout << "Preparing cipher_text failed" << endl;
+        std::cerr << "Preparing cipher_text failed" << endl;
         return -1;
     }
 
     hex_string = to_hex2(padded_cipher, 276);
     cout << "Ciphertext is:\n";
-    // cout << padded_cipher << endl;
     cout << hex_string << endl;
 
     return 0;
@@ -109,7 +108,7 @@ int encryption::handle_decryption(const uint8_t *cipher, string &decrypted_strin
 
     if (ret != true)
     {
-        cout << "Decrypt failed" << endl;
+        std::cerr << "Decrypt failed" << endl;
         return -1;
     }
 
@@ -188,7 +187,7 @@ int encryption::prepare_ciphertext(uint8_t *iv, uint8_t *plain_cipher_text, uint
 
     if (pl_ciph_text_size > (ciph_text_out_size - 16 - 4))
     {
-        cout << "buffer is too big or cipher array is too small" << endl;
+        std::cerr << "buffer is too big or cipher array is too small" << endl;
         return -1;
     }
     /*copy cipher_text*/

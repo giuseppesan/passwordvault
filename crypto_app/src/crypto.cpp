@@ -1,13 +1,10 @@
 
 #include "../include/crypto.hpp"
 
-crypto::crypto()
-{
-}
+crypto::crypto() = default;
 
-crypto::~crypto()
-{
-}
+
+crypto::~crypto() = default;
 
 int crypto::sha_256(string in, string &out)
 {
@@ -19,9 +16,9 @@ int crypto::sha_256(string in, string &out)
     /* Generate Hash*/
     hash_bytes_ptr = SHA256(plain_password, in.size(), hash);
 
-    if (hash_bytes_ptr == NULL)
+    if (hash_bytes_ptr == nullptr)
     {
-        cout << " NULL pointer" << endl;
+        std::cerr << " NULL pointer" << endl;
         return -1;
     }
 
@@ -42,7 +39,7 @@ int crypto::sha_512(string in, string &out)
 
     if (hash_bytes_ptr == NULL)
     {
-        cout << " NULL pointer" << endl;
+        std::cerr << " NULL pointer" << endl;
         return -1;
     }
 
@@ -53,7 +50,7 @@ int crypto::sha_512(string in, string &out)
 
 int crypto::salt_n_hash(string in, string salt, string &final_hash, size_t iterations)
 {
-    if (algorithm != 1 && algorithm != 2)
+    if (algorithm != ALGORITHM_SHA256 && algorithm != ALGORITHM_SHA512)
     {
         std::cerr << "Algorithm is not implemented" << std::endl;
         return -1;
@@ -124,7 +121,7 @@ int crypto::check_login(string name, string pw)
 
     if (ret != 0)
     {
-        std::cout << "Password is not correct: " << ret << std::endl;
+        std::cerr << "Password is not correct: " << ret << std::endl;
         return ret;
     }
 
@@ -143,7 +140,7 @@ void crypto::generate_salt(std::string &out)
     std::uniform_int_distribution<> distribution(0, CHARACTERS.size() - 1);
 
     // Use append directly instead of concatenating characters
-    for (size_t i = 0; i < 16; ++i)
+    for (size_t i = 0; i < SALT_SIZE; ++i)
     {
         out.push_back(CHARACTERS[distribution(generator)]);
     }
@@ -152,17 +149,19 @@ void crypto::generate_salt(std::string &out)
 int crypto::register_user(const std::string &name, const std::string &password, int u_algorithm)
 {
     std::string salt, final_hash;
+    std::stringstream ss;
 
     generate_salt(salt);
     algorithm = u_algorithm;
-    std::string out = name + ":" + std::to_string(algorithm) + ":" + salt + ":";
 
     if (salt_n_hash(password, salt, final_hash, ITERATIONS) != 0)
     {
         return -1;
     }
 
-    out += final_hash;
+    ss << name << ":" << algorithm << ":" << salt << ":" << final_hash;
+    std::string out = ss.str();
+
     return write_to_file(out, passwd_path.c_str());
 }
 
@@ -181,7 +180,7 @@ int crypto::check_user(const std::string &name)
     {
         if (line.substr(0, name.size()) == name)
         {
-            cout << "Username is taken\n";
+            std::cerr << "Username is taken\n";
             my_file.close();
             return -1;
         }
@@ -212,7 +211,7 @@ int crypto::check_entry(const std::string &entry)
             return 0;
         }
     }
-    cout << "No credentials found\n";
+    std::cerr << "No credentials found\n";
     return -1;
 }
 
@@ -225,6 +224,7 @@ int crypto::add_new_entry(const std::string &tag, const std::string &user, const
         std::cerr << "Failed to add new entry to file\n";
         return -1;
     }
+    cout << "credentials were added\n";
 
     return 0;
 }

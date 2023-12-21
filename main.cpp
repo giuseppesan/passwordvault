@@ -8,13 +8,13 @@ int main()
     decrypt_from_file_test(path);
     hashing_test();
     
-    bool cli = false;
+    bool cli = true;
     if (cli == true)
     { 
-        Router router;
+        CLInterface cli;
         while (true)
         {
-            router.handle_input();
+            cli.main_thread();
         }
     }
     return 0;

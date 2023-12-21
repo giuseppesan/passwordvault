@@ -33,6 +33,7 @@ string to_hex(unsigned char *str, int len)
     hex_hash_string.assign(buffer, buffer + len);
     return hex_hash_string;
 }
+
 std::string to_hex2(const unsigned char* str, int len)
 {
     std::ostringstream oss;
@@ -74,7 +75,7 @@ int write_to_file(string in, string file)
 /**
  * @brief Reads from file and find a string
  *
- * @param out String witch filecontent
+ * @param out String witch file content
  * @param name given name
  * @param path filepath
  *
@@ -100,6 +101,7 @@ int read_from_file_and_find(string &out, string name, string path)
         {
             out = line;
             my_file.close();
+            cout << "Entry found\n";
             return 0;
         }
     }
