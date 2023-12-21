@@ -1,11 +1,8 @@
 *.o
-*.
 .vscode/*
 bin/
 main
 secure/*
-logins
-passwd
 # Local History for Visual Studio Code
 .history/
 

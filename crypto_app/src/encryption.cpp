@@ -17,7 +17,7 @@ int encryption::get_iv(unsigned char *iv, const uint8_t *cipher_text)
     return 0;
 }
 
-int encryption::handle_encryption(string plain, uint8_t *padded_cipher)
+int encryption::handle_encryption(std::string plain, uint8_t *padded_cipher)
 {
     encryption COB;
     uint8_t plaintext_buff[AES_BLOCK_SIZE] = {0}; // plaintext
@@ -26,24 +26,24 @@ int encryption::handle_encryption(string plain, uint8_t *padded_cipher)
     int ciphertext_len = 0;
     int ret = -1;
 
-    string hex_string = ""; // final readable string
+    std::string hex_string = ""; // final readable string
 
     for (size_t i = 0; i <= 16; i++)
     {
         iv[i] = rand() % 256;
     }
 
-    cout << "Input is: " << plain << endl;
+    std::cout << "Input is: " << plain << std::endl;
     /*Cast to fit in encrypt function*/
     uint8_t *plain_text = const_cast<uint8_t *>(reinterpret_cast<const uint8_t *>(plain.c_str()));
 
     if (plain.size() > AES_BLOCK_SIZE - 1)
     {
-        std::cerr << "plaintext size too big" << endl;
+        std::cerr << "plaintext size too big" << std::endl;
         return -1;
     }
 
-    cout << "Input size = " << plain.size() << endl;
+    std::cout << "Input size = " << plain.size() << std::endl;
     /*Write plaintext to buff for padding*/
     for (size_t i = 0; i < plain.size(); i++)
     {
@@ -65,7 +65,7 @@ int encryption::handle_encryption(string plain, uint8_t *padded_cipher)
 
     if (ret != true)
     {
-        std::cerr << "Encrypt failed" << endl;
+        std::cerr << "Encrypt failed" << std::endl;
         return -1;
     }
 
@@ -75,18 +75,18 @@ int encryption::handle_encryption(string plain, uint8_t *padded_cipher)
 
     if (ret != 0)
     {
-        std::cerr << "Preparing cipher_text failed" << endl;
+        std::cerr << "Preparing cipher_text failed" << std::endl;
         return -1;
     }
 
-    hex_string = to_hex2(padded_cipher, 276);
-    cout << "Ciphertext is:\n";
-    cout << hex_string << endl;
+    hex_string = to_hex(padded_cipher, 276);
+    std::cout << "Ciphertext is:\n";
+    std::cout << hex_string << std::endl;
 
     return 0;
 }
 // TODO: problem when processing saved hexstring -> decrypt fails
-int encryption::handle_decryption(const uint8_t *cipher, string &decrypted_string)
+int encryption::handle_decryption(const uint8_t *cipher, std::string &decrypted_string)
 {
     encryption COB;
     int ret = -1;
@@ -108,13 +108,13 @@ int encryption::handle_decryption(const uint8_t *cipher, string &decrypted_strin
 
     if (ret != true)
     {
-        std::cerr << "Decrypt failed" << endl;
+        std::cerr << "Decrypt failed" << std::endl;
         return -1;
     }
 
     /* Show the decrypted text */
-    std::cout << "\nDecrypted text is:" << endl;
-    std::cout << decrypted_text << "\n" <<endl;
+    std::cout << "\nDecrypted text is:" << std::endl;
+    std::cout << decrypted_text << "\n" << std::endl;
     decrypted_string.assign(decrypted_text, decrypted_text + plaintext_len);
 
     return 0;
@@ -187,7 +187,7 @@ int encryption::prepare_ciphertext(uint8_t *iv, uint8_t *plain_cipher_text, uint
 
     if (pl_ciph_text_size > (ciph_text_out_size - 16 - 4))
     {
-        std::cerr << "buffer is too big or cipher array is too small" << endl;
+        std::cerr << "buffer is too big or cipher array is too small" << std::endl;
         return -1;
     }
     /*copy cipher_text*/

@@ -3,9 +3,7 @@
 
 int main()
 {   
-    encrypt_decrypt_test();
-    string path = "secure/encrypt";
-    decrypt_from_file_test(path);
+    en_decrypt_test();
     hashing_test();
     
     bool cli = true;

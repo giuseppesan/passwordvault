@@ -6,14 +6,11 @@
 #include "../include/encryption.hpp"
 #define BUFFER 300
 
-int encrypt_decrypt_test(void);
-int decrypt_from_file_test(string file_name);
-
 int encrypt_decrypt_test(void)
 {
     int ret = -1;
-    string plain = "Super Secret Message";
-    string decrypted_string = "";
+    std::string plain = "Super Secret Message";
+    std::string decrypted_string = "";
     uint8_t padded_cipher[BUFFER] = {0}; // passed between functions for testing
     encryption crypto_obj;
 
@@ -21,7 +18,7 @@ int encrypt_decrypt_test(void)
 
     if (ret != 0)
     {
-        cout << "Encryption failed" << endl;
+        std::cout << "Encryption failed" << std::endl;
         return -1;
     }
 
@@ -29,40 +26,40 @@ int encrypt_decrypt_test(void)
 
     if (ret != 0)
     {
-        cout << "Decryption failed" << endl;
+        std::cout << "Decryption failed" << std::endl;
         return -1;
     }
 
     if (strcmp(plain.c_str(), decrypted_string.c_str()) != 0)
     {
-        cout << "Input and Output strings do not match" << endl;
+        std::cout << "Input and Output strings do not match" << std::endl;
         return -1;
     }
 
     return 0;
 }
 
-int decrypt_from_file_test(string file_name)
+int decrypt_from_file_test(std::string file_name)
 {
-    ifstream my_file(file_name.c_str(), std::ios::binary);
-    string plain_out = "";
-    string read_buffer = "";
+    std::ifstream my_file(file_name.c_str(), std::ios::binary);
+    std::string plain_out = "";
+    std::string read_buffer = "";
     char cipher_bytes[BUFFER];
     int ret = -1;
 
     encryption crypto_obj;
-    string plain = "Secret";
+    std::string plain = "Secret";
     uint8_t padded_cipher[BUFFER] = {0};
 
     ret = crypto_obj.handle_encryption(plain, padded_cipher);
 
     if (ret != 0)
     {
-        cout << "Encryption failed" << endl;
+        std::cout << "Encryption failed" << std::endl;
         return -1;
     }
 
-    write_to_file(to_hex2(padded_cipher, 300), file_name);
+    write_to_file(to_hex(padded_cipher, 300), file_name);
 
     if (my_file.is_open())
     {
@@ -71,7 +68,7 @@ int decrypt_from_file_test(string file_name)
     }
     else
     {
-        cout << "Unable to open & read file\n";
+        std::cout << "Unable to open & read file\n";
         return -1;
     }
 
@@ -81,7 +78,7 @@ int decrypt_from_file_test(string file_name)
 
     if (ret != 0)
     {
-        cout << "handle_decryption went wrong" << endl;
+        std::cout << "handle_decryption went wrong" << std::endl;
         return -1;
     }
 
@@ -90,26 +87,36 @@ int decrypt_from_file_test(string file_name)
     return 0;
 }
 
+void en_decrypt_test()
+{
+    int result = encrypt_decrypt_test();
+    assert(result == 0 && "Login check failed");
+    
+    std::string path = "secure/encrypt";
+    result = decrypt_from_file_test(path);
+    assert(result == 0 && "Login check failed");
+}
+
 void hashing_test()
 {
     crypto c_obj;
     int result = c_obj.check_login("giu", "giu");
     assert(result == 0 && "Login check failed");
-    cout << endl;
+    std::cout << std::endl;
 
     result= c_obj.check_login("giu2", "giu2");
     assert(result == 0 && "Login check failed");
-    cout << endl;
+    std::cout << std::endl;
 
     result = c_obj.check_login("giu", "giu2");
     assert(result != 0 && "Login passed but should fail");
-    cout << endl;
+    std::cout << std::endl;
     
     result= c_obj.check_login("giu2", "giu22");
     assert(result != 0 && "Login passed but should fail");
-    cout << endl;
+    std::cout << std::endl;
 
     result= c_obj.check_login("bebo2", "giu22");
     assert(result != 0 && "Login passed but should fail");
-    cout << endl;
+    std::cout << std::endl;
 }

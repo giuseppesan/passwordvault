@@ -9,9 +9,10 @@
 #include <random>
 #include "../src/utils.hpp"
 
-#define ITERATIONS 10
-#define ALGORITHM_SHA256 1
-#define ALGORITHM_SHA512 2
+const int ITERATIONS = 10;
+const int ALGORITHM_SHA256 = 1;
+const int ALGORITHM_SHA512 = 2;
+const size_t salt_size = 16;
 
 class crypto
 {
@@ -27,7 +28,7 @@ public:
      *
      * @return 0 if successful
      */
-    int check_login(string name, string pw);
+    int check_login(std::string name, std::string pw);
 
     /**
      * @brief writes the userdata in the defined format to the file <USERNAME>:<ALG>:<SALT>:<HASH>
@@ -69,15 +70,15 @@ public:
     */
     int check_entry(const std::string& entry);
 
-    void set_user(string u) { user = u; }
-    void set_password(string p) { password = p; }
-    string get_user() { return user; }
-    string get_password() { return password; }
+    void set_user(std::string u) { user = u; }
+    void set_password(std::string p) { password = p; }
+    std::string get_user() { return user; }
+    std::string get_password() { return password; }
 
-    string passwd_path = "secure/passwd";
-    string logins_path = "secure/logins";
+    std::string passwd_path = "secure/passwd";
+    std::string logins_path = "secure/logins";
 
-    const size_t SALT_SIZE = 16;
+
 
 private:
     /**
@@ -88,7 +89,7 @@ private:
      *
      * @return 0 if successful
      */
-    int sha_256(string in, string &out);
+    int sha_256(std::string in, std::string &out);
     /**
      * @brief Turn string into hash
      *
@@ -97,7 +98,7 @@ private:
      *
      * @return 0 if successful
      */
-    int sha_512(string in, string &out);
+    int sha_512(std::string in, std::string &out);
 
     /**
      * @brief creates the password hash
@@ -110,7 +111,7 @@ private:
      * 
      * @return 0 if successful
      */
-    int salt_n_hash(string in, string salt, string &final_hash, size_t iterations);
+    int salt_n_hash(std::string in, std::string salt, std::string &final_hash, size_t iterations);
 
     /**
      * @brief Generate random salt from set of characters
@@ -120,8 +121,8 @@ private:
      */
     void generate_salt(std::string &out);
 
-    string user = "";
-    string password = "";
+    std::string user = "";
+    std::string password = "";
     int algorithm = 0;
 };
 

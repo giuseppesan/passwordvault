@@ -8,9 +8,9 @@
 class CLInterface
 {
 private:
-    string curr_path;
-    string input;
-    string logged_in_user;
+    std::string curr_path;
+    std::string input;
+    std::string logged_in_user;
 
 public:
     /**

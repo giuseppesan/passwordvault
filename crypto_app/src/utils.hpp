@@ -7,7 +7,7 @@
 #include <istream>
 #include <sstream>
 #include <iomanip>
-using namespace std;
+
 #define PEPPER "SEpl9QTQ574d9R5R"
 
 /**
@@ -19,22 +19,7 @@ using namespace std;
  * @return hex string
  */
 
-string to_hex(unsigned char *str, int len)
-{
-    string hex_hash_string = "";
-    char *buffer = new char[len * 2 + 1];
-    char *p_buffer = buffer;
-    for (int i = 0; i < len; ++i)
-    {
-        sprintf(p_buffer, "%02X", str[i]);
-        p_buffer += 2;
-    }
-
-    hex_hash_string.assign(buffer, buffer + len);
-    return hex_hash_string;
-}
-
-std::string to_hex2(const unsigned char* str, int len)
+std::string to_hex(const unsigned char* str, int len)
 {
     std::ostringstream oss;
     oss << std::hex << std::uppercase << std::setfill('0');
@@ -55,7 +40,7 @@ std::string to_hex2(const unsigned char* str, int len)
  * @return 0 if successful
  */
 
-int write_to_file(string in, string file)
+int write_to_file(std::string in, std::string file)
 {
     /*Add multiple entries*/
 
@@ -82,7 +67,7 @@ int write_to_file(string in, string file)
  * @return 0 if successful
  */
 
-int read_from_file_and_find(string &out, string name, string path)
+int read_from_file_and_find(std::string &out, std::string name, std::string path)
 {
    /*search for user in file*/
     std::ifstream my_file(path);
@@ -101,7 +86,7 @@ int read_from_file_and_find(string &out, string name, string path)
         {
             out = line;
             my_file.close();
-            cout << "Entry found\n";
+            std::cout << "Entry found\n";
             return 0;
         }
     }

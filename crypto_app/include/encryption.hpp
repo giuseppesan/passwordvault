@@ -27,7 +27,7 @@ public:
      * @param padded_cipher 16 Bytes IV + 4 Bytes Length + 256 Bytes encrypted+padded Payload
      * @return 0 if successful
      */
-    int handle_encryption(string plain, uint8_t *padded_cipher);
+    int handle_encryption(std::string plain, uint8_t *padded_cipher);
     
     /**
      * @brief 
@@ -36,7 +36,7 @@ public:
      * @param in 
      * @return 0 if successful
      */
-    int handle_decryption(const uint8_t * cipher, string &decrypted_string);
+    int handle_decryption(const uint8_t * cipher, std::string &decrypted_string);
 
 private:
 
