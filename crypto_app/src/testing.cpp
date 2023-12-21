@@ -91,7 +91,7 @@ void en_decrypt_test()
 {
     int result = encrypt_decrypt_test();
     assert(result == 0 && "Login check failed");
-    
+
     std::string path = "secure/encrypt";
     result = decrypt_from_file_test(path);
     assert(result == 0 && "Login check failed");
@@ -100,23 +100,50 @@ void en_decrypt_test()
 void hashing_test()
 {
     crypto c_obj;
-    int result = c_obj.check_login("giu", "giu");
+    int result;
+
+    if (c_obj.find_user("user1", 1) == 0)
+    {
+        result = c_obj.register_user("user1", "user1", 1);
+        assert(result == 0 && "Register check failed");
+        std::cout << std::endl;
+
+        result = c_obj.find_user("user1", 1);
+        assert(result != 0 && "Search check failed");
+        std::cout << std::endl;
+    }
+
+    if (c_obj.find_user("user2", 1) == 0)
+    {
+        result = c_obj.register_user("user2", "user2", 2);
+        assert(result == 0 && "Register check failed");
+        std::cout << std::endl;
+
+        result = c_obj.find_user("user2", 1);
+        assert(result != 0 && "Search check failed");
+        std::cout << std::endl;
+    }
+
+    result = c_obj.check_login("user1", "user1");
     assert(result == 0 && "Login check failed");
     std::cout << std::endl;
 
-    result= c_obj.check_login("giu2", "giu2");
+    result = c_obj.check_login("user2", "user2");
     assert(result == 0 && "Login check failed");
     std::cout << std::endl;
 
-    result = c_obj.check_login("giu", "giu2");
+    result = c_obj.check_login("user1", "pass");
+    assert(result != 0 && "Login passed but should fail");
+    std::cout << std::endl;
+
+    result = c_obj.check_login("user2", "pass");
+    assert(result != 0 && "Login passed but should fail");
+    std::cout << std::endl;
+
+    result = c_obj.check_login("no_user", "pass");
     assert(result != 0 && "Login passed but should fail");
     std::cout << std::endl;
     
-    result= c_obj.check_login("giu2", "giu22");
-    assert(result != 0 && "Login passed but should fail");
-    std::cout << std::endl;
-
-    result= c_obj.check_login("bebo2", "giu22");
-    assert(result != 0 && "Login passed but should fail");
-    std::cout << std::endl;
+    std::ofstream file("secure/passwd", std::ios::trunc);
+    //TODO: delete test
 }

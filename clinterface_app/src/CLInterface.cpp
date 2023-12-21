@@ -115,7 +115,7 @@ void CLInterface::handle_register(crypto &cobj)
     getline(std::cin, u);
     cobj.set_user(u);
 
-    while (cobj.check_user(cobj.get_user()) == -1)
+    while (cobj.find_user(cobj.get_user(), 1) == -1)
     {
         std::cout << "Choose a new username:\n";
         getline(std::cin, u);

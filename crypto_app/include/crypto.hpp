@@ -45,10 +45,11 @@ public:
      * @brief checks if username is taken
      *
      * @param name username
+     * @param action 1 find for register - 2 find for delete
      *
      * @return 0 if successful
      */
-    int check_user(const std::string& name);
+    int find_user(const std::string& name, int action);
 
     /**
      * @brief add new login credentials

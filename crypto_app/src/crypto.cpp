@@ -165,9 +165,9 @@ int crypto::register_user(const std::string &name, const std::string &password, 
     return write_to_file(out, passwd_path.c_str());
 }
 
-int crypto::check_user(const std::string &name)
+int crypto::find_user(const std::string &name, int action)
 {
-    std::ifstream my_file(passwd_path.c_str());
+    std::fstream my_file(passwd_path.c_str());
     std::string line = "";
 
     if (!my_file.is_open())
@@ -180,9 +180,15 @@ int crypto::check_user(const std::string &name)
     {
         if (line.substr(0, name.size()) == name)
         {
-            std::cerr << "Username is taken\n";
-            my_file.close();
-            return -1;
+            if (action == 1)
+            {
+                std::cout << "Username is taken\n";
+                return -1;
+            }
+            else if (action == 2)
+            {
+                //TODO: delete entry
+            }
         }
     }
 
@@ -228,3 +234,4 @@ int crypto::add_new_entry(const std::string &tag, const std::string &user, const
 
     return 0;
 }
+
