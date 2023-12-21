@@ -1,6 +1,11 @@
+## Installation
+```sh
 sudo apt-get install libssl-dev
+```
+
 
 add -lssl -lcrypto to task.json after ${file}
+```json
 {
     "tasks": [
         {
@@ -27,6 +32,4 @@ add -lssl -lcrypto to task.json after ${file}
         }
     ],
     "version": "2.0.0"
-}
-### Issues
-
+```
