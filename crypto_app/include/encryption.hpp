@@ -8,11 +8,13 @@
 #include <openssl/rand.h>
 #include <vector>
 #include <iostream>
+#include <memory>
 #include "../src/utils.hpp"
 #include "key.hpp"
 
 #define BUFFER 300
 #define AES_BLOCK_SIZE 256
+const int total_cipher_len = 276;
 
 class encryption
 {
@@ -90,6 +92,6 @@ private:
 
 };
 
-unsigned char iv[16] = {0x00, 0x01, 0x02, 0x24, 0x00, 0x01, 0x02, 0x24, 0x00, 0x01, 0x02, 0x24, 0x00, 0x01, 0x02, 0x24};
+unsigned char iv[16];
 
 #endif // ENCRYPTION_H

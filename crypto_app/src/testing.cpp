@@ -90,11 +90,11 @@ int decrypt_from_file_test(std::string file_name)
 void en_decrypt_test()
 {
     int result = encrypt_decrypt_test();
-    assert(result == 0 && "Login check failed");
+    assert(result == 0 && "Encrypt check failed");
 
     std::string path = "secure/encrypt";
     result = decrypt_from_file_test(path);
-    assert(result == 0 && "Login check failed");
+    assert(result == 0 && "Decrypt check failed");
 }
 
 void hashing_test()
@@ -143,7 +143,7 @@ void hashing_test()
     result = c_obj.check_login("no_user", "pass");
     assert(result != 0 && "Login passed but should fail");
     std::cout << std::endl;
-    
+
     std::ofstream file("secure/passwd", std::ios::trunc);
     //TODO: delete test
 }

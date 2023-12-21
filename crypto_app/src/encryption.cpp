@@ -19,18 +19,18 @@ int encryption::get_iv(unsigned char *iv, const uint8_t *cipher_text)
 
 int encryption::handle_encryption(std::string plain, uint8_t *padded_cipher)
 {
-    encryption COB;
-    uint8_t plaintext_buff[AES_BLOCK_SIZE] = {0}; // plaintext
-    uint8_t cipher_text[AES_BLOCK_SIZE] = {0};    // encrypted text
-
+    encryption encryption_obj;
+    std::vector<uint8_t> plaintext_buff(AES_BLOCK_SIZE, 0);
+    std::vector<uint8_t> cipher_text(AES_BLOCK_SIZE, 0);
     int ciphertext_len = 0;
     int ret = -1;
-
     std::string hex_string = ""; // final readable string
+    std::random_device rd;
+    std::mt19937 generator(rd());
 
-    for (size_t i = 0; i <= 16; i++)
+    for (size_t i = 0; i < 16; i++)
     {
-        iv[i] = rand() % 256;
+        iv[i] = static_cast<uint8_t>(generator() % 256);
     }
 
     std::cout << "Input is: " << plain << std::endl;
@@ -60,8 +60,8 @@ int encryption::handle_encryption(std::string plain, uint8_t *padded_cipher)
     }
 
     /*Encryption*/
-    ret = COB.encrypt(plaintext_buff, AES_BLOCK_SIZE, crypto_key, iv,
-                      cipher_text, ciphertext_len);
+    ret = encryption_obj.encrypt(plaintext_buff.data(), AES_BLOCK_SIZE, crypto_key, iv,
+                                 cipher_text.data(), ciphertext_len);
 
     if (ret != true)
     {
@@ -71,7 +71,7 @@ int encryption::handle_encryption(std::string plain, uint8_t *padded_cipher)
 
     /*Adds Header to encrypted payload
     16 Bytes IV + 4 Bytes Length + 256 Bytes Payload*/
-    ret = COB.prepare_ciphertext(iv, cipher_text, ciphertext_len, padded_cipher, 276);
+    ret = encryption_obj.prepare_ciphertext(iv, cipher_text.data(), ciphertext_len, padded_cipher, total_cipher_len);
 
     if (ret != 0)
     {
@@ -85,28 +85,27 @@ int encryption::handle_encryption(std::string plain, uint8_t *padded_cipher)
 
     return 0;
 }
-// TODO: problem when processing saved hexstring -> decrypt fails
+
 int encryption::handle_decryption(const uint8_t *cipher, std::string &decrypted_string)
 {
-    encryption COB;
+    encryption encryption_obj;
     int ret = -1;
-    uint8_t decrypted_text[AES_BLOCK_SIZE] = {0}; // plaintext
-    uint8_t cipher_text[AES_BLOCK_SIZE] = {0};    // encrypted payload buffer
+    std::vector<uint8_t> decrypted_text(AES_BLOCK_SIZE, 0);
+    std::vector<uint8_t> cipher_text(AES_BLOCK_SIZE, 0);
     int plaintext_len = 0;
 
-    /*Writes payload to buffer*/
-    for (size_t i = 0; i < 256; i++)
-    {
-        cipher_text[i] = cipher[i + 20];
-    }
+    // Extract payload from cipher
+    constexpr size_t payload_size = 256;
+    constexpr size_t header_size = 20;
+    std::copy(cipher + header_size, cipher + header_size + payload_size, cipher_text.begin());
 
     /*Reads IV from Header*/
     get_iv(iv, cipher);
 
     /*Decryption*/
-    ret = COB.decrypt(cipher_text, AES_BLOCK_SIZE, crypto_key, iv, decrypted_text, plaintext_len);
+    ret = encryption_obj.decrypt(cipher_text.data(), AES_BLOCK_SIZE, crypto_key, iv, decrypted_text.data(), plaintext_len);
 
-    if (ret != true)
+    if (ret != 1)
     {
         std::cerr << "Decrypt failed" << std::endl;
         return -1;
@@ -114,63 +113,59 @@ int encryption::handle_decryption(const uint8_t *cipher, std::string &decrypted_
 
     /* Show the decrypted text */
     std::cout << "\nDecrypted text is:" << std::endl;
-    std::cout << decrypted_text << "\n" << std::endl;
-    decrypted_string.assign(decrypted_text, decrypted_text + plaintext_len);
+    std::cout << decrypted_text.data() << "\n"
+              << std::endl;
+
+    decrypted_string.assign(decrypted_text.data(), decrypted_text.data() + plaintext_len);
 
     return 0;
 }
 
 bool encryption::encrypt(const unsigned char *plain_text, int plaintext_len, const unsigned char *crypto_key, const unsigned char *iv, unsigned char *cipher_text, int &ciphertext_len)
 {
-    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
+    std::unique_ptr<EVP_CIPHER_CTX, decltype(&EVP_CIPHER_CTX_free)> ctx(EVP_CIPHER_CTX_new(), EVP_CIPHER_CTX_free);
     if (!ctx)
     {
         std::cerr << "Failed to create EVP_CIPHER_CTX" << std::endl;
         return false;
     }
 
-    if (EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), nullptr, crypto_key, iv) != 1)
+    if (EVP_EncryptInit_ex(ctx.get(), EVP_aes_256_cbc(), nullptr, crypto_key, iv) != 1)
     {
         std::cerr << "Failed to initialize encryption" << std::endl;
-        EVP_CIPHER_CTX_free(ctx);
         return false;
     }
 
-    if (EVP_EncryptUpdate(ctx, cipher_text, &ciphertext_len, plain_text, plaintext_len) != 1)
+    if (EVP_EncryptUpdate(ctx.get(), cipher_text, &ciphertext_len, plain_text, plaintext_len) != 1)
     {
         std::cerr << "Failed to encrypt data" << std::endl;
-        EVP_CIPHER_CTX_free(ctx);
         return false;
     }
 
-    EVP_CIPHER_CTX_free(ctx);
     return true;
 }
 
 bool encryption::decrypt(const unsigned char *cipher_text, int ciphertext_len, const unsigned char *crypto_key, const unsigned char *iv, unsigned char *plain_text, int &plaintext_len)
 {
-    EVP_CIPHER_CTX *ctx = EVP_CIPHER_CTX_new();
+    std::unique_ptr<EVP_CIPHER_CTX, decltype(&EVP_CIPHER_CTX_free)> ctx(EVP_CIPHER_CTX_new(), EVP_CIPHER_CTX_free);
     if (!ctx)
     {
         std::cerr << "Failed to create EVP_CIPHER_CTX" << std::endl;
         return false;
     }
 
-    if (EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), nullptr, crypto_key, iv) != 1)
+    if (EVP_DecryptInit_ex(ctx.get(), EVP_aes_256_cbc(), nullptr, crypto_key, iv) != 1)
     {
         std::cerr << "Failed to initialize decryption" << std::endl;
-        EVP_CIPHER_CTX_free(ctx);
         return false;
     }
 
-    if (EVP_DecryptUpdate(ctx, plain_text, &plaintext_len, cipher_text, ciphertext_len) != 1)
+    if (EVP_DecryptUpdate(ctx.get(), plain_text, &plaintext_len, cipher_text, ciphertext_len) != 1)
     {
         std::cerr << "Failed to decrypt data" << std::endl;
-        EVP_CIPHER_CTX_free(ctx);
         return false;
     }
 
-    EVP_CIPHER_CTX_free(ctx);
     return true;
 }
 

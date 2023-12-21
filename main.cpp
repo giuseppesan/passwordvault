@@ -6,7 +6,7 @@ int main()
     en_decrypt_test();
     hashing_test();
     
-    bool cli = true;
+    bool cli = false;
     if (cli == true)
     { 
         CLInterface cli;
