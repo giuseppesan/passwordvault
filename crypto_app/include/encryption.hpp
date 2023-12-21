@@ -14,7 +14,12 @@
 
 #define BUFFER 300
 #define AES_BLOCK_SIZE 256
+
 const int total_cipher_len = 276;
+const int payload_size = 256;
+const int header_size = 20;
+const int iv_size = 16;
+const int payload_byte_size = 4;
 
 class encryption
 {

@@ -10,7 +10,7 @@ encryption::~encryption()
 
 int encryption::get_iv(unsigned char *iv, const uint8_t *cipher_text)
 {
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < iv_size; i++)
     {
         iv[i] = cipher_text[i];
     }
@@ -28,7 +28,7 @@ int encryption::handle_encryption(std::string plain, uint8_t *padded_cipher)
     std::random_device rd;
     std::mt19937 generator(rd());
 
-    for (size_t i = 0; i < 16; i++)
+    for (size_t i = 0; i < iv_size; i++)
     {
         iv[i] = static_cast<uint8_t>(generator() % 256);
     }
@@ -95,8 +95,6 @@ int encryption::handle_decryption(const uint8_t *cipher, std::string &decrypted_
     int plaintext_len = 0;
 
     // Extract payload from cipher
-    constexpr size_t payload_size = 256;
-    constexpr size_t header_size = 20;
     std::copy(cipher + header_size, cipher + header_size + payload_size, cipher_text.begin());
 
     /*Reads IV from Header*/
@@ -173,14 +171,14 @@ int encryption::prepare_ciphertext(uint8_t *iv, uint8_t *plain_cipher_text, uint
                                    uint8_t *cipher_text_out, uint64_t ciph_text_out_size)
 {
     /*copy IV to bytes 0 to 15*/
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < iv_size; i++)
     {
         cipher_text_out[i] = iv[i];
     }
     /*add length of cipher_text from byte 16 to 19*/
-    *(reinterpret_cast<uint32_t *>(cipher_text_out + 16)) = pl_ciph_text_size;
+    *(reinterpret_cast<uint32_t *>(cipher_text_out + iv_size)) = pl_ciph_text_size;
 
-    if (pl_ciph_text_size > (ciph_text_out_size - 16 - 4))
+    if (pl_ciph_text_size > (ciph_text_out_size - iv_size - payload_byte_size))
     {
         std::cerr << "buffer is too big or cipher array is too small" << std::endl;
         return -1;
@@ -188,7 +186,7 @@ int encryption::prepare_ciphertext(uint8_t *iv, uint8_t *plain_cipher_text, uint
     /*copy cipher_text*/
     for (uint32_t j = 0; j < ciph_text_out_size; j++)
     {
-        cipher_text_out[j + 20] = plain_cipher_text[j];
+        cipher_text_out[j + header_size] = plain_cipher_text[j];
     }
 
     return 0;
