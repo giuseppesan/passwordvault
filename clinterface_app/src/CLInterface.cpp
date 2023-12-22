@@ -182,7 +182,7 @@ void CLInterface::handle_get_credential(crypto &cobj)
     if (cobj.check_entry(entry) == 0)
     {
         std::string out;
-        if (read_from_file_and_find(out, entry, "secure/logins") == 0)
+        if (read_from_file_and_find(out, entry, "../secure/logins") == 0)
         {
             std::cout << "Credentials: " << out << std::endl;
         }

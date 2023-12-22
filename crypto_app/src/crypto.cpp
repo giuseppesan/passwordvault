@@ -198,7 +198,7 @@ int crypto::find_user(const std::string &name, int action)
 
 int crypto::check_entry(const std::string &entry)
 {
-    std::string path = "secure/logins";
+    std::string path = "../secure/logins";
     std::ifstream my_file(path.c_str());
     std::string line = "";
 
