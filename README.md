@@ -13,6 +13,7 @@ cmake ..
 make
 ```
 ### task.json
+for debugging in VS Code (not using cmake)
 
 add -lssl -lcrypto after ${file}
 ```json
