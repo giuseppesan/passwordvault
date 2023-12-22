@@ -5,13 +5,16 @@ sudo apt-get install libssl-dev
 sudo apt install libgtest-dev
 sudo apt install cmake
 
-sudo find / -name "libssl*" -or -name "libcrypto*"
-export CMAKE_PREFIX_PATH=/path/to/libssl.so
-
 mkdir build
 cd build
 cmake ..
 make
+```
+#### Troubleshoot
+In case CMake is not finding libssl
+```
+sudo find / -name "libssl*" -or -name "libcrypto*"
+export CMAKE_PREFIX_PATH=/path/to/libssl.so
 ```
 ### task.json
 for debugging in VS Code (not using cmake)
