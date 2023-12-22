@@ -1,8 +1,8 @@
 *.o
 .vscode/*
-bin/
 main
-secure/*
+secure
+build
 # Local History for Visual Studio Code
 .history/
 

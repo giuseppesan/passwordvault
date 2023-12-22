@@ -4,6 +4,8 @@
  */
 #include <cassert>
 #include "../include/encryption.hpp"
+#include "../include/crypto.hpp"
+
 #define BUFFER 300
 
 int encrypt_decrypt_test(void)
@@ -92,8 +94,7 @@ void en_decrypt_test()
     int result = encrypt_decrypt_test();
     assert(result == 0 && "Encrypt check failed");
 
-    std::string path = "secure/encrypt";
-    result = decrypt_from_file_test(path);
+    result = decrypt_from_file_test("../secure/encrypt");
     assert(result == 0 && "Decrypt check failed");
 }
 

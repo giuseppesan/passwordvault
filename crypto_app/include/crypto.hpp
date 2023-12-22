@@ -76,9 +76,8 @@ public:
     std::string get_user() { return user; }
     std::string get_password() { return password; }
 
-    std::string passwd_path = "secure/passwd";
-    std::string logins_path = "secure/logins";
-
+    std::string passwd_path = "../secure/passwd";
+    std::string logins_path = "../secure/logins";
 
 
 private:

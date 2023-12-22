@@ -1,10 +1,20 @@
 ## Installation
+### CMake
 ```sh
 sudo apt-get install libssl-dev
+sudo apt install cmake
+
+sudo find / -name "libssl*" -or -name "libcrypto*"
+export CMAKE_PREFIX_PATH=/path/to/libssl.so
+
+mkdir build
+cd build
+cmake ..
+make
 ```
+### task.json
 
-
-add -lssl -lcrypto to task.json after ${file}
+add -lssl -lcrypto after ${file}
 ```json
 {
     "tasks": [

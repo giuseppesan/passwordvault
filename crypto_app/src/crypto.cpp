@@ -87,7 +87,7 @@ int crypto::check_login(std::string name, std::string pw)
     int ret = -1;
     std::string saved_hash, salt, final_hash;
 
-    ret = read_from_file_and_find(saved_hash, name, "secure/passwd");
+    ret = read_from_file_and_find(saved_hash, name, passwd_path);
 
     if (ret != 0)
     {

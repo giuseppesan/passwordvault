@@ -9,6 +9,7 @@
 #include <vector>
 #include <iostream>
 #include <memory>
+#include <random>
 #include "../src/utils.hpp"
 #include "key.hpp"
 
@@ -93,7 +94,6 @@ private:
      * @return 0 if successful
      */
     int get_iv(unsigned char *iv, const uint8_t *cipher_text);
-
 
 };
 
