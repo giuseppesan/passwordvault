@@ -5,7 +5,6 @@
 #include <cassert>
 #include "../include/encryption.hpp"
 #include "../include/crypto.hpp"
-
 #define BUFFER 300
 
 int encrypt_decrypt_test(void)

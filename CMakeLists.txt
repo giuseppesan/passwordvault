@@ -1,12 +1,17 @@
 cmake_minimum_required(VERSION 3.10)
 project(PasswordVault)
 
+find_package(OpenSSL REQUIRED)
 set(CMAKE_CXX_STANDARD 11)
 
 add_subdirectory(clinterface_app)
 add_subdirectory(crypto_app)
+add_subdirectory(Testing)
 
-add_executable(main main.cpp main.hpp)
+add_executable(main main.cpp)
+target_link_libraries(main PRIVATE crypto_app clinterface_app OpenSSL::SSL OpenSSL::Crypto)
 
-#link the apps 
-target_link_libraries(main PRIVATE clinterface_app crypto_app)
+
+# Test-Executable
+add_executable(MyGtests Testing/main_test.cpp)
+target_link_libraries(MyGtests PRIVATE mygtest gtest gtest_main)

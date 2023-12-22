@@ -2,6 +2,7 @@
 ### CMake
 ```sh
 sudo apt-get install libssl-dev
+sudo apt install libgtest-dev
 sudo apt install cmake
 
 sudo find / -name "libssl*" -or -name "libcrypto*"
