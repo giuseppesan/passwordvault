@@ -10,7 +10,7 @@
 #include <iostream>
 #include <memory>
 #include <random>
-#include "../src/utils.hpp"
+#include "../src/utils.cpp"
 #include "key.hpp"
 
 #define BUFFER 300

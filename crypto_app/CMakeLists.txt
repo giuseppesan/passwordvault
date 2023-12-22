@@ -8,14 +8,14 @@ add_library(crypto_app
     src/crypto.cpp 
     src/encryption.cpp 
     src/testing.cpp 
-    src/utils.hpp
+    src/utils.cpp
 )
 
-# Füge die Quelldateien und Header-Dateien hinzu
+# add includes
 target_include_directories(crypto_app
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-# Verlinke mit OpenSSL-Bibliotheken
+#link with openssl 
 target_link_libraries(crypto_app PRIVATE OpenSSL::SSL OpenSSL::Crypto)

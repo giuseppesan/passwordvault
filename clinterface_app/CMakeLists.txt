@@ -4,12 +4,12 @@ project(CLInterfaceApp)
 add_library(clinterface_app 
     src/CLInterface.cpp)
 
-# Füge die Quelldateien und Header-Dateien hinzu
+# add includes
 target_include_directories(clinterface_app
     PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/../crypto_app/include
 )
 
-# Verlinke mit crypto_app und OpenSSL-Bibliotheken
+# link the crypto app
 target_link_libraries(clinterface_app PRIVATE crypto_app)

@@ -7,7 +7,7 @@
 #include <string.h>
 #include <string>
 #include <random>
-#include "../src/utils.hpp"
+#include "../src/utils.cpp"
 
 const int ITERATIONS = 10;
 const int ALGORITHM_SHA256 = 1;
