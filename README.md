@@ -48,3 +48,6 @@ add -lssl -lcrypto after ${file}
     ],
     "version": "2.0.0"
 ```
+
+### About the encryption
+https://wiki.openssl.org/index.php/EVP_Symmetric_Encryption_and_Decryption
