@@ -7,6 +7,7 @@
 #include <istream>
 #include <sstream>
 #include <iomanip>
+#include <vector>
 
 #define PEPPER "SEpl9QTQ574d9R5R"
 
@@ -19,7 +20,7 @@
  * @return hex string
  */
 
-std::string to_hex(const unsigned char* str, int len)
+std::string to_hex_sha(const unsigned char* str, int len)
 {
     std::ostringstream oss;
     oss << std::hex << std::uppercase << std::setfill('0');
@@ -27,6 +28,24 @@ std::string to_hex(const unsigned char* str, int len)
     for (int i = 0; i < len; ++i)
     {
         oss << std::setw(2) << static_cast<unsigned>(str[i]);
+    }
+
+    return oss.str();
+}
+
+/**
+ * @brief convert bytes to hexstring
+ * @param data vector Bytes
+ * @return hex string
+ */
+std::string to_hex(const std::vector<uint8_t>& data)
+{
+    std::ostringstream oss;
+    oss << std::hex << std::uppercase << std::setfill('0');
+
+    for (const auto& byte : data)
+    {
+        oss << std::setw(2) << static_cast<unsigned>(byte);
     }
 
     return oss.str();
@@ -100,15 +119,17 @@ int read_from_file_and_find(std::string &out, std::string name, std::string path
  * @param input src string
  * @return input 
  */
-int char2int(char input)
-{
-  if(input >= '0' && input <= '9')
-    return input - '0';
-  if(input >= 'A' && input <= 'F')
-    return input - 'A' + 10;
-  if(input >= 'a' && input <= 'f')
-    return input - 'a' + 10;
-  throw std::invalid_argument("Invalid input string");
+int char2int(char input) {
+  if (input >= '0' && input <= '9') {
+      return input - '0';
+  } else if (input >= 'A' && input <= 'F') {
+      return input - 'A' + 10;
+  } else if (input >= 'a' && input <= 'f') {
+      return input - 'a' + 10;
+  }
+    // Handle invalid characters if needed
+    std::cerr << "Error: Invalid hexadecimal character." << std::endl;
+    return -1; // Or throw an exception
 }
 
 
@@ -118,13 +139,11 @@ int char2int(char input)
  * @param src zero terminated sanitized string
  * @param target char array bytes
  */
-void hex2bin(const char* src, char* target)
-{
-  while(*src && src[1])
-  {
-    *(target++) = char2int(*src)*16 + char2int(src[1]);
-    src += 2;
-  }
+void hex2bin(const char* src, std::vector<uint8_t>& target) {
+    while (*src && src[1]) {
+        uint8_t byte = char2int(*src) * 16 + char2int(src[1]);
+        target.push_back(byte);
+        src += 2;
+    }
 }
-
 #endif // UTILS_H

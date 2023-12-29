@@ -5,17 +5,16 @@
 #include <cassert>
 #include "../include/encryption.hpp"
 #include "../include/crypto.hpp"
-#define BUFFER 300
 
 int encrypt_decrypt_test(void)
 {
     int ret = -1;
     std::string plain = "Super Secret Message";
     std::string decrypted_string = "";
-    uint8_t padded_cipher[BUFFER] = {0}; // passed between functions for testing
+    std::vector<uint8_t>  cipher_block; // passed between functions for testing
     encryption crypto_obj;
 
-    ret = crypto_obj.handle_encryption(plain, padded_cipher);
+    ret = crypto_obj.handle_encryption(plain, cipher_block);
 
     if (ret != 0)
     {
@@ -23,7 +22,7 @@ int encrypt_decrypt_test(void)
         return -1;
     }
 
-    ret = crypto_obj.handle_decryption(reinterpret_cast<const uint8_t *>(padded_cipher), decrypted_string);
+    ret = crypto_obj.handle_decryption(cipher_block, decrypted_string);
 
     if (ret != 0)
     {
@@ -45,12 +44,12 @@ int decrypt_from_file_test(std::string file_name)
     std::ifstream my_file(file_name.c_str(), std::ios::binary);
     std::string plain_out = "";
     std::string read_buffer = "";
-    char cipher_bytes[BUFFER];
+    std::vector<uint8_t>  cipher_bytes;
     int ret = -1;
 
     encryption crypto_obj;
     std::string plain = "Secret";
-    uint8_t padded_cipher[BUFFER] = {0};
+    std::vector<uint8_t>  padded_cipher;
 
     ret = crypto_obj.handle_encryption(plain, padded_cipher);
 
@@ -60,7 +59,7 @@ int decrypt_from_file_test(std::string file_name)
         return -1;
     }
 
-    write_to_file(to_hex(padded_cipher, 300), file_name);
+    write_to_file(to_hex(padded_cipher), file_name);
 
     if (my_file.is_open())
     {
@@ -75,11 +74,17 @@ int decrypt_from_file_test(std::string file_name)
 
     hex2bin(read_buffer.c_str(), cipher_bytes);
 
-    ret = crypto_obj.handle_decryption(reinterpret_cast<const uint8_t *>(cipher_bytes), plain_out);
+    ret = crypto_obj.handle_decryption(cipher_bytes, plain_out);
 
     if (ret != 0)
     {
         std::cout << "handle_decryption went wrong" << std::endl;
+        return -1;
+    }
+
+    if (strcmp(plain.c_str(), plain_out.c_str()) != 0)
+    {
+        std::cout << "Input and Output strings do not match" << std::endl;
         return -1;
     }
 

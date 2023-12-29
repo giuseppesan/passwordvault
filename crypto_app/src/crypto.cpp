@@ -22,7 +22,7 @@ int crypto::sha_256(std::string in, std::string &out)
         return -1;
     }
 
-    out = to_hex(hash_bytes_ptr, SHA256_DIGEST_LENGTH);
+    out = to_hex_sha(hash_bytes_ptr, SHA256_DIGEST_LENGTH);
 
     return 0;
 }
@@ -43,7 +43,7 @@ int crypto::sha_512(std::string in, std::string &out)
         return -1;
     }
 
-    out = to_hex(hash_bytes_ptr, SHA512_DIGEST_LENGTH);
+    out = to_hex_sha(hash_bytes_ptr, SHA512_DIGEST_LENGTH);
 
     return 0;
 }

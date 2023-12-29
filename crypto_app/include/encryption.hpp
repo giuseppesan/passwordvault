@@ -35,7 +35,7 @@ public:
      * @param padded_cipher 16 Bytes IV + 4 Bytes Length + 256 Bytes encrypted+padded Payload
      * @return 0 if successful
      */
-    int handle_encryption(std::string plain, uint8_t *padded_cipher);
+    int handle_encryption(const std::string plain, std::vector<uint8_t> &padded_cipher);
     
     /**
      * @brief 
@@ -44,7 +44,7 @@ public:
      * @param in 
      * @return 0 if successful
      */
-    int handle_decryption(const uint8_t * cipher, std::string &decrypted_string);
+    int handle_decryption(const std::vector<uint8_t> & cipher, std::string &decrypted_string);
 
 private:
 
@@ -59,7 +59,7 @@ private:
      * @param plaintext_len 
      * @return true if successful
      */
-    bool decrypt(const unsigned char *cipher_text, int ciphertext_len, const unsigned char *crypto_key, const unsigned char *iv, unsigned char *plaintext, int &plaintext_len);
+    bool decrypt(const std::vector<uint8_t> &cipher_text, int ciphertext_len, const unsigned char *crypto_key, const unsigned char *iv, std::vector<uint8_t> &plaintext, int &plaintext_len);
     
 
     /**
@@ -73,7 +73,7 @@ private:
      * @param ciphertext_len 
      * @return true if successful
      */
-    bool encrypt(const unsigned char *plaintext, int plaintext_len, const unsigned char *crypto_key, const unsigned char *iv, unsigned char *cipher_text, int &ciphertext_len);
+    bool encrypt(const std::vector<uint8_t> &plaintext, int plaintext_len, const unsigned char *crypto_key, const unsigned char *iv, std::vector<uint8_t> &cipher_text, int &ciphertext_len);
     
 
     /**
@@ -85,7 +85,7 @@ private:
      * @param ciph_text_out_size 
      * @return 0 if successful
      */
-    int prepare_ciphertext(uint8_t *iv, uint8_t *plain_cipher_text, uint64_t pl_ciph_text_size, uint8_t *cipher_text_out, uint64_t ciph_text_out_size);
+    int prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t> &plain_cipher_text, uint64_t pl_ciph_text_size, std::vector<uint8_t> &cipher_block, uint64_t ciph_text_out_size);
     
     /**
      * @brief copy bytes 0 to 15 to iv during decryption
@@ -93,7 +93,7 @@ private:
      * @param cipher_text cipher text (header+payload)
      * @return 0 if successful
      */
-    int get_iv(unsigned char *iv, const uint8_t *cipher_text);
+    int get_iv(unsigned char *iv, const std::vector<uint8_t> &cipher_text);
 
 };
 
