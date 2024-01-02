@@ -10,7 +10,7 @@ int encrypt_decrypt_test(std::string plain_text)
 {
     int ret = -1;
     std::string decrypted_string = "";
-    std::vector<uint8_t>  cipher_block; // passed between functions for testing
+    std::vector<uint8_t> cipher_block; // passed between functions for testing
     encryption crypto_obj;
 
     ret = crypto_obj.handle_encryption(plain_text, cipher_block);
@@ -31,7 +31,7 @@ int encrypt_decrypt_test(std::string plain_text)
 
     if (strcmp(plain_text.c_str(), decrypted_string.c_str()) != 0)
     {
-        std::cout << "Input and Output strings do not match" << std::endl;
+        std::cout << "\nInput and Output strings do not match" << std::endl;
         return -1;
     }
 
@@ -43,11 +43,11 @@ int decrypt_from_file_test(std::string file_name, std::string plain_text)
     std::ifstream my_file(file_name.c_str(), std::ios::binary);
     std::string plain_out = "";
     std::string read_buffer = "";
-    std::vector<uint8_t>  cipher_bytes;
+    std::vector<uint8_t> cipher_bytes;
     int ret = -1;
 
     encryption crypto_obj;
-    std::vector<uint8_t>  padded_cipher;
+    std::vector<uint8_t> padded_cipher;
 
     ret = crypto_obj.handle_encryption(plain_text, padded_cipher);
 
@@ -83,6 +83,8 @@ int decrypt_from_file_test(std::string file_name, std::string plain_text)
     if (strcmp(plain_text.c_str(), plain_out.c_str()) != 0)
     {
         std::cout << "Input and Output strings do not match" << std::endl;
+        my_file.open(file_name.c_str(), std::ofstream::out | std::ofstream::trunc);
+        my_file.close();
         return -1;
     }
 

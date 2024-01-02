@@ -10,7 +10,7 @@ encryption::~encryption()
 
 int encryption::get_iv(unsigned char *iv, const std::vector<uint8_t> &cipher_block)
 {
-    for (int i = 0; i < iv_size; i++)
+    for (int i = 0; i < IV_SIZE; i++)
     {
         iv[i] = cipher_block[i];
     }
@@ -29,7 +29,19 @@ int encryption::handle_encryption(const std::string plain_text, std::vector<uint
     std::random_device rd;
     std::mt19937 generator(rd());
 
-    for (size_t i = 0; i < iv_size; i++)
+    if (plain_text.empty())
+    {
+        std::cerr << "plain_text is empty\n";
+        return -1;
+    }
+
+    if (plain_text.size() > AES_BLOCK_SIZE / 2)
+    {
+        std::cerr << "plaintext size too big" << std::endl;
+        return -1;
+    }
+
+    for (size_t i = 0; i < IV_SIZE; i++)
     {
         iv[i] = static_cast<uint8_t>(generator() % 256);
     }
@@ -43,12 +55,6 @@ int encryption::handle_encryption(const std::string plain_text, std::vector<uint
     catch (const std::exception &e)
     {
         std::cerr << "Error during plaintext_buff assignment: " << e.what() << std::endl;
-        return -1;
-    }
-
-    if (plain_text.size() > AES_BLOCK_SIZE)
-    {
-        std::cerr << "plaintext size too big" << std::endl;
         return -1;
     }
 
@@ -90,13 +96,17 @@ int encryption::handle_decryption(const std::vector<uint8_t> &cipher_block, std:
     int plaintext_len = 0;
 
     // Extract payload from cipher_block
-    if (cipher_block.size() >= iv_size + AES_BLOCK_SIZE)
+    if (cipher_block.size() == IV_SIZE + AES_BLOCK_SIZE)
     {
-        std::copy(cipher_block.begin() + iv_size, cipher_block.begin() + iv_size + AES_BLOCK_SIZE, cipher_payload.begin());
+        size_t destIndex = 0;
+        for (size_t i = IV_SIZE; i < AES_BLOCK_SIZE; ++i)
+        {
+            cipher_payload[destIndex++] = cipher_block[i];
+        }
     }
     else
     {
-        std::cerr << "Error: Insufficient data in the cipher.\n";
+        std::cerr << "Error: Malformed cipher block.\n";
         return -1;
     }
 
@@ -131,7 +141,6 @@ int encryption::handle_decryption(const std::vector<uint8_t> &cipher_block, std:
 
 bool encryption::encrypt(const std::vector<uint8_t> &plain_text, int plaintext_len, const unsigned char *crypto_key, const unsigned char *iv, std::vector<uint8_t> &cipher_payload, int &ciphertext_len)
 {
-    int final_len = 0;
     std::unique_ptr<EVP_CIPHER_CTX, decltype(&EVP_CIPHER_CTX_free)> ctx(EVP_CIPHER_CTX_new(), EVP_CIPHER_CTX_free);
     if (!ctx)
     {
@@ -151,14 +160,11 @@ bool encryption::encrypt(const std::vector<uint8_t> &plain_text, int plaintext_l
         return false;
     }
 
-    ciphertext_len += final_len;
-
     return true;
 }
 
 bool encryption::decrypt(const std::vector<uint8_t> &cipher_payload, int ciphertext_len, const unsigned char *crypto_key, const unsigned char *iv, std::vector<uint8_t> &plain_text, int &plaintext_len)
 {
-    int final_len = 0;
     std::unique_ptr<EVP_CIPHER_CTX, decltype(&EVP_CIPHER_CTX_free)> ctx(EVP_CIPHER_CTX_new(), EVP_CIPHER_CTX_free);
     if (!ctx)
     {
@@ -178,7 +184,6 @@ bool encryption::decrypt(const std::vector<uint8_t> &cipher_payload, int ciphert
         return false;
     }
 
-    plaintext_len += final_len;
     return true;
 }
 
@@ -186,7 +191,7 @@ int encryption::prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t>
                                    std::vector<uint8_t> &cipher_block)
 {
     /*copy IV to bytes 0 to 15*/
-    for (int i = 0; i < iv_size; i++)
+    for (int i = 0; i < IV_SIZE; i++)
     {
         cipher_block.push_back(iv[i]);
     }

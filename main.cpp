@@ -3,7 +3,6 @@
 
 int main()
 {
-
     CLInterface cli;
     while (true)
     {

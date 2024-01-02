@@ -15,7 +15,7 @@
 #include "key.hpp"
 
 const int AES_BLOCK_SIZE = 256;
-const int iv_size = 16;
+const int IV_SIZE = 16;
 
 class encryption
 {

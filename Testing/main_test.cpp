@@ -1,20 +1,49 @@
 #include <gtest/gtest.h>
 #include "../main.hpp"
 
-TEST(EncryptionTest, encrypt_decrypt) {
-    int result = 0;
-    result = encrypt_decrypt_test("Super Secret Message");
-    EXPECT_EQ(result, 0);
+TEST(EncryptionTest, encrypt_decrypt_positive)
+{
 
-    result = decrypt_from_file_test("../secure/encrypt", "Secret");
+    int result = encrypt_decrypt_test("Super Secret Message");
     EXPECT_EQ(result, 0);
 }
+TEST(EncryptionTest, encrypt_decrypt_file_positive)
+{
+    int result = decrypt_from_file_test("../secure/encrypt", "Secret");
+    EXPECT_EQ(result, 0);
+}
+TEST(EncryptionTest, encrypt_decrypt_all_num)
+{
+    std::string input = "";
+    char characterToAdd = 'A';
+    int result;
 
-TEST(EncryptionTest, hash_test) {
+    for (int count = 129; count > 1; --count)
+    {
+        input += characterToAdd;
+        result = encrypt_decrypt_test(input);
+        EXPECT_EQ(result, 0);
+    }
+}
+TEST(EncryptionTest, encrypt_decrypt_empty)
+{
+    std::string input = "";
+    int result = encrypt_decrypt_test(input);
+    EXPECT_NE(result, 0);
+}
+TEST(EncryptionTest, encrypt_decrypt_too_big)
+{
+    // 129
+    int result = encrypt_decrypt_test("czgfgrchydtvagxxbbdeqvxktvrcqjgdkhkapxaheefxmqqepuchekwvkvriahkkpuifgfpwmgevaqdxzycmyvwkzmmitwerqtcbzpuqvrhjugjcdhbrjbwcyrzynpjwi");
+    EXPECT_NE(result, 0);
+}
+
+TEST(EncryptionTest, hash_test)
+{
     crypto c_obj;
     int result = 0;
-   
-   if (c_obj.find_user("user1", 1) == 0)
+
+    if (c_obj.find_user("user1", 1) == 0)
     {
         result = c_obj.register_user("user1", "user1", 1);
         EXPECT_EQ(result, 0);
@@ -58,5 +87,3 @@ TEST(EncryptionTest, hash_test) {
 
     std::ofstream file("../secure/passwd", std::ios::trunc);
 }
-
-
