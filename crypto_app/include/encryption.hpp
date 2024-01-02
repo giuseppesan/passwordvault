@@ -10,17 +10,12 @@
 #include <iostream>
 #include <memory>
 #include <random>
+#include <stdexcept>
 #include "../src/utils.cpp"
 #include "key.hpp"
 
-#define BUFFER 300
-#define AES_BLOCK_SIZE 256
-
-const int total_cipher_len = 276;
-const int payload_size = 256;
-const int header_size = 20;
+const int AES_BLOCK_SIZE = 256;
 const int iv_size = 16;
-const int payload_byte_size = 4;
 
 class encryption
 {
@@ -85,7 +80,7 @@ private:
      * @param ciph_text_out_size 
      * @return 0 if successful
      */
-    int prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t> &plain_cipher_text, uint64_t pl_ciph_text_size, std::vector<uint8_t> &cipher_block, uint64_t ciph_text_out_size);
+    int prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t> &plain_cipher_text, uint64_t pl_ciph_text_size, std::vector<uint8_t> &cipher_block);
     
     /**
      * @brief copy bytes 0 to 15 to iv during decryption

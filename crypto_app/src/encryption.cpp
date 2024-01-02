@@ -21,7 +21,7 @@ int encryption::handle_encryption(const std::string plain_text, std::vector<uint
 {
     encryption encryption_obj;
     std::vector<uint8_t> plaintext_buff(AES_BLOCK_SIZE, 0);
-    std::vector<uint8_t> cipher_payload(AES_BLOCK_SIZE+16, 0);
+    std::vector<uint8_t> cipher_payload(AES_BLOCK_SIZE, 0);
 
     int ciphertext_len = 0;
     int ret = -1;
@@ -36,9 +36,17 @@ int encryption::handle_encryption(const std::string plain_text, std::vector<uint
 
     std::cout << "Input is: " << plain_text << std::endl;
 
-    plaintext_buff.assign(plain_text.begin(), plain_text.end());
+    try
+    {
+        plaintext_buff.assign(plain_text.begin(), plain_text.end());
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error during plaintext_buff assignment: " << e.what() << std::endl;
+        return -1;
+    }
 
-    if (plain_text.size() > AES_BLOCK_SIZE - 1)
+    if (plain_text.size() > AES_BLOCK_SIZE)
     {
         std::cerr << "plaintext size too big" << std::endl;
         return -1;
@@ -57,14 +65,16 @@ int encryption::handle_encryption(const std::string plain_text, std::vector<uint
 
     /*Adds Header to encrypted payload
     16 Bytes IV + 256 Bytes Payload*/
-    ret = encryption_obj.prepare_ciphertext(iv, cipher_payload, ciphertext_len, cipher_block, total_cipher_len);
+    ret = encryption_obj.prepare_ciphertext(iv, cipher_payload, ciphertext_len, cipher_block);
 
     if (ret != 0)
     {
         std::cerr << "Preparing cipher_payload failed" << std::endl;
         return -1;
     }
+
     hex_string = to_hex(cipher_block);
+
     std::cout << "Ciphertext is:\n";
     std::cout << hex_string << std::endl;
 
@@ -80,13 +90,12 @@ int encryption::handle_decryption(const std::vector<uint8_t> &cipher_block, std:
     int plaintext_len = 0;
 
     // Extract payload from cipher_block
-    if (cipher_block.size() >= iv_size + payload_size)
+    if (cipher_block.size() >= iv_size + AES_BLOCK_SIZE)
     {
         std::copy(cipher_block.begin() + iv_size, cipher_block.begin() + iv_size + AES_BLOCK_SIZE, cipher_payload.begin());
     }
     else
     {
-        // Handle the case where the cipher_block does not have enough data
         std::cerr << "Error: Insufficient data in the cipher.\n";
         return -1;
     }
@@ -105,10 +114,17 @@ int encryption::handle_decryption(const std::vector<uint8_t> &cipher_block, std:
 
     /* Show the decrypted text */
     std::cout << "\nDecrypted text is:" << std::endl;
-    std::cout << decrypted_text.data() << "\n"
-              << std::endl;
+    std::cout << decrypted_text.data() << "\n\n";
 
-    decrypted_string.assign(decrypted_text.data(), decrypted_text.data() + plaintext_len);
+    try
+    {
+        decrypted_string.assign(decrypted_text.data(), decrypted_text.data() + plaintext_len);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error during decrypted_string assignment: " << e.what() << std::endl;
+        return -1;
+    }
 
     return 0;
 }
@@ -132,12 +148,6 @@ bool encryption::encrypt(const std::vector<uint8_t> &plain_text, int plaintext_l
     if (EVP_EncryptUpdate(ctx.get(), cipher_payload.data(), &ciphertext_len, plain_text.data(), plaintext_len) != 1)
     {
         std::cerr << "Failed to encrypt data" << std::endl;
-        return false;
-    }
-
-    if (EVP_EncryptFinal_ex(ctx.get(), cipher_payload.data() + ciphertext_len, &final_len) != 1)
-    {
-        std::cerr << "Failed to finalize encrypt" << std::endl;
         return false;
     }
 
@@ -168,21 +178,12 @@ bool encryption::decrypt(const std::vector<uint8_t> &cipher_payload, int ciphert
         return false;
     }
 
-    /*
-    int ret = EVP_DecryptFinal_ex(ctx.get(), plain_text.data() + plaintext_len, &final_len);
-    if (ret != 1)
-    {
-        std::cerr << "Failed to finalize decrypt: " << std::endl;
-        ERR_print_errors_fp(stderr);
-        return false;
-    }
-    */
     plaintext_len += final_len;
     return true;
 }
 
 int encryption::prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t> &plain_cipher_text, uint64_t pl_ciph_text_size,
-                                   std::vector<uint8_t> &cipher_block, uint64_t ciph_text_out_size)
+                                   std::vector<uint8_t> &cipher_block)
 {
     /*copy IV to bytes 0 to 15*/
     for (int i = 0; i < iv_size; i++)
@@ -191,7 +192,7 @@ int encryption::prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t>
     }
 
     /*copy cipher_payload*/
-    for (uint32_t j = 0; j < ciph_text_out_size; j++)
+    for (uint32_t j = 0; j < AES_BLOCK_SIZE; j++)
     {
         cipher_block.push_back(plain_cipher_text[j]);
     }

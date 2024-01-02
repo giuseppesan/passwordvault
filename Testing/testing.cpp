@@ -3,18 +3,17 @@
  * @file testing.cpp
  */
 #include <cassert>
-#include "../include/encryption.hpp"
-#include "../include/crypto.hpp"
+#include "../crypto_app/include/encryption.hpp"
+#include "../crypto_app/include/crypto.hpp"
 
-int encrypt_decrypt_test(void)
+int encrypt_decrypt_test(std::string plain_text)
 {
     int ret = -1;
-    std::string plain = "Super Secret Message";
     std::string decrypted_string = "";
     std::vector<uint8_t>  cipher_block; // passed between functions for testing
     encryption crypto_obj;
 
-    ret = crypto_obj.handle_encryption(plain, cipher_block);
+    ret = crypto_obj.handle_encryption(plain_text, cipher_block);
 
     if (ret != 0)
     {
@@ -30,7 +29,7 @@ int encrypt_decrypt_test(void)
         return -1;
     }
 
-    if (strcmp(plain.c_str(), decrypted_string.c_str()) != 0)
+    if (strcmp(plain_text.c_str(), decrypted_string.c_str()) != 0)
     {
         std::cout << "Input and Output strings do not match" << std::endl;
         return -1;
@@ -39,7 +38,7 @@ int encrypt_decrypt_test(void)
     return 0;
 }
 
-int decrypt_from_file_test(std::string file_name)
+int decrypt_from_file_test(std::string file_name, std::string plain_text)
 {
     std::ifstream my_file(file_name.c_str(), std::ios::binary);
     std::string plain_out = "";
@@ -48,10 +47,9 @@ int decrypt_from_file_test(std::string file_name)
     int ret = -1;
 
     encryption crypto_obj;
-    std::string plain = "Secret";
     std::vector<uint8_t>  padded_cipher;
 
-    ret = crypto_obj.handle_encryption(plain, padded_cipher);
+    ret = crypto_obj.handle_encryption(plain_text, padded_cipher);
 
     if (ret != 0)
     {
@@ -82,7 +80,7 @@ int decrypt_from_file_test(std::string file_name)
         return -1;
     }
 
-    if (strcmp(plain.c_str(), plain_out.c_str()) != 0)
+    if (strcmp(plain_text.c_str(), plain_out.c_str()) != 0)
     {
         std::cout << "Input and Output strings do not match" << std::endl;
         return -1;

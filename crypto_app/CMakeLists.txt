@@ -4,7 +4,7 @@ project(CryptoApp)
 add_library(crypto_app 
     src/crypto.cpp 
     src/encryption.cpp 
-    src/testing.cpp 
+    #src/testing.cpp 
     src/utils.cpp
 )
 

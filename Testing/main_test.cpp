@@ -3,10 +3,10 @@
 
 TEST(EncryptionTest, encrypt_decrypt) {
     int result = 0;
-    result = encrypt_decrypt_test();
+    result = encrypt_decrypt_test("Super Secret Message");
     EXPECT_EQ(result, 0);
 
-    result = decrypt_from_file_test("../secure/encrypt");
+    result = decrypt_from_file_test("../secure/encrypt", "Secret");
     EXPECT_EQ(result, 0);
 }
 
@@ -60,10 +60,3 @@ TEST(EncryptionTest, hash_test) {
 }
 
 
-TEST(BeispielTest, TestFall1) {
-    EXPECT_EQ(1, 1);
-}
-
-TEST(BeispielTest, TestFall2) {
-    EXPECT_TRUE(true);
-}
