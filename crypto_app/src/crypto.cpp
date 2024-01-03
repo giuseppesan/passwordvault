@@ -223,6 +223,10 @@ int crypto::check_entry(const std::string &entry)
 
 int crypto::add_new_entry(const std::string &tag, const std::string &user, const std::string &password)
 {
+    //std::string encrypted_password = password;
+    //encryption obj;
+    //obj.encrypt_credentials(encrypted_password);
+
     std::string credentials = tag + ":" + user + ":" + password;
 
     if (write_to_file(credentials, logins_path.c_str()) != 0)

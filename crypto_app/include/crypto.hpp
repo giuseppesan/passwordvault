@@ -8,6 +8,7 @@
 #include <string>
 #include <random>
 #include "../src/utils.cpp"
+#include "encryption.hpp"
 
 const int ITERATIONS = 10;
 const int ALGORITHM_SHA256 = 1;

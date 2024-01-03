@@ -196,7 +196,7 @@ void CLInterface::handle_help()
         std::cout << "Available commands are:\n";
         std::cout << "'r' or 'register' - to create an account\n";
         std::cout << "'l' or 'login' - to log into your existing account\n";
-        std::cout << "'q' or 'quit' - to create an account\n\n";
+        std::cout << "'q' or 'quit' - to exit\n\n";
         std::cout << "'h' or 'help' - to get a list of available commands\n\n";
     }
     else if (curr_path == "pw_manager")
@@ -208,7 +208,7 @@ void CLInterface::handle_help()
         // std::cout << "'create pw' - to create a new random password\n";
         // std::cout << "'change pw' - to change your password\n";
         // std::cout << "'delete credential' - to delete your password\n\n";
-        std::cout << "'q' or 'quit' - to create an account\n";
+        std::cout << "'q' or 'quit' - to exit\n";
         std::cout << "'h' or 'help' - to get a list of available commands\n\n";
     }
 }

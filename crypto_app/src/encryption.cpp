@@ -204,3 +204,60 @@ int encryption::prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t>
 
     return 0;
 }
+
+int encryption::decrypt_credentials()
+{
+    std::fstream my_file("../secure/logins", std::ios::in | std::ios::out);
+    std::vector<uint8_t> cipher_block;
+    std::string line;
+    std::string password;
+    std::string credentials;
+    std::string plain;
+
+    if (!my_file.is_open())
+    {
+        std::cerr << "Unable to open & read file\n";
+        return -1;
+    }
+
+    while (getline(my_file, line))
+    {
+        size_t firstColonPos = line.find(':');
+        size_t secondColonPos = line.find(':', firstColonPos + 1);
+        
+        if(firstColonPos != std::string::npos && secondColonPos != std::string::npos)
+        {
+            credentials = line.substr(0, secondColonPos + 1);
+            std::cout << "credential is " << credentials << std::endl; 
+            
+            password = line.substr(secondColonPos + 1);
+            std::cout << "pw is " << password << std::endl;
+            
+            hex2bin(password.c_str(), cipher_block);
+            if(handle_decryption(cipher_block, plain) != 0) 
+            {
+                return -1;
+            }
+            std::cout << "pw plain is " << plain << std::endl; 
+        }
+        else
+        {
+            std::cerr << "Malformed string" << std::endl;
+        } 
+    }
+    return 0;
+}
+
+int encrypt_credentials(std::string &password)
+{
+    std::vector<uint8_t> cipher_block;
+    encryption obj;
+    
+    if(obj.handle_encryption(password, cipher_block) != 0)
+    {
+        return -1;
+    }
+
+    password = to_hex(cipher_block);
+    return 0;
+}
