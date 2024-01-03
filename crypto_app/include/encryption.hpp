@@ -27,7 +27,7 @@ public:
     /**
      * @brief 
      * @param plain plain password 
-     * @param padded_cipher 16 Bytes IV + 4 Bytes Length + 256 Bytes encrypted+padded Payload
+     * @param padded_cipher 16 Bytes IV + 256 Bytes encrypted+padded Payload
      * @return 0 if successful
      */
     int handle_encryption(const std::string plain, std::vector<uint8_t> &padded_cipher);
@@ -36,10 +36,9 @@ public:
      * @brief 
      * @param cipher 
      * @param decrypted_string 
-     * @param in 
      * @return 0 if successful
      */
-    int handle_decryption(const std::vector<uint8_t> & cipher, std::string &decrypted_string);
+    int handle_decryption(const std::vector<uint8_t> &cipher, std::string &decrypted_string);
 
 private:
 
@@ -72,12 +71,10 @@ private:
     
 
     /**
-     * @brief get IV(Initial-Vector) 16 Bytes from cipher text + add length of cipher_text from byte 16 to 19 + add cipher_text
+     * @brief get IV(Initial-Vector) 16 Bytes from cipher text + add cipher_text
      * @param iv 
      * @param plain_cipher_text 
-     * @param pl_ciph_text_size 
-     * @param cipher_text_out 
-     * @param ciph_text_out_size 
+     * @param cipher_block 
      * @return 0 if successful
      */
     int prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t> &plain_cipher_text, std::vector<uint8_t> &cipher_block);
