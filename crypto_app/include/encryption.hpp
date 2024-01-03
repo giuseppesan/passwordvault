@@ -80,7 +80,7 @@ private:
      * @param ciph_text_out_size 
      * @return 0 if successful
      */
-    int prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t> &plain_cipher_text, uint64_t pl_ciph_text_size, std::vector<uint8_t> &cipher_block);
+    int prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t> &plain_cipher_text, std::vector<uint8_t> &cipher_block);
     
     /**
      * @brief copy bytes 0 to 15 to iv during decryption

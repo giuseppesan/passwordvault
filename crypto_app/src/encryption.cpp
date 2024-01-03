@@ -71,7 +71,7 @@ int encryption::handle_encryption(const std::string plain_text, std::vector<uint
 
     /*Adds Header to encrypted payload
     16 Bytes IV + 256 Bytes Payload*/
-    ret = encryption_obj.prepare_ciphertext(iv, cipher_payload, ciphertext_len, cipher_block);
+    ret = encryption_obj.prepare_ciphertext(iv, cipher_payload, cipher_block);
 
     if (ret != 0)
     {
@@ -187,7 +187,7 @@ bool encryption::decrypt(const std::vector<uint8_t> &cipher_payload, int ciphert
     return true;
 }
 
-int encryption::prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t> &plain_cipher_text, uint64_t pl_ciph_text_size,
+int encryption::prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t> &plain_cipher_text,
                                    std::vector<uint8_t> &cipher_block)
 {
     /*copy IV to bytes 0 to 15*/

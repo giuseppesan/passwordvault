@@ -130,7 +130,7 @@ void CLInterface::handle_register(crypto &cobj)
     std::cout << "Algorithms [1]SHA256 [2]SHA512\n";
     std::cin >> alg;
 
-    int ret = cobj.register_user(cobj.get_user(), cobj.get_password(), alg);
+    cobj.register_user(cobj.get_user(), cobj.get_password(), alg);
 }
 
 void CLInterface::handle_logout()
