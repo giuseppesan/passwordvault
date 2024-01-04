@@ -3,8 +3,6 @@
 
 int main()
 {
-    //encryption obj;
-    //obj.decrypt_credentials();
     CLInterface cli;
     while (true)
     {

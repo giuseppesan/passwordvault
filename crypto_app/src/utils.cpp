@@ -8,8 +8,12 @@
 #include <sstream>
 #include <iomanip>
 #include <vector>
+#include "../include/encryption.hpp"
 
 #define PEPPER "SEpl9QTQ574d9R5R"
+
+std::string passwd_path = "../secure/passwd";
+std::string logins_path = "../secure/logins";
 
 /**
  * @brief convert bytes to hexstring

@@ -39,8 +39,21 @@ public:
      * @return 0 if successful
      */
     int handle_decryption(const std::vector<uint8_t> &cipher, std::string &decrypted_string);
+    
+    /**
+     * @brief 
+     * @param password 
+     * @return 
+     */
     int encrypt_credentials(std::string &password);
-    int decrypt_credentials();
+    
+    /**
+     * @brief 
+     * @param credentials 
+     * @return 
+     */
+    int decrypt_credentials(std::string &credentials);
+    
 private:
 
     /**

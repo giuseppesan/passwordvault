@@ -52,7 +52,7 @@ public:
      */
     int find_user(const std::string& name, int action);
 
-    /**
+/**
      * @brief add new login credentials
      * 
      * @param tag tag which the user searches for e.g. google
@@ -76,10 +76,6 @@ public:
     void set_password(std::string p) { password = p; }
     std::string get_user() { return user; }
     std::string get_password() { return password; }
-
-    std::string passwd_path = "../secure/passwd";
-    std::string logins_path = "../secure/logins";
-
 
 private:
     /**

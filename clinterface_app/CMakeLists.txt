@@ -5,4 +5,4 @@ add_library(clinterface_app
     src/CLInterface.cpp
 )
 
-target_include_directories(clinterface_app PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(clinterface_app PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

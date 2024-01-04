@@ -1,5 +1,6 @@
 #include "../include/CLInterface.hpp"
 
+
 CLInterface::CLInterface() : curr_path("auth"), logged_in_user("")
 {
     handle_help();
@@ -178,13 +179,14 @@ void CLInterface::handle_get_credential(crypto &cobj)
     std::string entry;
     std::cout << "Tag: \n";
     std::cin >> entry;
-
+    encryption obj;
     if (cobj.check_entry(entry) == 0)
     {
         std::string out;
         if (read_from_file_and_find(out, entry, "../secure/logins") == 0)
         {
-            std::cout << "Credentials: " << out << std::endl;
+            std::cout << "Credentials: " << std::endl;
+            obj.decrypt_credentials(out);
         }
     }
 }

@@ -6,6 +6,5 @@ add_library(crypto_app
     src/encryption.cpp 
     src/utils.cpp
 )
-include_directories(include)
 
-target_include_directories(crypto_app PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(crypto_app PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
