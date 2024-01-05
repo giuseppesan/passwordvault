@@ -40,7 +40,7 @@ TEST(EncryptionTest, encrypt_decrypt_too_big)
 
 TEST(EncryptionTest, hash_test)
 {
-    crypto c_obj;
+    hash c_obj;
     int result = 0;
 
     if (c_obj.find_user("user1", 1) == 0)

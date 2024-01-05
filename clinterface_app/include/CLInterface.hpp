@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "../../crypto_app/include/crypto.hpp"
+#include "../../crypto_app/include/hash.hpp"
 #include "../../crypto_app/src/utils.cpp"
 
 class CLInterface
@@ -29,19 +29,19 @@ public:
      * @brief switches between register, login, quit
      * @param obj
      */
-    void handle_startup(crypto &obj);
+    void handle_startup(hash &obj);
 
     /**
      * @brief check credentials
      * @param cobj
      */
-    void handle_login(crypto &cobj);
+    void handle_login(hash &cobj);
 
     /**
      * @brief register user
      * @param cobj
      */
-    void handle_register(crypto &cobj);
+    void handle_register(hash &cobj);
 
     /**
      * @brief logout user
@@ -58,19 +58,19 @@ public:
      * @brief
      * @param cobj
      */
-    void handle_credentials(crypto &cobj);
+    void handle_credentials(hash &cobj);
 
     /**
      * @brief
      * @param cobj
      */
-    void handle_credential_entry(crypto &cobj);
+    void handle_credential_entry(hash &cobj);
 
     /**
      * @brief
      * @param cobj
      */
-    void handle_get_credential(crypto &cobj);
+    void handle_get_credential(hash &cobj);
 
     CLInterface();
     ~CLInterface();

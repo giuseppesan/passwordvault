@@ -4,7 +4,7 @@
  */
 #include <cassert>
 #include "../crypto_app/include/encryption.hpp"
-#include "../crypto_app/include/crypto.hpp"
+#include "../crypto_app/include/hash.hpp"
 
 int encrypt_decrypt_test(std::string plain_text)
 {

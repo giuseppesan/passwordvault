@@ -1,12 +1,12 @@
 
-#include "../include/crypto.hpp"
+#include "../include/hash.hpp"
 
-crypto::crypto() = default;
+hash::hash() = default;
 
 
-crypto::~crypto() = default;
+hash::~hash() = default;
 
-int crypto::sha_256(std::string in, std::string &out)
+int hash::sha_256(std::string in, std::string &out)
 {
     unsigned char hash[SHA256_DIGEST_LENGTH];
     const unsigned char *plain_password = reinterpret_cast<const unsigned char *>(in.c_str());
@@ -27,7 +27,7 @@ int crypto::sha_256(std::string in, std::string &out)
     return 0;
 }
 
-int crypto::sha_512(std::string in, std::string &out)
+int hash::sha_512(std::string in, std::string &out)
 {
     unsigned char hash[SHA512_DIGEST_LENGTH];
     const unsigned char *plain_password = reinterpret_cast<const unsigned char *>(in.c_str());
@@ -48,7 +48,7 @@ int crypto::sha_512(std::string in, std::string &out)
     return 0;
 }
 
-int crypto::salt_n_hash(std::string in, std::string salt, std::string &final_hash, size_t iterations)
+int hash::salt_n_hash(std::string in, std::string salt, std::string &final_hash, size_t iterations)
 {
     if (algorithm != ALGORITHM_SHA256 && algorithm != ALGORITHM_SHA512)
     {
@@ -82,7 +82,7 @@ int crypto::salt_n_hash(std::string in, std::string salt, std::string &final_has
     return 0;
 }
 
-int crypto::check_login(std::string name, std::string pw)
+int hash::check_login(std::string name, std::string pw)
 {
     int ret = -1;
     std::string saved_hash, salt, final_hash;
@@ -130,7 +130,7 @@ int crypto::check_login(std::string name, std::string pw)
     return 0;
 }
 
-void crypto::generate_salt(std::string &out)
+void hash::generate_salt(std::string &out)
 {
     // Create random 16 byte salt from charset
     const std::string CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -146,7 +146,7 @@ void crypto::generate_salt(std::string &out)
     }
 }
 
-int crypto::register_user(const std::string &name, const std::string &password, int u_algorithm)
+int hash::register_user(const std::string &name, const std::string &password, int u_algorithm)
 {
     std::string salt, final_hash;
     std::stringstream ss;
@@ -165,7 +165,7 @@ int crypto::register_user(const std::string &name, const std::string &password, 
     return write_to_file(out, passwd_path.c_str());
 }
 
-int crypto::find_user(const std::string &name, int action)
+int hash::find_user(const std::string &name, int action)
 {
     std::fstream my_file(passwd_path.c_str());
     std::string line = "";
@@ -196,7 +196,7 @@ int crypto::find_user(const std::string &name, int action)
     return 0;
 }
 
-int crypto::check_entry(const std::string &entry)
+int hash::check_entry(const std::string &entry)
 {
     std::string path = "../secure/logins";
     std::ifstream my_file(path.c_str());
@@ -221,7 +221,7 @@ int crypto::check_entry(const std::string &entry)
     return -1;
 }
 
-int crypto::add_new_entry(const std::string &tag, const std::string &user, const std::string &password)
+int hash::add_new_entry(const std::string &tag, const std::string &user, const std::string &password)
 {
     std::string encrypted_password = password;
     encryption obj;

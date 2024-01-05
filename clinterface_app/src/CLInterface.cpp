@@ -8,7 +8,7 @@ CLInterface::CLInterface() : curr_path("auth"), logged_in_user("")
 
 void CLInterface::main_thread()
 {
-    crypto cobj;
+    hash cobj;
 
     // Display user information
     if (!logged_in_user.empty())
@@ -62,7 +62,7 @@ void CLInterface::sanitize_input(std::string &input)
     input.erase(input.find_last_not_of(" \t\n\r\f\v") + 1);
 }
 
-void CLInterface::handle_startup(crypto &cobj)
+void CLInterface::handle_startup(hash &cobj)
 {
     if (input == "l" || input == "login")
     {
@@ -82,7 +82,7 @@ void CLInterface::handle_startup(crypto &cobj)
     }
 }
 
-void CLInterface::handle_login(crypto &cobj)
+void CLInterface::handle_login(hash &cobj)
 {
     std::cout << "Handle login \n";
     std::string u, p;
@@ -108,7 +108,7 @@ void CLInterface::handle_login(crypto &cobj)
     }
 }
 
-void CLInterface::handle_register(crypto &cobj)
+void CLInterface::handle_register(hash &cobj)
 {
     std::cout << "Handle register \n";
     std::string u, p;
@@ -140,7 +140,7 @@ void CLInterface::handle_logout()
     logged_in_user.clear();
 }
 
-void CLInterface::handle_credentials(crypto &cobj)
+void CLInterface::handle_credentials(hash &cobj)
 {
     if (input == "c" || input == "credential")
     {
@@ -160,7 +160,7 @@ void CLInterface::handle_credentials(crypto &cobj)
     }
 }
 
-void CLInterface::handle_credential_entry(crypto &cobj)
+void CLInterface::handle_credential_entry(hash &cobj)
 {
     std::string user, password, tag;
 
@@ -174,7 +174,7 @@ void CLInterface::handle_credential_entry(crypto &cobj)
     cobj.add_new_entry(tag, user, password);
 }
 
-void CLInterface::handle_get_credential(crypto &cobj)
+void CLInterface::handle_get_credential(hash &cobj)
 {
     std::string entry;
     std::cout << "Tag: \n";

@@ -1,5 +1,5 @@
-#ifndef CRYPTO_H
-#define CRYPTO_H
+#ifndef HASH_H
+#define HASH_H
 
 #include <openssl/sha.h>
 #include <iostream>
@@ -15,11 +15,11 @@ const int ALGORITHM_SHA256 = 1;
 const int ALGORITHM_SHA512 = 2;
 const size_t salt_size = 16;
 
-class crypto
+class hash
 {
 public:
-    crypto();
-    ~crypto();
+    hash();
+    ~hash();
 
     /**
      * @brief reads hashed password from file and compares it to input
@@ -123,4 +123,4 @@ private:
     int algorithm = 0;
 };
 
-#endif // CRYPTO_H
+#endif // HASH_H

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(CryptoApp)
 
 add_library(crypto_app 
-    src/crypto.cpp 
+    src/hash.cpp 
     src/encryption.cpp 
     src/utils.cpp
 )
