@@ -1,6 +1,8 @@
+#pragma GCC diagnostic push
+#pragma GCC
 #pragma once
-#include <AppCore/AppCore.h>
 
+#include <AppCore/AppCore.h>
 using namespace ultralight;
 
 class MyApp : public AppListener,
@@ -42,6 +44,9 @@ public:
 
   virtual void OnChangeTitle(ultralight::View* caller,
     const String& title) override;
+
+
+  virtual void OnChangeURL(String url);
 
 protected:
   RefPtr<App> app_;

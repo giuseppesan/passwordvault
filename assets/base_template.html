@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Layout</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+        }
+
+        #sidebar {
+            flex: 0 0 200px; /* Fixed width for the sidebar */
+            height: 100vh; /* Full height of the viewport */
+            background-color: #333; /* Dark background color for the sidebar */
+            color: #fff; /* Text color for the sidebar */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #container {
+            flex: 1;
+            background-color: #f4f4f4; /* Light background color for the container */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                flex: 0 0 170px;
+                padding: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <!-- Sidebar content goes here -->
+    <h2>Sidebar</h2>
+    <p>Links</p>
+    <p>Navigation</p>
+</div>
+
+<div id="container">
+    <!-- Container content goes here -->
+    <h1>Main Content</h1>
+    <p>This is the main content area on the right.</p>
+</div>
+
+</body>
+</html>

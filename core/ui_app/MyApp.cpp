@@ -1,4 +1,3 @@
-#include "../main.hpp"
 #include "MyApp.h"
 
 #define WINDOW_WIDTH 600
@@ -34,16 +33,6 @@ MyApp::MyApp()
   ///
   overlay_->view()->LoadURL("file:///app.html");
 
-  overlay_->view()->EvaluateScript(
-      "document.getElementById('registerLink').addEventListener('click', function() {"
-      "  window.ultralightApp.loadRegistrationPage();"
-      "});");
-  overlay_->view()->EvaluateScript(
-      "document.getElementById('backToLoginLink').addEventListener('click', function() {"
-      "  window.ultralightApp.goBackToLoginPage();"
-      "});");
-
-  ///
   /// Register our MyApp instance as an AppListener so we can handle the
   /// App's OnUpdate event below.
   ///
@@ -106,15 +95,15 @@ void MyApp::OnFinishLoading(ultralight::View *caller,
                             bool is_main_frame,
                             const String &url)
 {
-   if (is_main_frame) {
-    // Notify the page that the UltralightApp object is ready
-    overlay_->view()->EvaluateScript(
-      "window.ultralightApp = {"
-      "  loadRegistrationPage: function() { window.location.href = 'file:///registration.html'; },"
-      "  goBackToLoginPage: function() { window.location.href = 'file:///app.html'; },"
-      "  registerUser: function() { /* Implement user registration logic here */ }"
-      "};");
-  }
+  //  if (is_main_frame) {
+  //   // Notify the page that the UltralightApp object is ready
+  //   overlay_->view()->EvaluateScript(
+  //     "window.ultralightApp = {"
+  //     "  loadRegistrationPage: function() { window.location.href = 'file:///registration.html'; },"
+  //     "  goBackToLoginPage: function() { window.location.href = 'file:///app.html'; },"
+  //     "  registerUser: function() { /* Implement user registration logic here */ }"
+  //     "};");
+  // }
 }
 
 void MyApp::OnDOMReady(ultralight::View *caller,
@@ -149,4 +138,10 @@ void MyApp::OnChangeTitle(ultralight::View *caller,
   /// We update the main window's title here.
   ///
   window_->SetTitle("Passwordvault");
+}
+
+void MyApp::OnChangeURL(String url)
+{
+  // Opens HTML based off string
+  overlay_->view()->LoadURL(url);
 }

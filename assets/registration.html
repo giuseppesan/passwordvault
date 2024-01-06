@@ -88,15 +88,18 @@
 
         <button type="submit" id="registerButton">Register</button>
 
-        <a href="#" class="back-link" id="backToLoginLink">Back to Login</a>
+        <a href="file:///app.html" class="link" id="backToLoginLink">Back to Login</a>
     </div>
 </div>
 
 <script>
-    document.getElementById('backToLoginLink').addEventListener('click', function() {
-        window.ultralightApp.goBackToLoginPage();
+    const links = document.querySelectorAll('link')
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        window.ultralightApp.OnChangeURL(link.href);
+      });
     });
-</script>
+  </script>
 
 </body>
 </html>

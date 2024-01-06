@@ -93,16 +93,21 @@
         <input type="password" id="password" name="password" placeholder="Enter your password">
 
         <button type="submit" id="loginButton">Login</button>
+        Penis
 
-        <a href="#" class="register-link" id="registerLink">Register</a>
+        <a href="file:///registration.html" class="link" id="registerLink">Register</a>
+        <a href="file:///passwords.html" class="link">Passwords</a>
+        <a href="file:///base_template.html" class="link">BaseTemplate</a>
     </div>
 </div>
 
 <script>
-    document.getElementById('registerLink').addEventListener('click', function() {
-        window.ultralightApp.loadRegistrationPage();
+  const links = document.querySelectorAll('link')
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      window.ultralightApp.OnChangeURL(link.href);
     });
-    
+  });
 </script>
 
 </body>
