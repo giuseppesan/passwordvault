@@ -1,3 +1,16 @@
+## Project Structure
+
+#### assets/ ####
+hold static html files
+
+#### cmake/ ####
+custom cmake to build UI
+
+#### core/ ####
+code is stored here
+
+
+
 ## Installation
 ### CMake
 ```sh

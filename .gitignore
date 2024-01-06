@@ -7,3 +7,8 @@ build
 .history/
 # Built Visual Studio Code Extensions
 *.vsix
+
+# Ignore build/bin directories
+[Bb]uild/
+build_*/
+.DS_Store
