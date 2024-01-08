@@ -9,7 +9,7 @@ TEST(EncryptionTest, encrypt_decrypt_positive)
 }
 TEST(EncryptionTest, encrypt_decrypt_file_positive)
 {
-    int result = decrypt_from_file_test("../secure/encrypt", "Secret");
+    int result = decrypt_from_file_test(encrypt_path, "Secret");
     EXPECT_EQ(result, 0);
 }
 TEST(EncryptionTest, encrypt_decrypt_all_num)

@@ -12,8 +12,9 @@
 
 #define PEPPER "SEpl9QTQ574d9R5R"
 
-std::string passwd_path = "../secure/passwd";
-std::string logins_path = "../secure/logins";
+const std::string passwd_path = "../data/passwd";
+const std::string logins_path = "../data/logins";
+const std::string encrypt_path = "../Testing/encrypt";
 
 /**
  * @brief convert bytes to hexstring

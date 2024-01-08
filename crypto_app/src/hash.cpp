@@ -198,7 +198,7 @@ int hash::find_user(const std::string &name, int action)
 
 int hash::check_entry(const std::string &entry)
 {
-    std::string path = "../secure/logins";
+    std::string path = logins_path;
     std::ifstream my_file(path.c_str());
     std::string line = "";
 
