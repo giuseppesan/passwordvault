@@ -230,6 +230,7 @@ int encryption::decrypt_credentials(std::string &credentials)
     else
     {
         std::cerr << "Malformed string" << std::endl;
+        return -1;
     } 
     return 0;
 }
