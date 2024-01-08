@@ -53,6 +53,17 @@ public:
      * @return plain password
      */
     int decrypt_credentials(std::string &credentials);
+
+    /**
+     * @brief add new login credentials
+     * 
+     * @param tag tag which the user searches for e.g. google
+     * @param user username
+     * @param password user password
+     * 
+     * @return 0 if successful
+     */
+    int add_new_entry(const std::string& tag, const std::string& user, const std::string& password);
     
 private:
 

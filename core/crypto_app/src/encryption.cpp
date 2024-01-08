@@ -247,3 +247,21 @@ int encryption::encrypt_credentials(std::string &password)
     password = utils::to_hex(cipher_block);
     return 0;
 }
+
+int encryption::add_new_entry(const std::string &tag, const std::string &user, const std::string &password)
+{
+    std::string encrypted_password = password;
+    encryption obj;
+    obj.encrypt_credentials(encrypted_password);
+
+    std::string credentials = tag + ":" + user + ":" + encrypted_password;
+
+    if (utils::write_to_file(credentials, credentials_path.c_str()) != 0)
+    {
+        std::cerr << "Failed to add new entry to file\n";
+        return -1;
+    }
+    std::cout << "credentials were added\n";
+
+    return 0;
+}

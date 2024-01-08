@@ -89,11 +89,16 @@ int hash::check_login(std::string name, std::string pw)
 
     ret = utils::read_from_file_and_find(saved_hash, name, passwd_path);
 
-    if (ret != 0)
+    if (ret == not_found)
+    {
+        std::cerr << "Username not found\n";
+        return ret;
+    }
+    else if (ret != 0)
     {
         return ret;
     }
-
+    
     // Erase name from string
     saved_hash.erase(0, name.size() + 1);
 
@@ -165,21 +170,4 @@ int hash::register_user(const std::string &name, const std::string &password, in
     return utils::write_to_file(out, passwd_path.c_str());
 }
 
-int hash::add_new_entry(const std::string &tag, const std::string &user, const std::string &password)
-{
-    std::string encrypted_password = password;
-    encryption obj;
-    obj.encrypt_credentials(encrypted_password);
-
-    std::string credentials = tag + ":" + user + ":" + encrypted_password;
-
-    if (utils::write_to_file(credentials, credentials_path.c_str()) != 0)
-    {
-        std::cerr << "Failed to add new entry to file\n";
-        return -1;
-    }
-    std::cout << "credentials were added\n";
-
-    return 0;
-}
 

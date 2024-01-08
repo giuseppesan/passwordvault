@@ -50,25 +50,25 @@ TEST(Hashing, hash_test)
     hash c_obj;
     int result = 0;
 
-    if (utils::find_entry("user1", passwd_path) == 0)
+    if (utils::find_entry("user1", passwd_path) == not_found)
     {
         result = c_obj.register_user("user1", "user1", 1);
         EXPECT_EQ(result, 0);
         std::cout << std::endl;
 
         result = utils::find_entry("user1", passwd_path);
-        EXPECT_NE(result, 0);
+        EXPECT_EQ(result, 0);
         std::cout << std::endl;
     }
 
-    if (utils::find_entry("user2", passwd_path) == 0)
+    if (utils::find_entry("user2", passwd_path) == not_found)
     {
         result = c_obj.register_user("user2", "user2", 2);
         EXPECT_EQ(result, 0);
         std::cout << std::endl;
 
         result = utils::find_entry("user2", passwd_path);
-        EXPECT_NE(result, 0);
+        EXPECT_EQ(result, 0);
         std::cout << std::endl;
     }
 
@@ -92,5 +92,5 @@ TEST(Hashing, hash_test)
     EXPECT_NE(result, 0);
     std::cout << std::endl;
 
-    std::ofstream file("../secure/passwd", std::ios::trunc);
+    std::ofstream file(passwd_path, std::ios::trunc);
 }

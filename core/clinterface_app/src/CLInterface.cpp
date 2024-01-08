@@ -41,7 +41,7 @@ void CLInterface::main_thread()
         }
         else if (curr_path == "pw_manager")
         {
-            handle_credentials(hash_obj);
+            handle_credentials();
         }
     }
 }
@@ -116,9 +116,9 @@ void CLInterface::handle_register(hash &hash_obj)
     getline(std::cin, u);
     hash_obj.set_user(u);
 
-    while (utils::find_entry(hash_obj.get_user(), passwd_path) == -1)
+    while (utils::find_entry(hash_obj.get_user(), passwd_path) == not_found)
     {
-        std::cout << "Choose a new username:\n";
+        std::cout << "Username is taken. Choose a new username:\n";
         getline(std::cin, u);
         hash_obj.set_user(u);
     }
@@ -140,11 +140,11 @@ void CLInterface::handle_logout()
     logged_in_user.clear();
 }
 
-void CLInterface::handle_credentials(hash &hash_obj)
+void CLInterface::handle_credentials()
 {
     if (input == "c" || input == "credential")
     {
-        handle_credential_entry(hash_obj);
+        handle_credential_entry();
     }
     else if (input == "get credential" || input == "gc")
     {
@@ -160,7 +160,7 @@ void CLInterface::handle_credentials(hash &hash_obj)
     }
 }
 
-void CLInterface::handle_credential_entry(hash &hash_obj)
+void CLInterface::handle_credential_entry()
 {
     std::string user, password, tag;
 
@@ -170,8 +170,15 @@ void CLInterface::handle_credential_entry(hash &hash_obj)
     std::cin >> password;
     std::cout << "Tag: \n";
     std::cin >> tag;
+   
+    while (utils::find_entry(user, credentials_path) == found)
+    {
+        std::cout << "Tag is taken. Choose a new Tag:\n";
+        getline(std::cin, user);
+    }
 
-    hash_obj.add_new_entry(tag, user, password);
+    encryption enc_obj;
+    enc_obj.add_new_entry(tag, user, password);
 }
 
 void CLInterface::handle_get_credential()
@@ -180,14 +187,16 @@ void CLInterface::handle_get_credential()
     std::cout << "Tag: \n";
     std::cin >> entry;
     encryption obj;
-    if (utils::find_entry(entry, credentials_path) == 0)
+    std::string out;
+    
+    if (utils::read_from_file_and_find(out, entry, credentials_path) == found)
     {
-        std::string out;
-        if (utils::read_from_file_and_find(out, entry, credentials_path) == 0)
-        {
-            std::cout << "Credentials: " << std::endl;
-            obj.decrypt_credentials(out);
-        }
+        std::cout << "Credentials: " << std::endl;
+        obj.decrypt_credentials(out);
+    }
+    else
+    {
+        std::cerr << "Credentials not found " << std::endl;
     }
 }
 

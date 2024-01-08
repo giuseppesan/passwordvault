@@ -13,6 +13,8 @@
 
 const std::string passwd_path = "../data/passwd";
 const std::string credentials_path = "../data/logins";
+const int found = 0; 
+const int not_found = -2; 
 
 namespace utils
 {
@@ -83,6 +85,12 @@ int write_to_file(std::string in, std::string file)
 }
 
 
+/**
+ * @brief looks in defined file for a matching string
+ * @param entry search string
+ * @param path filepath
+ * @return found 0 if successful, not found -2 if not successful
+ */
 int find_entry(const std::string &entry, std::string path)
 {
     std::fstream my_file(path);
@@ -98,13 +106,11 @@ int find_entry(const std::string &entry, std::string path)
     {
         if (line.substr(0, entry.size()) == entry)
         {
-            std::cout << "Username is taken\n";
-            return -1;
+            return found;
         }
     }
 
-    std::cout << "Username is available\n";
-    return 0;
+    return not_found;
 }
 
 /**
@@ -114,7 +120,7 @@ int find_entry(const std::string &entry, std::string path)
  * @param name given name
  * @param path filepath
  *
- * @return 0 if successful
+ * @return found 0 if successful, not found -2 if not successful
  */
 
 int read_from_file_and_find(std::string &out, std::string name, std::string path)
@@ -136,13 +142,10 @@ int read_from_file_and_find(std::string &out, std::string name, std::string path
         {
             out = line;
             my_file.close();
-            std::cout << "Entry found\n";
-            return 0;
+            return found;
         }
     }
-
-    std::cerr << "Entry not found\n";
-    return -1;
+    return not_found;
 }
 
 /**

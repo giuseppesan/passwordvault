@@ -10,11 +10,6 @@
 #include "../include/utils.hpp"
 #include "encryption.hpp"
 
-const int ITERATIONS = 10;
-const int ALGORITHM_SHA256 = 1;
-const int ALGORITHM_SHA512 = 2;
-const size_t salt_size = 16;
-
 class hash
 {
 public:
@@ -41,21 +36,13 @@ public:
      * @return 0 if successful
      */
     int register_user(const std::string & name, const std::string & password, int u_algorithm);
-
-    /**
-     * @brief add new login credentials
-     * 
-     * @param tag tag which the user searches for e.g. google
-     * @param user username
-     * @param password user password
-     * 
-     * @return 0 if successful
-     */
-    int add_new_entry(const std::string& tag, const std::string& user, const std::string& password);
     
     void set_user(std::string u) { user = u; }
+
     void set_password(std::string p) { password = p; }
+
     std::string get_user() { return user; }
+
     std::string get_password() { return password; }
 
 private:
@@ -98,6 +85,11 @@ private:
      *
      */
     void generate_salt(std::string &out);
+
+    const int ITERATIONS = 10;
+    const int ALGORITHM_SHA256 = 1;
+    const int ALGORITHM_SHA512 = 2;
+    const size_t salt_size = 16;
 
     std::string user = "";
     std::string password = "";

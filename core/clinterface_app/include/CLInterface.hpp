@@ -58,13 +58,13 @@ public:
      * @brief
      * @param cobj
      */
-    void handle_credentials(hash &cobj);
+    void handle_credentials();
 
     /**
      * @brief
      * @param cobj
      */
-    void handle_credential_entry(hash &cobj);
+    void handle_credential_entry();
 
     /**
      * @brief
