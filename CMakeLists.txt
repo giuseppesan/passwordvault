@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_subdirectory(clinterface_app)
 add_subdirectory(crypto_app)
-add_subdirectory(Testing)
+add_subdirectory(testing)
 
 add_compile_options(-Wall -Wextra -Wpedantic)
 
@@ -15,5 +15,5 @@ target_link_libraries(main PRIVATE crypto_app clinterface_app OpenSSL::SSL OpenS
 
 
 # Test-Executable
-add_executable(MyGtests Testing/main_test.cpp)
+add_executable(MyGtests testing/main_test.cpp)
 target_link_libraries(MyGtests PRIVATE mygtest gtest gtest_main OpenSSL::SSL OpenSSL::Crypto)

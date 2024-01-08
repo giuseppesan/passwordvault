@@ -14,7 +14,7 @@
 
 const std::string passwd_path = "../data/passwd";
 const std::string logins_path = "../data/logins";
-const std::string encrypt_path = "../Testing/encrypt";
+const std::string encrypt_path = "../testing/encrypt";
 
 /**
  * @brief convert bytes to hexstring
