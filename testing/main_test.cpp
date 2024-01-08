@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../main.hpp"
+#include "../core/main.hpp"
 
 const std::string encrypt_path = "../testing/encrypt";
 

@@ -4,13 +4,13 @@ project(PasswordVault)
 find_package(OpenSSL REQUIRED)
 set(CMAKE_CXX_STANDARD 11)
 
-add_subdirectory(clinterface_app)
-add_subdirectory(crypto_app)
+add_subdirectory(core/clinterface_app)
+add_subdirectory(core/crypto_app)
 add_subdirectory(testing)
 
 add_compile_options(-Wall -Wextra -Wpedantic)
 
-add_executable(main main.cpp)
+add_executable(main core/main.cpp)
 target_link_libraries(main PRIVATE crypto_app clinterface_app OpenSSL::SSL OpenSSL::Crypto)
 
 
