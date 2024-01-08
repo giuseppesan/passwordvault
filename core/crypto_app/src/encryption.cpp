@@ -79,7 +79,7 @@ int encryption::handle_encryption(const std::string plain_text, std::vector<uint
         return -1;
     }
 
-    hex_string = to_hex(cipher_block);
+    hex_string = utils::to_hex(cipher_block);
 
     std::cout << "Ciphertext is:\n";
     std::cout << hex_string << std::endl;
@@ -218,7 +218,7 @@ int encryption::decrypt_credentials(std::string &credentials)
     {
         username = credentials.substr(0, secondColonPos + 1);
         password = credentials.substr(secondColonPos + 1);
-        hex2bin(password.c_str(), cipher_block);
+        utils::hex2bin(password.c_str(), cipher_block);
         
         if(handle_decryption(cipher_block, plain_password) != 0) 
         {
@@ -244,6 +244,6 @@ int encryption::encrypt_credentials(std::string &password)
         return -1;
     }
 
-    password = to_hex(cipher_block);
+    password = utils::to_hex(cipher_block);
     return 0;
 }

@@ -11,7 +11,7 @@
 #include <memory>
 #include <random>
 #include <stdexcept>
-#include "../src/utils.cpp"
+#include "utils.hpp"
 #include "key.hpp"
 
 const int AES_BLOCK_SIZE = 256;

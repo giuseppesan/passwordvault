@@ -22,7 +22,7 @@ int hash::sha_256(std::string in, std::string &out)
         return -1;
     }
 
-    out = to_hex_sha(hash_bytes_ptr, SHA256_DIGEST_LENGTH);
+    out = utils::to_hex_sha(hash_bytes_ptr, SHA256_DIGEST_LENGTH);
 
     return 0;
 }
@@ -43,7 +43,7 @@ int hash::sha_512(std::string in, std::string &out)
         return -1;
     }
 
-    out = to_hex_sha(hash_bytes_ptr, SHA512_DIGEST_LENGTH);
+    out = utils::to_hex_sha(hash_bytes_ptr, SHA512_DIGEST_LENGTH);
 
     return 0;
 }
@@ -87,7 +87,7 @@ int hash::check_login(std::string name, std::string pw)
     int ret = -1;
     std::string saved_hash, salt, final_hash;
 
-    ret = read_from_file_and_find(saved_hash, name, passwd_path);
+    ret = utils::read_from_file_and_find(saved_hash, name, passwd_path);
 
     if (ret != 0)
     {
@@ -162,7 +162,7 @@ int hash::register_user(const std::string &name, const std::string &password, in
     ss << name << ":" << algorithm << ":" << salt << ":" << final_hash;
     std::string out = ss.str();
 
-    return write_to_file(out, passwd_path.c_str());
+    return utils::write_to_file(out, passwd_path.c_str());
 }
 
 int hash::find_user(const std::string &name, int action)
@@ -229,7 +229,7 @@ int hash::add_new_entry(const std::string &tag, const std::string &user, const s
 
     std::string credentials = tag + ":" + user + ":" + encrypted_password;
 
-    if (write_to_file(credentials, logins_path.c_str()) != 0)
+    if (utils::write_to_file(credentials, logins_path.c_str()) != 0)
     {
         std::cerr << "Failed to add new entry to file\n";
         return -1;

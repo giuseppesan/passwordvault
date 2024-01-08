@@ -7,7 +7,7 @@
 #include <string.h>
 #include <string>
 #include <random>
-#include "../src/utils.cpp"
+#include "../include/utils.hpp"
 #include "encryption.hpp"
 
 const int ITERATIONS = 10;

@@ -8,12 +8,14 @@
 #include <sstream>
 #include <iomanip>
 #include <vector>
-#include "../include/encryption.hpp"
 
 #define PEPPER "SEpl9QTQ574d9R5R"
 
 const std::string passwd_path = "../data/passwd";
 const std::string logins_path = "../data/logins";
+
+namespace utils
+{
 
 /**
  * @brief convert bytes to hexstring
@@ -149,5 +151,6 @@ void hex2bin(const char* src, std::vector<uint8_t>& target) {
         target.push_back(byte);
         src += 2;
     }
+}
 }
 #endif // UTILS_H

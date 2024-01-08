@@ -5,7 +5,7 @@
 #include <string>
 #include <sstream>
 #include "../../crypto_app/include/hash.hpp"
-#include "../../crypto_app/src/utils.cpp"
+#include "../../crypto_app/include/utils.hpp"
 
 class CLInterface
 {

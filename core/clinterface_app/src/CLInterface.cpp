@@ -183,7 +183,7 @@ void CLInterface::handle_get_credential(hash &cobj)
     if (cobj.check_entry(entry) == 0)
     {
         std::string out;
-        if (read_from_file_and_find(out, entry, logins_path) == 0)
+        if (utils::read_from_file_and_find(out, entry, logins_path) == 0)
         {
             std::cout << "Credentials: " << std::endl;
             obj.decrypt_credentials(out);

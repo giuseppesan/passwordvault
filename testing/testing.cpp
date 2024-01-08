@@ -57,7 +57,7 @@ int decrypt_from_file_test(std::string file_name, std::string plain_text)
         return -1;
     }
 
-    write_to_file(to_hex(padded_cipher), file_name);
+    utils::write_to_file(utils::to_hex(padded_cipher), file_name);
 
     if (my_file.is_open())
     {
@@ -70,7 +70,7 @@ int decrypt_from_file_test(std::string file_name, std::string plain_text)
         return -1;
     }
 
-    hex2bin(read_buffer.c_str(), cipher_bytes);
+    utils::hex2bin(read_buffer.c_str(), cipher_bytes);
 
     ret = crypto_obj.handle_decryption(cipher_bytes, plain_out);
 

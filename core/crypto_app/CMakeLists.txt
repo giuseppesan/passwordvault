@@ -4,7 +4,6 @@ project(CryptoApp)
 add_library(crypto_app 
     src/hash.cpp 
     src/encryption.cpp 
-    src/utils.cpp
 )
 
 target_include_directories(crypto_app PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
