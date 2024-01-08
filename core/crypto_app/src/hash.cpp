@@ -165,62 +165,6 @@ int hash::register_user(const std::string &name, const std::string &password, in
     return utils::write_to_file(out, passwd_path.c_str());
 }
 
-int hash::find_user(const std::string &name, int action)
-{
-    std::fstream my_file(passwd_path.c_str());
-    std::string line = "";
-
-    if (!my_file.is_open())
-    {
-        std::cerr << "Unable to open & read file\n";
-        return -1;
-    }
-
-    while (std::getline(my_file, line))
-    {
-        if (line.substr(0, name.size()) == name)
-        {
-            if (action == 1)
-            {
-                std::cout << "Username is taken\n";
-                return -1;
-            }
-            else if (action == 2)
-            {
-                //TODO: delete entry
-            }
-        }
-    }
-
-    std::cout << "Username is available\n";
-    return 0;
-}
-
-int hash::check_entry(const std::string &entry)
-{
-    std::string path = logins_path;
-    std::ifstream my_file(path.c_str());
-    std::string line = "";
-
-    if (my_file.fail())
-    {
-        std::cerr << "Unable to open & read file\n";
-        return -1;
-    }
-
-    while (getline(my_file, line))
-    {
-        if (line.substr(0, entry.size()) == entry)
-        {
-            std::cout << "Found credentials\n";
-            my_file.close();
-            return 0;
-        }
-    }
-    std::cerr << "No credentials found\n";
-    return -1;
-}
-
 int hash::add_new_entry(const std::string &tag, const std::string &user, const std::string &password)
 {
     std::string encrypted_password = password;
@@ -229,7 +173,7 @@ int hash::add_new_entry(const std::string &tag, const std::string &user, const s
 
     std::string credentials = tag + ":" + user + ":" + encrypted_password;
 
-    if (utils::write_to_file(credentials, logins_path.c_str()) != 0)
+    if (utils::write_to_file(credentials, credentials_path.c_str()) != 0)
     {
         std::cerr << "Failed to add new entry to file\n";
         return -1;

@@ -50,24 +50,24 @@ TEST(Hashing, hash_test)
     hash c_obj;
     int result = 0;
 
-    if (c_obj.find_user("user1", 1) == 0)
+    if (utils::find_entry("user1", passwd_path) == 0)
     {
         result = c_obj.register_user("user1", "user1", 1);
         EXPECT_EQ(result, 0);
         std::cout << std::endl;
 
-        result = c_obj.find_user("user1", 1);
+        result = utils::find_entry("user1", passwd_path);
         EXPECT_NE(result, 0);
         std::cout << std::endl;
     }
 
-    if (c_obj.find_user("user2", 1) == 0)
+    if (utils::find_entry("user2", passwd_path) == 0)
     {
         result = c_obj.register_user("user2", "user2", 2);
         EXPECT_EQ(result, 0);
         std::cout << std::endl;
 
-        result = c_obj.find_user("user2", 1);
+        result = utils::find_entry("user2", passwd_path);
         EXPECT_NE(result, 0);
         std::cout << std::endl;
     }

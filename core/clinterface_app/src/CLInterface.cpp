@@ -8,7 +8,7 @@ CLInterface::CLInterface() : curr_path("auth"), logged_in_user("")
 
 void CLInterface::main_thread()
 {
-    hash cobj;
+    hash hash_obj;
 
     // Display user information
     if (!logged_in_user.empty())
@@ -37,11 +37,11 @@ void CLInterface::main_thread()
         // Delegate to specific handlers based on the current path
         if (curr_path == "auth")
         {
-            handle_startup(cobj);
+            handle_startup(hash_obj);
         }
         else if (curr_path == "pw_manager")
         {
-            handle_credentials(cobj);
+            handle_credentials(hash_obj);
         }
     }
 }
@@ -62,15 +62,15 @@ void CLInterface::sanitize_input(std::string &input)
     input.erase(input.find_last_not_of(" \t\n\r\f\v") + 1);
 }
 
-void CLInterface::handle_startup(hash &cobj)
+void CLInterface::handle_startup(hash &hash_obj)
 {
     if (input == "l" || input == "login")
     {
-        handle_login(cobj);
+        handle_login(hash_obj);
     }
     else if (input == "r" || input == "register")
     {
-        handle_register(cobj);
+        handle_register(hash_obj);
     }
     else if (input == "logout" || input == "o")
     {
@@ -82,23 +82,23 @@ void CLInterface::handle_startup(hash &cobj)
     }
 }
 
-void CLInterface::handle_login(hash &cobj)
+void CLInterface::handle_login(hash &hash_obj)
 {
     std::cout << "Handle login \n";
     std::string u, p;
     std::cout << "Username: \n";
     getline(std::cin, u);
-    cobj.set_user(u);
+    hash_obj.set_user(u);
 
     std::cout << "Password: \n";
     getline(std::cin, p);
-    cobj.set_password(p);
+    hash_obj.set_password(p);
 
-    int ret = cobj.check_login(cobj.get_user(), cobj.get_password());
+    int ret = hash_obj.check_login(hash_obj.get_user(), hash_obj.get_password());
 
     if (ret == 0)
     {
-        logged_in_user = "Logged in as " + cobj.get_user() + "\n";
+        logged_in_user = "Logged in as " + hash_obj.get_user() + "\n";
         curr_path = "pw_manager";
         std::cout << logged_in_user;
     }
@@ -108,30 +108,30 @@ void CLInterface::handle_login(hash &cobj)
     }
 }
 
-void CLInterface::handle_register(hash &cobj)
+void CLInterface::handle_register(hash &hash_obj)
 {
     std::cout << "Handle register \n";
     std::string u, p;
     std::cout << "New Username: \n";
     getline(std::cin, u);
-    cobj.set_user(u);
+    hash_obj.set_user(u);
 
-    while (cobj.find_user(cobj.get_user(), 1) == -1)
+    while (utils::find_entry(hash_obj.get_user(), passwd_path) == -1)
     {
         std::cout << "Choose a new username:\n";
         getline(std::cin, u);
-        cobj.set_user(u);
+        hash_obj.set_user(u);
     }
 
     std::cout << "Password: \n";
     getline(std::cin, p);
-    cobj.set_password(p);
+    hash_obj.set_password(p);
 
     int alg;
     std::cout << "Algorithms [1]SHA256 [2]SHA512\n";
     std::cin >> alg;
 
-    cobj.register_user(cobj.get_user(), cobj.get_password(), alg);
+    hash_obj.register_user(hash_obj.get_user(), hash_obj.get_password(), alg);
 }
 
 void CLInterface::handle_logout()
@@ -140,15 +140,15 @@ void CLInterface::handle_logout()
     logged_in_user.clear();
 }
 
-void CLInterface::handle_credentials(hash &cobj)
+void CLInterface::handle_credentials(hash &hash_obj)
 {
     if (input == "c" || input == "credential")
     {
-        handle_credential_entry(cobj);
+        handle_credential_entry(hash_obj);
     }
     else if (input == "get credential" || input == "gc")
     {
-        handle_get_credential(cobj);
+        handle_get_credential();
     }
     else if (input == "logout" || input == "o")
     {
@@ -160,7 +160,7 @@ void CLInterface::handle_credentials(hash &cobj)
     }
 }
 
-void CLInterface::handle_credential_entry(hash &cobj)
+void CLInterface::handle_credential_entry(hash &hash_obj)
 {
     std::string user, password, tag;
 
@@ -171,19 +171,19 @@ void CLInterface::handle_credential_entry(hash &cobj)
     std::cout << "Tag: \n";
     std::cin >> tag;
 
-    cobj.add_new_entry(tag, user, password);
+    hash_obj.add_new_entry(tag, user, password);
 }
 
-void CLInterface::handle_get_credential(hash &cobj)
+void CLInterface::handle_get_credential()
 {
     std::string entry;
     std::cout << "Tag: \n";
     std::cin >> entry;
     encryption obj;
-    if (cobj.check_entry(entry) == 0)
+    if (utils::find_entry(entry, credentials_path) == 0)
     {
         std::string out;
-        if (utils::read_from_file_and_find(out, entry, logins_path) == 0)
+        if (utils::read_from_file_and_find(out, entry, credentials_path) == 0)
         {
             std::cout << "Credentials: " << std::endl;
             obj.decrypt_credentials(out);

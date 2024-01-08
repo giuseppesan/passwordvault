@@ -12,7 +12,7 @@
 #define PEPPER "SEpl9QTQ574d9R5R"
 
 const std::string passwd_path = "../data/passwd";
-const std::string logins_path = "../data/logins";
+const std::string credentials_path = "../data/logins";
 
 namespace utils
 {
@@ -79,6 +79,31 @@ int write_to_file(std::string in, std::string file)
 
     my_file << in << std::endl;
 
+    return 0;
+}
+
+
+int find_entry(const std::string &entry, std::string path)
+{
+    std::fstream my_file(path);
+    std::string line = "";
+
+    if (!my_file.is_open())
+    {
+        std::cerr << "Unable to open & read file\n";
+        return -1;
+    }
+
+    while (std::getline(my_file, line))
+    {
+        if (line.substr(0, entry.size()) == entry)
+        {
+            std::cout << "Username is taken\n";
+            return -1;
+        }
+    }
+
+    std::cout << "Username is available\n";
     return 0;
 }
 

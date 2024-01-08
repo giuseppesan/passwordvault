@@ -70,7 +70,7 @@ public:
      * @brief
      * @param cobj
      */
-    void handle_get_credential(hash &cobj);
+    void handle_get_credential();
 
     CLInterface();
     ~CLInterface();

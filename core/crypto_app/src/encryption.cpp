@@ -187,7 +187,7 @@ bool encryption::decrypt(const std::vector<uint8_t> &cipher_payload, int ciphert
     return true;
 }
 
-int encryption::prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t> &plain_cipher_text,
+int encryption::prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t> &cipher_text,
                                    std::vector<uint8_t> &cipher_block)
 {
     /*copy IV to bytes 0 to 15*/
@@ -199,7 +199,7 @@ int encryption::prepare_ciphertext(const uint8_t *iv, const std::vector<uint8_t>
     /*copy cipher_payload*/
     for (uint32_t j = 0; j < AES_BLOCK_SIZE; j++)
     {
-        cipher_block.push_back(plain_cipher_text[j]);
+        cipher_block.push_back(cipher_text[j]);
     }
 
     return 0;

@@ -43,16 +43,6 @@ public:
     int register_user(const std::string & name, const std::string & password, int u_algorithm);
 
     /**
-     * @brief checks if username is taken
-     *
-     * @param name username
-     * @param action 1 find for register - 2 find for delete
-     *
-     * @return 0 if successful
-     */
-    int find_user(const std::string& name, int action);
-
-/**
      * @brief add new login credentials
      * 
      * @param tag tag which the user searches for e.g. google
@@ -63,15 +53,6 @@ public:
      */
     int add_new_entry(const std::string& tag, const std::string& user, const std::string& password);
     
-    /**
-     * @brief check for existing login credentials
-     * 
-     * @param name name-tag which the user searches for e.g. google
-     * 
-     * @return 0 if successful
-    */
-    int check_entry(const std::string& entry);
-
     void set_user(std::string u) { user = u; }
     void set_password(std::string p) { password = p; }
     std::string get_user() { return user; }
