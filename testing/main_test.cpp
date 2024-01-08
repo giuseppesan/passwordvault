@@ -1,23 +1,28 @@
 #include <gtest/gtest.h>
 #include "../main.hpp"
 
-TEST(EncryptionTest, encrypt_decrypt_positive)
+const std::string encrypt_path = "../testing/encrypt";
+
+
+TEST(Encryption, encrypt_decrypt_positive)
 {
 
     int result = encrypt_decrypt_test("Super Secret Message");
     EXPECT_EQ(result, 0);
 }
-TEST(EncryptionTest, encrypt_decrypt_file_positive)
+
+TEST(Encryption, encrypt_decrypt_from_file_positive)
 {
     int result = decrypt_from_file_test(encrypt_path, "Secret");
     EXPECT_EQ(result, 0);
 }
-TEST(EncryptionTest, encrypt_decrypt_all_num)
+
+TEST(Encryption, encrypt_decrypt_all_num)
 {
     std::string input = "";
     char characterToAdd = 'A';
     int result;
-
+    //1-128
     for (int count = 129; count > 1; --count)
     {
         input += characterToAdd;
@@ -25,20 +30,22 @@ TEST(EncryptionTest, encrypt_decrypt_all_num)
         EXPECT_EQ(result, 0);
     }
 }
-TEST(EncryptionTest, encrypt_decrypt_empty)
+
+TEST(Encryption, encrypt_decrypt_empty)
 {
     std::string input = "";
     int result = encrypt_decrypt_test(input);
     EXPECT_NE(result, 0);
 }
-TEST(EncryptionTest, encrypt_decrypt_too_big)
+
+TEST(Encryption, encrypt_decrypt_too_big)
 {
     // 129
     int result = encrypt_decrypt_test("czgfgrchydtvagxxbbdeqvxktvrcqjgdkhkapxaheefxmqqepuchekwvkvriahkkpuifgfpwmgevaqdxzycmyvwkzmmitwerqtcbzpuqvrhjugjcdhbrjbwcyrzynpjwi");
     EXPECT_NE(result, 0);
 }
 
-TEST(EncryptionTest, hash_test)
+TEST(Hashing, hash_test)
 {
     hash c_obj;
     int result = 0;
