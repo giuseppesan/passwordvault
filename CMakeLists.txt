@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 11)
 add_subdirectory(core/clinterface_app)
 add_subdirectory(core/crypto_app)
 add_subdirectory(testing)
+add_subdirectory(ultralight_sdk)
 
 add_compile_options(-Wall -Wextra -Wpedantic)
 

@@ -4,6 +4,10 @@
 sudo apt-get install libssl-dev
 sudo apt install libgtest-dev
 sudo apt install cmake
+sudo apt install libx11-dev xorg-dev libglu1-mesa-dev
+
+export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
 
 mkdir build
 cd build
