@@ -5,7 +5,6 @@ const std::string encrypt_path = "../testing/encrypt";
 
 TEST(Encryption, positive)
 {
-
     int result = encrypt_decrypt_test("Super Secret Message");
     EXPECT_EQ(result, 0);
 }
@@ -21,7 +20,7 @@ TEST(Encryption, all_num)
     std::string input = "";
     char characterToAdd = 'A';
     int result;
-    //1-128
+    // 1-128
     for (int count = 129; count > 1; --count)
     {
         input += characterToAdd;
@@ -44,13 +43,15 @@ TEST(Encryption, too_big)
     EXPECT_NE(result, 0);
 }
 
-TEST(Credentials, add_positive) {
+TEST(Credentials, add_positive)
+{
     encryption enc_obj;
-    int result = enc_obj.add_new_entry("tag", "user", "password"); 
+    int result = enc_obj.add_new_entry("tag", "user", "password");
     EXPECT_EQ(result, 0);
 }
 
-TEST(Credentials, get_positive) {
+TEST(Credentials, get_positive)
+{
     encryption enc_obj;
     std::string entry = "tag";
     std::string out;
@@ -58,7 +59,8 @@ TEST(Credentials, get_positive) {
     enc_obj.decrypt_credentials(out);
 }
 
-TEST(Credentials, get_malformed) {
+TEST(Credentials, get_malformed)
+{
     encryption enc_obj;
     std::string entry = "malformed";
     int result = enc_obj.decrypt_credentials(entry);

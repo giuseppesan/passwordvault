@@ -146,7 +146,6 @@ void hash::generate_salt(std::string &out)
     std::mt19937 generator(random_device());
     std::uniform_int_distribution<> distribution(0, CHARACTERS.size() - 1);
 
-    // Use append directly instead of concatenating characters
     for (size_t i = 0; i < salt_size; ++i)
     {
         out.push_back(CHARACTERS[distribution(generator)]);
