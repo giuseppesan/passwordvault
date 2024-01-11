@@ -1,12 +1,18 @@
 ## Installation
-### CMake
+Run build.sh when building for the first time (can be used for clean build too)
+### Manual installation
+
+#### Preconditions
 ```sh
 sudo apt-get install libssl-dev
 sudo apt install libgtest-dev
 sudo apt install cmake
 sudo apt install libx11-dev xorg-dev libglu1-mesa-dev
+sudo apt install clang
+```
+#### Build
 
-export CC=/usr/bin/clang
+```sh
 export CXX=/usr/bin/clang++
 
 mkdir build
