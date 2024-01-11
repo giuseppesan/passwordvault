@@ -4,5 +4,5 @@
 #include "crypto_app/src/hash.cpp"
 #include "crypto_app/src/encryption.cpp"
 #include "clinterface_app/src/CLInterface.cpp"
-#include "../testing/testing.cpp"
+#include "../testing/src/mocking.cpp"
 #endif /* MAIN_H */

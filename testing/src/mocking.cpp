@@ -2,9 +2,9 @@
  * @brief for testing functions
  * @file testing.cpp
  */
-#include <cassert>
-#include "../core/crypto_app/include/encryption.hpp"
-#include "../core/crypto_app/include/hash.hpp"
+
+#include "../../core/crypto_app/include/encryption.hpp"
+#include "../../core/crypto_app/include/hash.hpp"
 
 int encrypt_decrypt_test(std::string plain_text)
 {

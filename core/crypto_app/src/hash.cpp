@@ -111,8 +111,9 @@ int hash::check_login(std::string name, std::string pw)
     saved_hash.erase(0, 17);
 
     // Check algorithm and perform corresponding hash verification
+#ifdef HASH_DEBUG
     std::cout << (algorithm == 1 ? "SHA256" : "SHA512") << " detected" << std::endl;
-
+#endif
     ret = salt_n_hash(pw, salt, final_hash, ITERATIONS);
 
     if (ret != 0)
@@ -121,12 +122,13 @@ int hash::check_login(std::string name, std::string pw)
     }
 
     ret = strcmp(saved_hash.c_str(), final_hash.c_str());
+#ifdef HASH_DEBUG
     std::cout << saved_hash << "\n"
               << final_hash << std::endl;
-
+#endif
     if (ret != 0)
     {
-        std::cerr << "Password is not correct: " << ret << std::endl;
+        std::cerr << "Password is not correct" << std::endl;
         return ret;
     }
 

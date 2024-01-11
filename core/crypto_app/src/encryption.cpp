@@ -45,9 +45,9 @@ int encryption::handle_encryption(const std::string plain_text, std::vector<uint
     {
         iv[i] = static_cast<uint8_t>(generator() % 256);
     }
-
+#ifdef ENCRYPTION_DEBUG
     std::cout << "Input is: " << plain_text << std::endl;
-
+#endif
     try
     {
         plaintext_buff.assign(plain_text.begin(), plain_text.end());
@@ -57,8 +57,9 @@ int encryption::handle_encryption(const std::string plain_text, std::vector<uint
         std::cerr << "Error during plaintext_buff assignment: " << e.what() << std::endl;
         return -1;
     }
-
+#ifdef ENCRYPTION_DEBUG
     std::cout << "Input size = " << plain_text.size() << std::endl;
+#endif
     /*Encryption*/
     ret = encryption_obj.encrypt(plaintext_buff, AES_BLOCK_SIZE, crypto_key, iv,
                                  cipher_payload, ciphertext_len);
@@ -81,9 +82,10 @@ int encryption::handle_encryption(const std::string plain_text, std::vector<uint
 
     hex_string = utils::to_hex(cipher_block);
 
+#ifdef ENCRYPTION_DEBUG
     std::cout << "Ciphertext is:\n";
     std::cout << hex_string << std::endl;
-
+#endif
     return 0;
 }
 
@@ -123,9 +125,10 @@ int encryption::handle_decryption(const std::vector<uint8_t> &cipher_block, std:
     }
 
     /* Show the decrypted text */
+#ifdef ENCRYPTION_DEBUG
     std::cout << "\nDecrypted text is:" << std::endl;
     std::cout << decrypted_text.data() << "\n\n";
-
+#endif
     try
     {
         decrypted_string.assign(decrypted_text.data(), decrypted_text.data() + plaintext_len);
@@ -230,7 +233,7 @@ int encryption::decrypt_credentials(std::string &credentials)
     else
     {
         std::cerr << "Malformed string" << std::endl;
-        return -1;
+        return -2;
     } 
     return 0;
 }
