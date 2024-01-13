@@ -1,22 +1,48 @@
-#!/bin/sh
+#!/bin/bash
 
-sudo apt-get install libssl-dev
-sudo apt install libgtest-dev
-sudo apt install cmake
-sudo apt install libx11-dev xorg-dev libglu1-mesa-dev
-sudo apt install clang
+# Function to check if a package is installed
+check_package() {
+    dpkg -s $1 &> /dev/null
+    return $?
+}
 
-export CXX=/usr/bin/clang++
-
+# List of packages to be checked
+packages=("libssl-dev" "libgtest-dev" "cmake" "libx11-dev" "xorg-dev" "libglu1-mesa-dev" "clang")
 build_dir="build"
 
-if [ -d "$build_dir" ]; then
-    echo "Directory $build_dir already exists - deleting ..."
-    rm -r "$build_dir"
+echo "checking packages..."
+
+if [ "$1" = "install" ]; then
+    # Loop through the packages and check if they are installed
+    for package in "${packages[@]}"; do
+        if check_package $package; then
+            echo "$package is already installed."
+        else
+            echo "Installing $package..."
+            sudo apt-get install $package
+            if [ $? -eq 0 ]; then
+                echo "$package installed successfully."
+            else
+                echo "Failed to install $package. Exiting."
+                exit 1
+            fi
+        fi
+    done
+    echo "All required packages are installed."
 fi
 
-mkdir "$build_dir"
-cd "$build_dir"
+if [ "$1" = "install" ] || [ "$1" = "clean" ]; then
+    # Delete the directory if it exists
+    if [ -d "$build_dir" ]; then
+        echo "Directory $build_dir exists - deleting ..."
+        rm -r "$build_dir"
+    fi
 
-cmake ..
-make
+    mkdir "$build_dir"
+fi
+
+# Use the default C++ compiler
+export CXX=$(which clang++)
+
+cd "$build_dir"
+cmake .. && make

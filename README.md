@@ -1,24 +1,14 @@
-## Installation
-Run build.sh when building for the first time (can be used for clean build too)
-### Manual installation
+## Installation & Build
 
-#### Preconditions
-```sh
-sudo apt-get install libssl-dev
-sudo apt install libgtest-dev
-sudo apt install cmake
-sudo apt install libx11-dev xorg-dev libglu1-mesa-dev
-sudo apt install clang
 ```
-#### Build
+Run build.sh
 
-```sh
-export CXX=/usr/bin/clang++
+Possible parameters:
 
-mkdir build
-cd build
-cmake ..
-make
+install - for first build
+clean - for clean build
+
+when no parameter is provided the script just runs the build commands
 ```
 #### Troubleshoot
 In case CMake is not finding libssl
