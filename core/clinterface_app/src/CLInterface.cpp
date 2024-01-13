@@ -116,7 +116,7 @@ void CLInterface::handle_register(hash &hash_obj)
     getline(std::cin, u);
     hash_obj.set_user(u);
 
-    while (utils::find_entry(hash_obj.get_user(), passwd_path) == not_found)
+    while (utils::find_entry(hash_obj.get_user(), passwd_path) == found)
     {
         std::cout << "Username is taken. Choose a new username:\n";
         getline(std::cin, u);
