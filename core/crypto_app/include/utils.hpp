@@ -101,10 +101,11 @@ int find_entry(const std::string &entry, std::string path)
         std::cerr << "Unable to open & read file\n";
         return -1;
     }
-
+    size_t firstColonPos;
     while (std::getline(my_file, line))
     {
-        if (line.substr(0, entry.size()) == entry)
+        firstColonPos = line.find(':');
+        if (line.substr(0, firstColonPos) == entry)
         {
             return found;
         }
