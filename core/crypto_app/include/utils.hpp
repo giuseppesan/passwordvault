@@ -69,8 +69,6 @@ std::string to_hex(const std::vector<uint8_t>& data)
 
 int write_to_file(std::string in, std::string file)
 {
-    /*Add multiple entries*/
-
     std::ofstream my_file(file, std::ios::app);
 
     if (!my_file.is_open())
@@ -94,7 +92,7 @@ int write_to_file(std::string in, std::string file)
 int find_entry(const std::string &entry, std::string path)
 {
     std::fstream my_file(path);
-    std::string line = "";
+    std::string line;
 
     if (!my_file.is_open())
     {
@@ -105,7 +103,7 @@ int find_entry(const std::string &entry, std::string path)
     while (std::getline(my_file, line))
     {
         firstColonPos = line.find(':');
-        if (line.substr(0, firstColonPos) == entry)
+        if (line.compare(0, firstColonPos, entry) == 0)
         {
             return found;
         }
@@ -126,7 +124,6 @@ int find_entry(const std::string &entry, std::string path)
 
 int read_from_file_and_find(std::string &out, std::string name, std::string path)
 {
-   /*search for user in file*/
     std::ifstream my_file(path);
 
     if (!my_file.is_open())
@@ -136,10 +133,11 @@ int read_from_file_and_find(std::string &out, std::string name, std::string path
     }
 
     std::string line;
-
+    size_t firstColonPos;
     while (getline(my_file, line))
     {
-        if (line.compare(0, name.size(), name) == 0)
+        firstColonPos = line.find(':');
+        if (line.compare(0, firstColonPos, name) == 0)
         {
             out = line;
             my_file.close();
