@@ -88,10 +88,12 @@ void CLInterface::handle_login(hash &hash_obj)
     std::string u, p;
     std::cout << "Username: \n";
     getline(std::cin, u);
+    sanitize_input(u);
     hash_obj.set_user(u);
 
     std::cout << "Password: \n";
     getline(std::cin, p);
+    sanitize_input(p);
     hash_obj.set_password(p);
 
     int ret = hash_obj.check_login(hash_obj.get_user(), hash_obj.get_password());
@@ -114,17 +116,20 @@ void CLInterface::handle_register(hash &hash_obj)
     std::string u, p;
     std::cout << "New Username: \n";
     getline(std::cin, u);
+    sanitize_input(u);
     hash_obj.set_user(u);
 
     while (utils::find_entry(hash_obj.get_user(), passwd_path) == found)
     {
         std::cout << "Username is taken. Choose a new username:\n";
         getline(std::cin, u);
+        sanitize_input(u);
         hash_obj.set_user(u);
     }
 
     std::cout << "Password: \n";
     getline(std::cin, p);
+    sanitize_input(p);
     hash_obj.set_password(p);
 
     int alg;
@@ -166,10 +171,13 @@ void CLInterface::handle_credential_entry()
 
     std::cout << "Username: \n";
     std::cin >> user;
+    sanitize_input(user);
     std::cout << "Password: \n";
     std::cin >> password;
+    sanitize_input(password);
     std::cout << "Tag: \n";
     std::cin >> tag;
+    sanitize_input(tag);
    
     while (utils::find_entry(user, credentials_path) == found)
     {
@@ -186,6 +194,7 @@ void CLInterface::handle_get_credential()
     std::string entry;
     std::cout << "Tag: \n";
     std::cin >> entry;
+    sanitize_input(entry);
     encryption obj;
     std::string out;
     
