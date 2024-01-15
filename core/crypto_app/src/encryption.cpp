@@ -212,14 +212,14 @@ int encryption::decrypt_credentials(std::string &credentials)
 {
     std::vector<uint8_t> cipher_block;
     std::string password;
-    std::string username;
+    std::string tag_username;
     std::string plain_password;
     size_t firstColonPos = credentials.find(':');
     size_t secondColonPos = credentials.find(':', firstColonPos + 1);
 
     if(firstColonPos != std::string::npos && secondColonPos != std::string::npos)
     {
-        username = credentials.substr(0, secondColonPos + 1);
+        tag_username = credentials.substr(0, secondColonPos + 1);
         password = credentials.substr(secondColonPos + 1);
         utils::hex2bin(password.c_str(), cipher_block);
         
@@ -228,7 +228,7 @@ int encryption::decrypt_credentials(std::string &credentials)
             return -1;
         }
 
-        std::cout << username << plain_password << std::endl; 
+        std::cout << tag_username << plain_password << std::endl; 
     }
     else
     {
