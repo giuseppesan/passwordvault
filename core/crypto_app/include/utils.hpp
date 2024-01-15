@@ -89,9 +89,9 @@ int write_to_file(std::string in, std::string file)
  * @param path filepath
  * @return found 0 if successful, not found -2 if not successful
  */
-int find_entry(const std::string &entry, std::string path)
+int find_entry(const std::string &entry, const std::string file_path)
 {
-    std::fstream my_file(path);
+    std::fstream my_file(file_path);
     std::string line;
 
     if (!my_file.is_open())
@@ -122,9 +122,9 @@ int find_entry(const std::string &entry, std::string path)
  * @return found 0 if successful, not found -2 if not successful
  */
 
-int read_from_file_and_find(std::string &out, std::string name, std::string path)
+int read_from_file_and_find(std::string &out, std::string name, const std::string file_path)
 {
-    std::ifstream my_file(path);
+    std::ifstream my_file(file_path);
 
     if (!my_file.is_open())
     {
@@ -146,6 +146,18 @@ int read_from_file_and_find(std::string &out, std::string name, std::string path
     }
     return not_found;
 }
+
+bool is_file_empty(const std::string& file_path) {
+    std::ifstream file(file_path);
+
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << file_path << std::endl;
+        return false;
+    }
+
+    return file.peek() == std::ifstream::traits_type::eof();
+}
+
 
 /**
  * @brief 
