@@ -10,6 +10,9 @@
 #include "../include/utils.hpp"
 #include "encryption.hpp"
 
+/**
+ * @brief 
+ */
 class hash
 {
 public:
@@ -45,7 +48,22 @@ public:
 
     std::string get_password() { return password; }
 
+    /**
+     * @brief Creates a HMAC from the user entry in passwd
+     * @param data user entry in passwd
+     * @param key hmac key
+     * @return the hash
+     */
     std::string generateHMAC(const std::string& data, const unsigned char * key); 
+
+
+    /**
+     * @brief Checks if the user entry HMAC is == storedMAC
+     * @param data user entry in passwd
+     * @param key hmac key
+     * @param storedMAC stored HMAC from encrypted credential entry
+     * @return 
+     */
     bool verifyIntegrity(const std::string& data, const unsigned char * key, const std::string& storedMAC);
 
 private:
