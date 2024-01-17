@@ -3,7 +3,6 @@
 
 hash::hash() = default;
 
-
 hash::~hash() = default;
 
 int hash::sha_256(std::string in, std::string &out)
@@ -48,20 +47,27 @@ int hash::sha_512(std::string in, std::string &out)
     return 0;
 }
 
-std::string hash::generateHMAC(const std::string& data, const unsigned char * key) {
+std::string hash::generate_HMAC(const std::string &data, const unsigned char *key)
+{
     unsigned char hash[EVP_MAX_MD_SIZE];
     unsigned int hashLen;
 
     const EVP_MD *digest = EVP_sha3_512();
 
-    HMAC(digest, key, 32, reinterpret_cast<const unsigned char*>(data.c_str()), data.length(), hash, &hashLen);
+    HMAC(digest, key, 32, reinterpret_cast<const unsigned char *>(data.c_str()), data.length(), hash, &hashLen);
 
     return utils::to_hex_sha(hash, hashLen);
 }
 
-bool hash::verifyIntegrity(const std::string& data, const unsigned char * key, const std::string& storedMAC) {
-    std::string calculatedMAC = generateHMAC(data, key);
-    return (calculatedMAC == storedMAC);
+bool hash::verify_Integrity(const std::string &data, const unsigned char *key, const std::string &storedMAC)
+{
+    std::string calculatedMAC = generate_HMAC(data, key);
+
+    if (strcmp(calculatedMAC.c_str(), storedMAC.c_str()) == 0)
+    {
+        return true;
+    }
+    return false;
 }
 
 int hash::salt_n_hash(std::string in, std::string salt, std::string &final_hash, size_t iterations)
@@ -114,7 +120,7 @@ int hash::check_login(std::string name, std::string pw)
     {
         return ret;
     }
-    
+
     // Erase name from string
     saved_hash.erase(0, name.size() + 1);
 
@@ -186,5 +192,3 @@ int hash::register_user(const std::string &name, const std::string &password, in
 
     return utils::write_to_file(out, passwd_path.c_str());
 }
-
-

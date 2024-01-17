@@ -11,7 +11,7 @@
 #include "encryption.hpp"
 
 /**
- * @brief 
+ * @brief
  */
 class hash
 {
@@ -35,11 +35,11 @@ public:
      * @param name Username
      * @param password Password
      * @param u_algorithm hash algorithm
-     * 
+     *
      * @return 0 if successful
      */
-    int register_user(const std::string & name, const std::string & password, int u_algorithm);
-    
+    int register_user(const std::string &name, const std::string &password, int u_algorithm);
+
     void set_user(std::string u) { user = u; }
 
     void set_password(std::string p) { password = p; }
@@ -54,17 +54,16 @@ public:
      * @param key hmac key
      * @return the hash
      */
-    std::string generateHMAC(const std::string& data, const unsigned char * key); 
-
+    std::string generate_HMAC(const std::string &data, const unsigned char *key);
 
     /**
      * @brief Checks if the user entry HMAC is == storedMAC
      * @param data user entry in passwd
      * @param key hmac key
      * @param storedMAC stored HMAC from encrypted credential entry
-     * @return 
+     * @return
      */
-    bool verifyIntegrity(const std::string& data, const unsigned char * key, const std::string& storedMAC);
+    bool verify_Integrity(const std::string &data, const unsigned char *key, const std::string &storedMAC);
 
 private:
     /**
@@ -94,7 +93,7 @@ private:
      * @param salt random salt string
      * @param final_hash the hash string
      * @param iterations 10 times
-     * 
+     *
      * @return 0 if successful
      */
     int salt_n_hash(std::string in, std::string salt, std::string &final_hash, size_t iterations);
