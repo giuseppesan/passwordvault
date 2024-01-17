@@ -48,6 +48,22 @@ int hash::sha_512(std::string in, std::string &out)
     return 0;
 }
 
+std::string hash::generateHMAC(const std::string& data, const unsigned char * key) {
+    unsigned char hash[EVP_MAX_MD_SIZE];
+    unsigned int hashLen;
+
+    const EVP_MD *digest = EVP_sha3_512();
+
+    HMAC(digest, key, 32, reinterpret_cast<const unsigned char*>(data.c_str()), data.length(), hash, &hashLen);
+
+    return utils::to_hex_sha(hash, hashLen);
+}
+
+bool hash::verifyIntegrity(const std::string& data, const unsigned char * key, const std::string& storedMAC) {
+    std::string calculatedMAC = generateHMAC(data, key);
+    return (calculatedMAC == storedMAC);
+}
+
 int hash::salt_n_hash(std::string in, std::string salt, std::string &final_hash, size_t iterations)
 {
     if (algorithm != ALGORITHM_SHA256 && algorithm != ALGORITHM_SHA512)

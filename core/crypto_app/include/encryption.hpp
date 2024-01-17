@@ -13,6 +13,7 @@
 #include <stdexcept>
 #include "utils.hpp"
 #include "key.hpp"
+#include "hash.hpp"
 
 const int AES_BLOCK_SIZE = 256;
 const int IV_SIZE = 16;

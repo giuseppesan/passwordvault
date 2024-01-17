@@ -147,6 +147,20 @@ int read_from_file_and_find(std::string &out, std::string name, const std::strin
     return not_found;
 }
 
+int return_user(std::string &out, const std::string file_path)
+{
+    std::ifstream my_file(file_path);
+    std::string line;
+    if (!my_file.is_open())
+    {
+        std::cerr << "Unable to open & read file\n";
+        return -1;
+    }
+    getline(my_file, line);
+    out = line;
+    return 0;
+}
+
 bool is_file_empty(const std::string& file_path) {
     std::ifstream file(file_path);
 

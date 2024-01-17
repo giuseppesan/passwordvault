@@ -45,6 +45,9 @@ public:
 
     std::string get_password() { return password; }
 
+    std::string generateHMAC(const std::string& data, const unsigned char * key); 
+    bool verifyIntegrity(const std::string& data, const unsigned char * key, const std::string& storedMAC);
+
 private:
     /**
      * @brief Turn string into hash

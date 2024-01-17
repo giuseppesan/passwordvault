@@ -212,15 +212,33 @@ int encryption::decrypt_credentials(std::string &credentials)
 {
     std::vector<uint8_t> cipher_block;
     std::string password;
-    std::string tag_username;
+    std::string tag_and_username;
     std::string plain_password;
+    std::string hmac;
     size_t firstColonPos = credentials.find(':');
     size_t secondColonPos = credentials.find(':', firstColonPos + 1);
-
+    size_t thirdColonPos = credentials.find(':', secondColonPos + 1);
+    std::string data;
+    hash hash_obj;
+    
     if(firstColonPos != std::string::npos && secondColonPos != std::string::npos)
     {
-        tag_username = credentials.substr(0, secondColonPos + 1);
-        password = credentials.substr(secondColonPos + 1);
+        tag_and_username = credentials.substr(0, secondColonPos + 1);
+        password = credentials.substr(secondColonPos + 1, thirdColonPos - secondColonPos -1);
+        hmac = credentials.substr(thirdColonPos + 1);
+
+        if(utils::return_user(data, passwd_path) != 0)
+        {
+            std::cerr << "Reading userdata went wrong\n";
+            return -1;
+        }
+
+        if (hash_obj.verifyIntegrity(data, hmac_key, hmac) != true)
+        {
+            std::cerr << "Integrity check failed!\n";
+            return -1; 
+        }
+
         utils::hex2bin(password.c_str(), cipher_block);
         
         if(handle_decryption(cipher_block, plain_password) != 0) 
@@ -228,7 +246,7 @@ int encryption::decrypt_credentials(std::string &credentials)
             return -1;
         }
 
-        std::cout << tag_username << plain_password << std::endl; 
+        std::cout << tag_and_username << plain_password << std::endl; 
     }
     else
     {
@@ -255,10 +273,19 @@ int encryption::encrypt_credentials(std::string &password)
 int encryption::add_new_entry(const std::string &tag, const std::string &user, const std::string &password)
 {
     std::string encrypted_password = password;
-    encryption obj;
-    obj.encrypt_credentials(encrypted_password);
+    std::string data;
+    encryption encrypt_obj;
+    hash hash_obj;
+    encrypt_obj.encrypt_credentials(encrypted_password);
 
-    std::string credentials = tag + ":" + user + ":" + encrypted_password;
+    if(utils::return_user(data, passwd_path) != 0)
+    {
+        std::cerr << "Reading userdata went wrong\n";
+        return -1;
+    }
+
+    std::string hmac = hash_obj.generateHMAC(data, hmac_key);
+    std::string credentials = tag + ":" + user + ":" + encrypted_password + ":" + hmac;
 
     if (utils::write_to_file(credentials, credentials_path.c_str()) != 0)
     {
