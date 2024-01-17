@@ -20,9 +20,14 @@ add_subdirectory(testing)
 # Conditionally add ultralight_sdk based on the system
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     add_subdirectory(ultralight_sdk)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    #add_subdirectory(ultralight_sdk_mac)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    #add_subdirectory(ultralight_sdk_windows)
 else()
-    # add_subdirectory(ultralight_sdk_mac)
+    message(FATAL_ERROR "Unsupported operating system: ${CMAKE_SYSTEM_NAME}")
 endif()
+
 
 # Create the main executable
 add_executable(main core/main.cpp)
