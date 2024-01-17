@@ -5,9 +5,37 @@ check_package() {
     dpkg -s $1 &> /dev/null
     return $?
 }
+os_name=$(uname -s)
 
-# List of packages to be checked
-packages=("libssl-dev" "libgtest-dev" "cmake" "libx11-dev" "xorg-dev" "libglu1-mesa-dev" "clang")
+# Check if the OS is Linux
+# List of packages to be checked, last 3 are for ubuntu
+if [ "$os_name" == "Linux" ]; then
+    echo "Linux detected"
+    
+    # Use the default C++ compiler
+    export CXX=$(which clang++)
+
+    if command -v lsb_release > /dev/null 2>&1; then
+    # Get the distribution name
+        distro_name=$(lsb_release -si)
+
+        # Check if the distribution is Ubuntu
+        if [ "$distro_name" == "Ubuntu" ]; then
+            echo "Ubuntu detected"
+            packages=("libssl-dev" "libgtest-dev" "cmake" "clang" "libx11-dev" "xorg-dev" "libglu1-mesa-dev")
+        else
+            packages=("libssl-dev" "libgtest-dev" "cmake" "clang")
+        fi
+    fi
+fi
+
+# Check if the OS is macOS
+if [ "$os_name" == "Darwin" ]; then
+    echo "macOS detected"
+    #brew install 
+    pagages_mac=("openssl" "googletest" "cmake" "libx11" "xorg-server" "mesa" "gcc")
+fi
+
 build_dir="build"
 
 echo "checking packages..."
@@ -41,8 +69,5 @@ if [ "$1" = "install" ] || [ "$1" = "clean" ]; then
     mkdir "$build_dir"
 fi
 
-# Use the default C++ compiler
-export CXX=$(which clang++)
-
 cd "$build_dir"
-cmake .. && make
+cmake .. && make -j4
