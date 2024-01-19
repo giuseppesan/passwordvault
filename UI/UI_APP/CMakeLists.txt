@@ -4,6 +4,9 @@ link_directories("${ULTRALIGHT_LIBRARY_DIR}")
 link_libraries(UltralightCore AppCore Ultralight WebCore)
 
 add_executable(${APP_NAME} WIN32 MACOSX_BUNDLE "main.cpp")
+  # Link all core apps 
+target_link_libraries(UI PRIVATE crypto_app clinterface_app OpenSSL::SSL OpenSSL::Crypto)
+
 
 if (APPLE)
   # Enable High-DPI on macOS through our custom Info.plist template

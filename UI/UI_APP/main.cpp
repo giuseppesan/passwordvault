@@ -1,7 +1,9 @@
 #include <AppCore/App.h>
 #include <AppCore/Window.h>
 #include <AppCore/Overlay.h>
-#include "../../core/crypto_app/include/utils.hpp"
+#include "../../core/crypto_app/src/hash.cpp"
+#include "../../core/crypto_app/src/encryption.cpp"
+#include "../../core/clinterface_app/src/CLInterface.cpp"
 using namespace ultralight;
 
 #define WINDOW_WIDTH    900
