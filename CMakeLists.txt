@@ -16,19 +16,8 @@ include_directories(${GTEST_INCLUDE_DIRS})
 add_subdirectory(core/clinterface_app)
 add_subdirectory(core/crypto_app)
 add_subdirectory(testing)
+add_subdirectory(ultralight_sdk)
 add_subdirectory(UI)
-
-# Conditionally add ultralight_sdk based on the system
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    add_subdirectory(ultralight_sdk)
-
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    #add_subdirectory(ultralight_sdk_mac)
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    #add_subdirectory(ultralight_sdk_windows)
-else()
-    message(FATAL_ERROR "Unsupported operating system: ${CMAKE_SYSTEM_NAME}")
-endif()
 
 
 # Create the main executable
