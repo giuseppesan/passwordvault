@@ -60,8 +60,10 @@ int encryption::handle_encryption(const std::string plain_text, std::vector<uint
 #ifdef ENCRYPTION_DEBUG
     std::cout << "Input size = " << plain_text.size() << std::endl;
 #endif
+    unsigned char pbkdf2[32] = {0};
+    utils::readKeyFromFile(encryption_key_path, pbkdf2);
     /*Encryption*/
-    ret = encryption_obj.encrypt(plaintext_buff, AES_BLOCK_SIZE, crypto_key, iv,
+    ret = encryption_obj.encrypt(plaintext_buff, AES_BLOCK_SIZE, pbkdf2, iv,
                                  cipher_payload, ciphertext_len);
 
     if (ret != true)
@@ -114,9 +116,10 @@ int encryption::handle_decryption(const std::vector<uint8_t> &cipher_block, std:
 
     /*Reads IV from Header*/
     get_iv(iv, cipher_block);
-
+    unsigned char pbkdf2[32] = {0};
+    utils::readKeyFromFile(encryption_key_path, pbkdf2);
     /*Decryption*/
-    ret = encryption_obj.decrypt(cipher_payload, AES_BLOCK_SIZE, crypto_key, iv, decrypted_text, plaintext_len);
+    ret = encryption_obj.decrypt(cipher_payload, AES_BLOCK_SIZE, pbkdf2, iv, decrypted_text, plaintext_len);
 
     if (ret != 1)
     {
@@ -311,4 +314,25 @@ int encryption::add_new_entry(const std::string &tag, const std::string &user, c
     std::cout << "credentials were added\n";
 
     return 0;
+}
+
+void encryption::pbkdf2(const std::string& password, const std::string& salt, int iterations, int key_length, const std::string file_path) {
+    // Convert password and salt to C-style strings
+    const char* password_cstr = password.c_str();
+    const char* salt_cstr = salt.c_str();
+    unsigned char key[key_length];
+
+    // Derive the key using PBKDF2
+    PKCS5_PBKDF2_HMAC(password_cstr, -1, reinterpret_cast<const unsigned char*>(salt_cstr), -1,
+                      iterations, EVP_sha256(), key_length, key);
+    
+    std::ofstream key_file(file_path, std::ios::binary);
+
+    if (!key_file.is_open()) {
+        std::cerr << "Error opening key file for writing" << std::endl;
+        return;
+    }
+
+    key_file.write(reinterpret_cast<const char*>(key), key_length);
+    key_file.close();
 }

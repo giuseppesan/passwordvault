@@ -178,6 +178,7 @@ int hash::register_user(const std::string &name, const std::string &password, in
 {
     std::string salt, final_hash;
     std::stringstream ss;
+    encryption encr_obj;
 
     generate_salt(salt);
     algorithm = u_algorithm;
@@ -189,6 +190,11 @@ int hash::register_user(const std::string &name, const std::string &password, in
 
     ss << name << ":" << algorithm << ":" << salt << ":" << final_hash;
     std::string out = ss.str();
+    
+    generate_salt(salt);
+    encr_obj.pbkdf2(password, salt, 10000, 32, encryption_key_path);
+    generate_salt(salt);
+    encr_obj.pbkdf2(password, salt, 10000, 32, hmac_key_path);
 
     return utils::write_to_file(out, passwd_path.c_str());
 }

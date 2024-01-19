@@ -13,6 +13,8 @@
 
 const std::string passwd_path = "../data/passwd";
 const std::string credentials_path = "../data/logins";
+const std::string encryption_key_path = "../data/encryption_key.bin";
+const std::string hmac_key_path = "../data/hmac_key.bin";
 const int found = 0; 
 const int not_found = -2; 
 
@@ -82,6 +84,31 @@ int write_to_file(std::string in, std::string file)
     return 0;
 }
 
+/**
+ * @brief reads the binary key from the file
+ * @param file_path file path
+ * @param key the private key 
+ * @return true or false
+ */
+bool readKeyFromFile(std::string file_path, unsigned char* key) {
+    std::ifstream key_file(file_path, std::ios::binary);
+
+    if (!key_file.is_open()) {
+        std::cerr << "Error opening key file for reading" << std::endl;
+        return false;
+    }
+
+    key_file.read(reinterpret_cast<char*>(key), 32);
+
+    if (key_file.fail()) {
+        std::cerr << "Error reading key from file" << std::endl;
+        key_file.close();
+        return false;
+    }
+
+    key_file.close();
+    return true;
+}
 
 /**
  * @brief looks in defined file for a matching string

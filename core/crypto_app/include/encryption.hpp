@@ -65,6 +65,16 @@ public:
      * @return 0 if successful
      */
     int add_new_entry(const std::string& tag, const std::string& user, const std::string& password);
+
+    /**
+     * @brief Key Derivation function
+     * @param password user password
+     * @param salt random salt
+     * @param iterations how often the alg should repeat
+     * @param key_length is 32
+     * @param file_path file path
+     */
+    void pbkdf2(const std::string& password, const std::string& salt, int iterations, int key_length, const std::string file_path);
     
 private:
 
