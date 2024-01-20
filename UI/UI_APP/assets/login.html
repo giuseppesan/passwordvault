@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-form">
+        <div class="form-square">
+            <p id="test"></p>
+            <label for="username">Username:</label>
+            <input id="username" type="text" name="username">
+            <label for="password">Password:</label>
+            <input id="password" type="password" name="password">
+            <button id="submit-button" type="button">Login</button>
+            <div id="errors" class="hidden"></div>
+        </div>
+    </div>
+    <div id="buttons">
+        <a href="///register.html" class="link">Register</a>
+    </div>
+</body>
+<script>
+    // Submit Form
+    const submitButton = document.getElementById("submit-button");
+    submitButton.onclick(() => {
+
+        // just to check that it works
+        document.getElementById("test").textContent = "Did it work?"
+        
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("username").value;
+        const loginSuccess = window.ultralightApp.loginUser(username, password);
+        if (!loginSuccess) {
+            const errorDiv = document.getElementById("errors");
+            const errorMessage = document.createElement("p");
+            errorMessage.classList.add("error");
+            errorMessage.textContent = "Wrong username or password";
+            errorDiv.appendChild(errorMessage);
+            errorDiv.toggle("hidden");
+        }
+    });
+
+    // Navigation
+    const links = document.querySelectorAll('link')
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        window.ultralightApp.OnChangeURL(link.href);
+      });
+    });
+</script>
+</html>
+</html>

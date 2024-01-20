@@ -1,0 +1,35 @@
+<html>
+<head>
+    <style type="text/css">
+        * {
+            -webkit-user-select: none;
+        }
+
+        body {
+            background: white;
+            color: #7e7f8e;
+            fill: #7e7f8e;
+            font-family: -apple-system, 'Segoe UI', Ubuntu, Arial, sans-serif;
+            margin: 8px 0;
+        }
+
+    </style>
+</head>
+<body>
+    <h3>Dashboard</h3>
+    <ul>
+        <li><a>Dashboard</a></li>
+        <a href="file:///passwords.html" class="link">Passwords</a>
+        <a href="file:///login.html" class="link">Login</a>
+        <a href="file:///register.html" class="link">Register</a>
+    </ul>
+</body>
+<script>
+    const links = document.querySelectorAll('link')
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        window.ultralightApp.OnChangeURL(link.href);
+      });
+    });
+</script>
+</html>
