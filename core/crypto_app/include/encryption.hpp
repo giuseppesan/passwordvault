@@ -17,7 +17,7 @@
 
 const int AES_BLOCK_SIZE = 256;
 const int IV_SIZE = 16;
-
+const int KEY_LENGTH = 32;
 class encryption
 {
 
@@ -74,7 +74,7 @@ public:
      * @param key_length is 32
      * @param file_path file path
      */
-    void pbkdf2(const std::string& password, const std::string& salt, int iterations, int key_length, const std::string file_path);
+    void pbkdf2(const std::string& password, const std::string& salt, int iterations, const std::string file_path);
     
 private:
 

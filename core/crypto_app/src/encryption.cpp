@@ -316,15 +316,15 @@ int encryption::add_new_entry(const std::string &tag, const std::string &user, c
     return 0;
 }
 
-void encryption::pbkdf2(const std::string& password, const std::string& salt, int iterations, int key_length, const std::string file_path) {
+void encryption::pbkdf2(const std::string& password, const std::string& salt, int iterations, const std::string file_path) {
     // Convert password and salt to C-style strings
     const char* password_cstr = password.c_str();
     const char* salt_cstr = salt.c_str();
-    unsigned char key[key_length];
+    unsigned char key[KEY_LENGTH];
 
     // Derive the key using PBKDF2
     PKCS5_PBKDF2_HMAC(password_cstr, -1, reinterpret_cast<const unsigned char*>(salt_cstr), -1,
-                      iterations, EVP_sha256(), key_length, key);
+                      iterations, EVP_sha256(), KEY_LENGTH, key);
     
     std::ofstream key_file(file_path, std::ios::binary);
 
@@ -333,6 +333,6 @@ void encryption::pbkdf2(const std::string& password, const std::string& salt, in
         return;
     }
 
-    key_file.write(reinterpret_cast<const char*>(key), key_length);
+    key_file.write(reinterpret_cast<const char*>(key), KEY_LENGTH);
     key_file.close();
 }

@@ -163,7 +163,7 @@ void hash::generate_salt(std::string &out)
 {
     // Create random 16 byte salt from charset
     const std::string CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
+    out = "";
     std::random_device random_device;
     std::mt19937 generator(random_device());
     std::uniform_int_distribution<> distribution(0, CHARACTERS.size() - 1);
@@ -192,9 +192,9 @@ int hash::register_user(const std::string &name, const std::string &password, in
     std::string out = ss.str();
     
     generate_salt(salt);
-    encr_obj.pbkdf2(password, salt, 10000, 32, encryption_key_path);
+    encr_obj.pbkdf2(password, salt, 10000, encryption_key_path);
     generate_salt(salt);
-    encr_obj.pbkdf2(password, salt, 10000, 32, hmac_key_path);
+    encr_obj.pbkdf2(password, salt, 10000, hmac_key_path);
 
     return utils::write_to_file(out, passwd_path.c_str());
 }
