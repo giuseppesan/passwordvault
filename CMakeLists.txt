@@ -16,8 +16,7 @@ include_directories(${GTEST_INCLUDE_DIRS})
 add_subdirectory(core/clinterface_app)
 add_subdirectory(core/crypto_app)
 add_subdirectory(testing)
-#add_subdirectory(ultralight_sdk)
-#add_subdirectory(UI)
+
 
 
 # Create the main executable
