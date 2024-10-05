@@ -47,13 +47,14 @@ public:
      * @return encrypted hex string
      */
     int encrypt_credentials(std::string &password);
-    
+
     /**
      * @brief Strips credential string and decrypts the password
      * @param credentials full credential string 
      * @return plain password
      */
     int decrypt_credentials(std::string &credentials);
+    int decrypt_credentials(std::string &credentials, std::string &username_out, std::string &password_out, std::string &tag_out);
 
     /**
      * @brief add new login credentials

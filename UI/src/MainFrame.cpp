@@ -1,33 +1,122 @@
 #include "MainFrame.hpp"
 #include "CredentialsDialog.hpp"
+#include "utils.hpp"
+#include "encryption.hpp"
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(wxID_NEW, MainFrame::OnNewEntry)
-    EVT_MENU(wxID_HELP, MainFrame::OnHelp)
-wxEND_EVENT_TABLE()
+        EVT_MENU(wxID_HELP, MainFrame::OnHelp)
+            EVT_LIST_ITEM_RIGHT_CLICK(wxID_ANY, MainFrame::OnItemRightClick)
+                wxEND_EVENT_TABLE()
 
-MainFrame::MainFrame(const wxString &title)
-    : wxFrame(NULL, wxID_ANY, title)
+                    MainFrame::MainFrame(const wxString &title)
+    : wxFrame(nullptr, wxID_ANY, title, wxDefaultPosition, wxSize(800, 600))
 {
-    wxMenu *menuFile = new wxMenu;
-    wxMenu *menuHelp = new wxMenu;
-    
-    menuFile->Append(wxID_NEW);
-    menuHelp->Append(wxID_HELP);
+    CreateMenuBar();
+    CreateStatusBar();
+    CreateCredentialsList();
+    LoadCredentials();
+}
 
-    wxMenuBar *menuBar = new wxMenuBar;
+void MainFrame::CreateMenuBar()
+{
+    auto *menuFile = new wxMenu;
+    auto *menuHelp = new wxMenu;
+
+    menuFile->Append(wxID_NEW, "&New Entry\tCtrl-N", "Add a new credential entry");
+    menuHelp->Append(wxID_HELP, "&Help\tF1", "Show help information");
+
+    auto *menuBar = new wxMenuBar;
     menuBar->Append(menuFile, "&File");
     menuBar->Append(menuHelp, "&Help");
 
     SetMenuBar(menuBar);
-    CreateStatusBar();
-    SetStatusText("Welcome to wxWidgets!");
+}
+
+void MainFrame::CreateCredentialsList()
+{
+    credentialsList = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxBORDER_SUNKEN);
+
+    wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
+    sizer->Add(credentialsList, 1, wxEXPAND | wxALL, 10);
+    SetSizer(sizer);
+
+    // Set up columns
+    credentialsList->InsertColumn(0, "Username", wxLIST_FORMAT_LEFT, 150);
+    credentialsList->InsertColumn(1, "Password", wxLIST_FORMAT_LEFT, 150);
+    credentialsList->InsertColumn(2, "Website", wxLIST_FORMAT_LEFT, 200);
+}
+
+void MainFrame::LoadCredentials()
+{
+    credentialsList->DeleteAllItems(); // Clear previous items
+
+    encryption obj;
+    std::string out, username, password, tag;
+    std::ifstream my_file(credentials_path);
+
+    if (!my_file.is_open())
+    {
+        std::cerr << "Unable to open & read file\n";
+        return;
+    }
+
+    while (getline(my_file, out))
+    {
+        obj.decrypt_credentials(out, username, password, tag);
+        long index = credentialsList->InsertItem(0, username);
+        credentialsList->SetItem(index, 1, password);
+        credentialsList->SetItem(index, 2, tag);
+    }
+    my_file.close();
 }
 
 void MainFrame::OnNewEntry(wxCommandEvent &WXUNUSED(event))
 {
     CredentialsDialog credentialsDlg(wxT("New Entry - Add Credentials"));
-    credentialsDlg.ShowModal();
+    if (credentialsDlg.ShowModal() == wxID_OK)
+    {
+        LoadCredentials(); // Reload credentials if new entry was added
+    }
+}
+
+void MainFrame::OnItemRightClick(wxListEvent &WXUNUSED(event))
+{
+    // Create a context menu
+    wxMenu contextMenu;
+    contextMenu.Append(wxID_COPY, "Copy Password");
+
+    // Bind the event to the menu item
+    Bind(wxEVT_MENU, &MainFrame::OnCopyPassword, this, wxID_COPY);
+
+    // Popup the context menu
+    PopupMenu(&contextMenu);
+}
+
+void MainFrame::OnCopyPassword(wxCommandEvent &WXUNUSED(event))
+{
+    long selectedRow = credentialsList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+
+    if (selectedRow != -1)
+    {
+        wxString password = credentialsList->GetItemText(selectedRow, 1); // Get the password
+
+        // Copy the password to the clipboard
+        if (wxTheClipboard->Open())
+        {
+            wxTheClipboard->SetData(new wxTextDataObject(password));
+            wxTheClipboard->Close();
+            SetStatusText("Password copied to clipboard.");
+        }
+        else
+        {
+            SetStatusText("Failed to open the clipboard.");
+        }
+    }
+    else
+    {
+        SetStatusText("No row selected.");
+    }
 }
 
 void MainFrame::OnHelp(wxCommandEvent &WXUNUSED(event))

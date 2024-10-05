@@ -268,6 +268,67 @@ int encryption::decrypt_credentials(std::string &credentials)
     return 0;
 }
 
+int encryption::decrypt_credentials(std::string &credentials, std::string &username_out, std::string &password_out, std::string &tag_out)
+{
+    std::vector<uint8_t> cipher_block;
+    std::vector<uint8_t> hmac_block;
+    std::string password;
+    std::string username;
+    std::string tag;
+    std::string plain_password;
+    std::string hmac;
+    std::string hmac_plain;
+    size_t firstColonPos = credentials.find(':');
+    size_t secondColonPos = credentials.find(':', firstColonPos + 1);
+    size_t thirdColonPos = credentials.find(':', secondColonPos + 1);
+    std::string data;
+    hash hash_obj;
+
+    if (firstColonPos != std::string::npos && secondColonPos != std::string::npos)
+    {
+        tag = credentials.substr(0, firstColonPos);
+        username = credentials.substr(firstColonPos + 1, secondColonPos - firstColonPos - 1);
+        password = credentials.substr(secondColonPos + 1, thirdColonPos - secondColonPos - 1);
+        hmac = credentials.substr(thirdColonPos + 1);
+
+        utils::hex2bin(hmac.c_str(), hmac_block);
+
+        if (handle_decryption(hmac_block, hmac_plain) != 0)
+        {
+            return -1;
+        }
+
+        if (utils::return_user(data, passwd_path) != 0)
+        {
+            std::cerr << "Reading userdata went wrong\n";
+            return -1;
+        }
+
+        if (hash_obj.verify_Integrity(data, hmac_key, hmac_plain) != true)
+        {
+            std::cerr << "Integrity check failed!\n";
+            return -1;
+        }
+
+        utils::hex2bin(password.c_str(), cipher_block);
+
+        if (handle_decryption(cipher_block, plain_password) != 0)
+        {
+            return -1;
+        }
+
+        username_out = username; 
+        password_out = plain_password; 
+        tag_out = tag;
+    }
+    else
+    {
+        std::cerr << "Malformed string" << std::endl;
+        return -2;
+    }
+    return 0;
+}
+
 int encryption::encrypt_credentials(std::string &password)
 {
     std::vector<uint8_t> cipher_block;
