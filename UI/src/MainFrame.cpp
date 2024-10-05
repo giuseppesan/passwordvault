@@ -50,6 +50,7 @@ void MainFrame::CreateCredentialsList()
 void MainFrame::LoadCredentials()
 {
     credentialsList->DeleteAllItems(); // Clear previous items
+    realPasswords.clear(); // Clear previous real passwords
 
     encryption obj;
     std::string out, username, password, tag;
@@ -65,7 +66,12 @@ void MainFrame::LoadCredentials()
     {
         obj.decrypt_credentials(out, username, password, tag);
         long index = credentialsList->InsertItem(0, username);
-        credentialsList->SetItem(index, 1, password);
+
+        // Insert the masked password (dots) for display
+        credentialsList->SetItem(index, 1, wxString("******")); // Masked password for display
+        
+        // Set the real password in the realPasswords vector
+        realPasswords.push_back(password);  // Store the real password
         credentialsList->SetItem(index, 2, tag);
     }
     my_file.close();
@@ -82,14 +88,9 @@ void MainFrame::OnNewEntry(wxCommandEvent &WXUNUSED(event))
 
 void MainFrame::OnItemRightClick(wxListEvent &WXUNUSED(event))
 {
-    // Create a context menu
     wxMenu contextMenu;
     contextMenu.Append(wxID_COPY, "Copy Password");
-
-    // Bind the event to the menu item
     Bind(wxEVT_MENU, &MainFrame::OnCopyPassword, this, wxID_COPY);
-
-    // Popup the context menu
     PopupMenu(&contextMenu);
 }
 
@@ -99,7 +100,8 @@ void MainFrame::OnCopyPassword(wxCommandEvent &WXUNUSED(event))
 
     if (selectedRow != -1)
     {
-        wxString password = credentialsList->GetItemText(selectedRow, 1); // Get the password
+        // Retrieve the actual password from the vector using the selected row index
+        wxString password = wxString(realPasswords[selectedRow]); // Get the real password
 
         // Copy the password to the clipboard
         if (wxTheClipboard->Open())

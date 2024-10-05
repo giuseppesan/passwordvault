@@ -11,11 +11,12 @@ class MainFrame : public wxFrame
 {
 public:
     MainFrame(const wxString &title);
-
+    void LoadCredentials();
+    
 private:
     void CreateMenuBar();
     void CreateCredentialsList();
-    void LoadCredentials();
+    wxListCtrl *credentialsList; // Pointer to the credentials list control
 
     void OnNewEntry(wxCommandEvent &event);
     void OnQuit(wxCommandEvent &event);
@@ -23,7 +24,7 @@ private:
     void OnItemRightClick(wxListEvent &event);
     void OnCopyPassword(wxCommandEvent &event);
 
-    wxListCtrl *credentialsList; // Pointer to the credentials list control
+    std::vector<std::string> realPasswords; // Store the actual passwords
 
 private:
     wxDECLARE_EVENT_TABLE();
