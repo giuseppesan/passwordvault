@@ -23,7 +23,7 @@ if [ "$action" = "install" ]; then
             case "$distro_name" in
                 Ubuntu)
                     echo "Ubuntu detected"
-                    packages=("libssl-dev" "libgtest-dev" "cmake" "clang" "libx11-dev" "xorg-dev" "libglu1-mesa-dev")
+                    packages=("libssl-dev" "libgtest-dev" "cmake" "clang" "libx11-dev" "xorg-dev" "libglu1-mesa-dev" "libwxgtk3.0-gtk3-dev")
                     ;;
                 *)
                     packages=("libssl-dev" "libgtest-dev" "cmake" "clang")

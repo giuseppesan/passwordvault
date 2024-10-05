@@ -9,6 +9,11 @@ add_library(mygtest
     src/utils_test.cpp
 )
 
-target_include_directories(mygtest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(mygtest PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/core/crypto_app/include
+    ${CMAKE_SOURCE_DIR}/core/clinterface_app/include
+    ${CMAKE_SOURCE_DIR}/core/
+)
 
+target_compile_definitions(mygtest PUBLIC PROJECT_ROOT="${PROJECT_ROOT}")
 

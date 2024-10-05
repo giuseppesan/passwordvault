@@ -1,5 +1,5 @@
 
-#include "../include/hash.hpp"
+#include "hash.hpp"
 
 hash::hash() = default;
 
@@ -174,14 +174,14 @@ void hash::generate_salt(std::string &out)
     }
 }
 
-int hash::register_user(const std::string &name, const std::string &password, int u_algorithm)
+int hash::register_user(const std::string &name, const std::string &password)
 {
     std::string salt, final_hash;
     std::stringstream ss;
     encryption encr_obj;
 
     generate_salt(salt);
-    algorithm = u_algorithm;
+    algorithm = 2;//u_algorithm;
 
     if (salt_n_hash(password, salt, final_hash, ITERATIONS) != 0)
     {

@@ -5,4 +5,10 @@ add_library(clinterface_app
     src/CLInterface.cpp
 )
 
-target_include_directories(clinterface_app PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(clinterface_app PUBLIC
+    ${CMAKE_SOURCE_DIR}/core/clinterface_app/include
+    ${CMAKE_SOURCE_DIR}/core/crypto_app/include
+)
+
+target_compile_definitions(clinterface_app PUBLIC PROJECT_ROOT="${PROJECT_ROOT}")
+

@@ -1,8 +1,8 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef MAIN_HPP
+#define MAIN_HPP
 
-#include "crypto_app/src/hash.cpp"
-#include "crypto_app/src/encryption.cpp"
-#include "clinterface_app/src/CLInterface.cpp"
-#include "../testing/src/mocking.cpp"
-#endif /* MAIN_H */
+#include "crypto_app/include/hash.hpp"
+#include "clinterface_app/include/CLInterface.hpp"
+#include "crypto_app/include/encryption.hpp"
+
+#endif /* MAIN_HPP */

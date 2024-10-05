@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
-#include "../../core/main.hpp"
+#include "main.hpp"
+#include "mocking.cpp"
 
-const std::string encrypt_path = "../testing/encrypt";
+const std::string encrypt_path = std::string(PROJECT_ROOT) + "/testing/encrypt";
 
 TEST(Encryption, positive)
 {

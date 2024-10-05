@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../core/main.hpp"
+#include "main.hpp"
 
 TEST(Utils, read_from_file_and_find_bad) {
     std::string entry = "test";

@@ -1,20 +1,19 @@
-#ifndef CLINTERFACE_H
-#define CLINTERFACE_H
+#ifndef CLINTERFACE_HPP
+#define CLINTERFACE_HPP
 
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "../../crypto_app/include/hash.hpp"
-#include "../../crypto_app/include/utils.hpp"
+#include "hash.hpp"
+#include "utils.hpp"
 
 class CLInterface
 {
-private:
-    std::string curr_path;
-    std::string input;
-    std::string logged_in_user;
 
 public:
+    CLInterface();
+    ~CLInterface();
+    
     /**
      * @brief main loop for CLI program - starts with auth and handle user input
      */
@@ -72,10 +71,12 @@ public:
      */
     void handle_get_credential();
 
-    CLInterface();
-    ~CLInterface();
+
+private:
+    std::string curr_path;
+    std::string input;
+    std::string logged_in_user;
 };
 
-CLInterface::~CLInterface() {}
 
-#endif // CLINTERFACE_H
+#endif // CLINTERFACE_HPP

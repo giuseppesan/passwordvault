@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
-#include "../core/main.hpp"
-
+#include "main.hpp"
+#include "hash.hpp"
 hash hash_obj;
 
 TEST(Hashing, register_1)
 {
     std::ofstream file_passwd_path(passwd_path, std::ios::trunc);
-    int result = hash_obj.register_user("user1", "user1", 1);
+    int result = hash_obj.register_user("user1", "user1");
     EXPECT_EQ(result, 0);
     std::cout << std::endl;
 
@@ -32,7 +32,7 @@ TEST(Hashing, login_bad_pw_1)
 TEST(Hashing, register_2)
 {
     std::ofstream file_passwd_path(passwd_path, std::ios::trunc);
-    int result = hash_obj.register_user("user2", "user2", 2);
+    int result = hash_obj.register_user("user2", "user2");
     EXPECT_EQ(result, 0);
     std::cout << std::endl;
 

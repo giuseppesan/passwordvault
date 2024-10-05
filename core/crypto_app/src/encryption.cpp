@@ -1,4 +1,4 @@
-#include "../include/encryption.hpp"
+#include "encryption.hpp"
 
 encryption::encryption()
 {

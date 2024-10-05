@@ -125,6 +125,6 @@ private:
 
 };
 
-unsigned char iv[16];
+inline unsigned char iv[16];
 
 #endif // ENCRYPTION_H

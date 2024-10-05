@@ -1,10 +1,12 @@
-#include "../include/CLInterface.hpp"
+#include "CLInterface.hpp"
 
 
 CLInterface::CLInterface() : curr_path("auth"), logged_in_user("")
 {
     handle_help();
 }
+
+CLInterface::~CLInterface() {}
 
 void CLInterface::main_thread()
 {
@@ -131,12 +133,12 @@ void CLInterface::handle_register(hash &hash_obj)
     getline(std::cin, p);
     sanitize_input(p);
     hash_obj.set_password(p);
-
+/*
     int alg;
     std::cout << "Algorithms [1]SHA256 [2]SHA512\n";
     std::cin >> alg;
-
-    hash_obj.register_user(hash_obj.get_user(), hash_obj.get_password(), alg);
+*/
+    hash_obj.register_user(hash_obj.get_user(), hash_obj.get_password());
 }
 
 void CLInterface::handle_logout()

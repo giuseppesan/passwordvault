@@ -1,5 +1,5 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
 #include <iostream>
 #include <string>
@@ -10,11 +10,10 @@
 #include <vector>
 
 #define PEPPER "SEpl9QTQ574d9R5R"
-
-const std::string passwd_path = "../data/passwd";
-const std::string credentials_path = "../data/logins";
-const std::string encryption_key_path = "../data/encryption_key.bin";
-const std::string hmac_key_path = "../data/hmac_key.bin";
+const std::string passwd_path = std::string(PROJECT_ROOT) + "/data/passwd";
+const std::string credentials_path = std::string(PROJECT_ROOT)  + "/data/logins";
+const std::string encryption_key_path = std::string(PROJECT_ROOT)  + "/data/encryption_key.bin";
+const std::string hmac_key_path = std::string(PROJECT_ROOT)  + "/data/hmac_key.bin";
 const int found = 0; 
 const int not_found = -2; 
 
@@ -30,7 +29,7 @@ namespace utils
  * @return hex string
  */
 
-std::string to_hex_sha(const unsigned char* str, int len)
+inline std::string to_hex_sha(const unsigned char* str, int len)
 {
     std::ostringstream oss;
     oss << std::hex << std::uppercase << std::setfill('0');
@@ -48,7 +47,7 @@ std::string to_hex_sha(const unsigned char* str, int len)
  * @param data vector Bytes
  * @return hex string
  */
-std::string to_hex(const std::vector<uint8_t>& data)
+inline std::string to_hex(const std::vector<uint8_t>& data)
 {
     std::ostringstream oss;
     oss << std::hex << std::uppercase << std::setfill('0');
@@ -69,7 +68,7 @@ std::string to_hex(const std::vector<uint8_t>& data)
  * @return 0 if successful
  */
 
-int write_to_file(std::string in, std::string file)
+inline int write_to_file(std::string in, std::string file)
 {
     std::ofstream my_file(file, std::ios::app);
 
@@ -90,7 +89,7 @@ int write_to_file(std::string in, std::string file)
  * @param key the private key 
  * @return true or false
  */
-bool readKeyFromFile(std::string file_path, unsigned char* key) {
+inline bool readKeyFromFile(std::string file_path, unsigned char* key) {
     std::ifstream key_file(file_path, std::ios::binary);
 
     if (!key_file.is_open()) {
@@ -116,7 +115,7 @@ bool readKeyFromFile(std::string file_path, unsigned char* key) {
  * @param path filepath
  * @return found 0 if successful, not found -2 if not successful
  */
-int find_entry(const std::string &entry, const std::string file_path)
+inline int find_entry(const std::string &entry, const std::string file_path)
 {
     std::fstream my_file(file_path);
     std::string line;
@@ -149,7 +148,7 @@ int find_entry(const std::string &entry, const std::string file_path)
  * @return found 0 if successful, not found -2 if not successful
  */
 
-int read_from_file_and_find(std::string &out, std::string name, const std::string file_path)
+inline int read_from_file_and_find(std::string &out, std::string name, const std::string file_path)
 {
     std::ifstream my_file(file_path);
 
@@ -174,7 +173,7 @@ int read_from_file_and_find(std::string &out, std::string name, const std::strin
     return not_found;
 }
 
-int return_user(std::string &out, const std::string file_path)
+inline int return_user(std::string &out, const std::string file_path)
 {
     std::ifstream my_file(file_path);
     std::string line;
@@ -188,7 +187,7 @@ int return_user(std::string &out, const std::string file_path)
     return 0;
 }
 
-bool is_file_empty(const std::string& file_path) {
+inline bool is_file_empty(const std::string& file_path) {
     std::ifstream file(file_path);
 
     if (!file.is_open()) {
@@ -205,7 +204,7 @@ bool is_file_empty(const std::string& file_path) {
  * @param input src string
  * @return input 
  */
-int char2int(char input) {
+inline int char2int(char input) {
   if (input >= '0' && input <= '9') {
       return input - '0';
   } else if (input >= 'A' && input <= 'F') {
@@ -225,7 +224,7 @@ int char2int(char input) {
  * @param src zero terminated sanitized string
  * @param target char array bytes
  */
-void hex2bin(const char* src, std::vector<uint8_t>& target) {
+inline void hex2bin(const char* src, std::vector<uint8_t>& target) {
     while (*src && src[1]) {
         uint8_t byte = char2int(*src) * 16 + char2int(src[1]);
         target.push_back(byte);
@@ -233,4 +232,4 @@ void hex2bin(const char* src, std::vector<uint8_t>& target) {
     }
 }
 }
-#endif // UTILS_H
+#endif // UTILS_HPP

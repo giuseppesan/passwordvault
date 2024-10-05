@@ -1,5 +1,5 @@
-#ifndef HASH_H
-#define HASH_H
+#ifndef HASH_HPP
+#define HASH_HPP
 
 #include <openssl/sha.h>
 #include <iostream>
@@ -7,7 +7,7 @@
 #include <string.h>
 #include <string>
 #include <random>
-#include "../include/utils.hpp"
+#include "utils.hpp"
 #include "encryption.hpp"
 
 /**
@@ -38,7 +38,7 @@ public:
      *
      * @return 0 if successful
      */
-    int register_user(const std::string &name, const std::string &password, int u_algorithm);
+    int register_user(const std::string &name, const std::string &password);
 
     void set_user(std::string u) { user = u; }
 
@@ -116,4 +116,4 @@ private:
     int algorithm = 0;
 };
 
-#endif // HASH_H
+#endif // HASH_HPP

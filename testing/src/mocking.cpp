@@ -3,8 +3,8 @@
  * @file testing.cpp
  */
 
-#include "../../core/crypto_app/include/encryption.hpp"
-#include "../../core/crypto_app/include/hash.hpp"
+#include "encryption.hpp"
+#include "hash.hpp"
 
 int encrypt_decrypt_test(std::string plain_text)
 {
