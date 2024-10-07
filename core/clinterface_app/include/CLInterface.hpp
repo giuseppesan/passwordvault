@@ -48,12 +48,6 @@ public:
     void handle_logout();
 
     /**
-     * @brief Validate and sanitize the input string
-     * @param input
-     */
-    void sanitize_input(std::string &input);
-
-    /**
      * @brief
      * @param cobj
      */

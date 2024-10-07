@@ -57,9 +57,9 @@ void LoginDialog::OnLogin(wxCommandEvent &WXUNUSED(event))
     hash hash_obj;
     CLInterface cli;
 
-    cli.sanitize_input(username);
+    utils::sanitize_input(username);
     hash_obj.set_user(username);
-    cli.sanitize_input(password);
+    utils::sanitize_input(password);
     hash_obj.set_password(password);
 
     int ret = hash_obj.check_login(hash_obj.get_user(), hash_obj.get_password());

@@ -58,9 +58,9 @@ void CredentialsDialog::OnSave(wxCommandEvent &WXUNUSED(event))
     CLInterface cli;
     hash hash_obj;
 
-    cli.sanitize_input(username);
-    cli.sanitize_input(password);
-    cli.sanitize_input(tag);
+    utils::sanitize_input(username);
+    utils::sanitize_input(password);
+    utils::sanitize_input(tag);
        
     if (utils::find_entry(username, credentials_path) == found)
     {
